@@ -16,3 +16,4 @@ vim.opt.clipboard = "unnamedplus"
 
 -- leader key
 vim.g.mapleader = " "
+
