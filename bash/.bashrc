@@ -2,16 +2,9 @@
 
 # If not running interactively, don't do anything
 case $- in
-    *i*) ;;
-      *) return;;
+  *i*) ;;
+    *) return;;
 esac
-
-# bash completion
-if [ -f /usr/share/bash-completion/bash_completion ]; then
-  source /usr/share/bash-completion/bash_completion
-elif [ -f /etc/bash_completion ]; then
-  source /etc/bash_completion
-fi
 
 # command history
 HISTSIZE=10000
@@ -29,9 +22,25 @@ shopt -s checkwinsize
 # # make less more friendly for non-text input files, see lesspipe(1)
 # [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
+# EDITOR
+export EDITOR="nvim"
+export VISUAL="nvim"
+
+# PS1 (Pureline)
+source ~/.dotfiles/bash/pureline/pureline ~/.dotfiles/bash/.pureline.conf
+
 # Alias definitions.
 if [ -f ~/.dotfiles/bash/.bash_aliases ]; then
     source ~/.dotfiles/bash/.bash_aliases
+fi
+
+# Programmable completion features
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    source /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    source /etc/bash_completion
+  fi
 fi
 
 # load secret key of ssh
@@ -41,4 +50,4 @@ if [ ! -f /.dockerenv ]; then
 fi
 
 # Vite+ bin (https://viteplus.dev
-. "$HOME/.vite-plus/env"
+source "$HOME/.vite-plus/env"

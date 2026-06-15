@@ -16,15 +16,15 @@ if [ -n "$BASH_VERSION" ]; then
     fi
 fi
 
-# set PATH of nvim
-if [ -d "/usr/bin/nvim" ] ; then
-   export PATH="$PATH:/usr/bin/nvim"
-fi
-
-# set PATH of ~/.local/bin
-if [ -d "$HOME/.local/bin" ] ; then
-   export PATH="$PATH:$HOME/.local/bin"
-fi
-
-# Vite+ bin (https://viteplus.dev)
-. "$HOME/.vite-plus/env"
+# # set PATH of nvim
+# if [ -d "/usr/bin/nvim" ] ; then
+#    export PATH="$PATH:/usr/bin/nvim"
+# fi
+#
+# # set PATH of ~/.local/bin
+# if [ -d "$HOME/.local/bin" ] ; then
+#    export PATH="$PATH:$HOME/.local/bin"
+# fi
+#
+# # Vite+ bin (https://viteplus.dev)
+# . "$HOME/.vite-plus/env"
