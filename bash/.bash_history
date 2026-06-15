@@ -391,3 +391,15 @@ source ~/.bashrc
 ..
 #1781530564
 nvim .gitignore 
+#1781530573
+git add .
+#1781530579
+git commit -m "add pureline"
+#1781530585
+git push origin main
+#1781530648
+git diff
+#1781530672
+..
+#1781530679
+nvim .gitignore
