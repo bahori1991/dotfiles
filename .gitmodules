@@ -1,0 +1,3 @@
+[submodule "bash/pureline"]
+	path = bash/pureline
+	url = https://github.com/bahori1991/pureline.git
