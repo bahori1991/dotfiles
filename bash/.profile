@@ -8,6 +8,15 @@
 # for ssh logins, install and configure the libpam-umask package.
 #umask 022
 
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
+
+export LESSHISTFILE="$XDG_STATE_HOME/lesshst"
+export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
+export GIT_CONFIG_GLOBAL="$XDG_CONFIG_HOME/git/config"
+
 # if running :bash
 if [ -n "$BASH_VERSION" ]; then
     # include .bashrc if it exists
@@ -16,15 +25,4 @@ if [ -n "$BASH_VERSION" ]; then
     fi
 fi
 
-# # set PATH of nvim
-# if [ -d "/usr/bin/nvim" ] ; then
-#    export PATH="$PATH:/usr/bin/nvim"
-# fi
-#
-# # set PATH of ~/.local/bin
-# if [ -d "$HOME/.local/bin" ] ; then
-#    export PATH="$PATH:$HOME/.local/bin"
-# fi
-#
-# # Vite+ bin (https://viteplus.dev)
-# . "$HOME/.vite-plus/env"
+

@@ -7,6 +7,7 @@ case $- in
 esac
 
 # command history
+HISTFILE="$XDG_STATE_HOME/bash_history"
 HISTSIZE=10000
 HISTFILESIZE=10000
 HISTTIMEFORMAT="[%Y/%m/%d %H:%M:%S] "
@@ -49,5 +50,11 @@ if [ ! -f /.dockerenv ]; then
     source $HOME/.keychain/$(uname -n)-sh
 fi
 
-# Vite+ bin (https://viteplus.dev
-source "$HOME/.vite-plus/env"
+# add PATH for use of cursor-cli agents
+export PATH="$HOME/.local/bin:$PATH"
+
+# Vite+ installation directory (https://viteplus.dev/guide/env)
+export VP_HOME="$HOME/.local/share/.vite-plus"
+
+# Vite+ bin (https://viteplus.dev)
+source "$VP_HOME/env"

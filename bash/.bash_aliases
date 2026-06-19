@@ -4,6 +4,11 @@ mkcd() {
   mkdir -p "$1" && cd "$1"
 }
 
+# touch and nvim
+tvim() {
+  touch "$1" && nvim "$1"
+}
+
 # get PATH 
 alias path="echo $PATH | tr ':' '\n'"
 
@@ -31,7 +36,7 @@ alias .....="cd ../../../.."
 alias ls="eza --icons --group-directories-first"
 alias ll="eza -l --icons --group-directories-first --git"
 alias la="eza -la --icons --group-directories-first --git"
-alias lt="eza --tree --level=2 --icons"
+alias lt="eza --tree --level=3 --icons"
 
 # alias chmod commands
 alias mx="chmod a+x"
