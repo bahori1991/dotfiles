@@ -42,7 +42,7 @@ alias ep="nvim ~/.dotfiles/bash/.profile"
 alias ea="nvim ~/.dotfiles/bash/.bash_aliases"
 
 # ls
-alias ls="eza -h--icons --group-directories-first"
+alias ls="eza -h --icons --group-directories-first"
 alias ll="eza -hl --icons --group-directories-first --git"
 alias la="eza -hla --icons --group-directories-first --git"
 

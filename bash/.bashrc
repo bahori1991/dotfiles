@@ -20,9 +20,6 @@ shopt -u histappend
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
-# move directory without command "cd"
-shopt -s autocd
-
 # # make less more friendly for non-text input files, see lesspipe(1)
 # [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
