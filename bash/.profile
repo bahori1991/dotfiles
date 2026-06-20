@@ -16,6 +16,7 @@ export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
 export LESSHISTFILE="$XDG_STATE_HOME/lesshst"
 export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
 export GIT_CONFIG_GLOBAL="$XDG_CONFIG_HOME/git/config"
+export WGETRC="$XDG_CONFIG_HOME/wget/wgetrc"
 
 # if running :bash
 if [ -n "$BASH_VERSION" ]; then

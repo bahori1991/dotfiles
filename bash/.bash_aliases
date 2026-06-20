@@ -72,4 +72,6 @@ alias 666="chmod -R 666"
 alias 755="chmod -R 755"
 alias 777="chmod -R 777"
 
+# wget
+alias wget="wget --hsts-file=\"\$XDG_CONFIG_HOME/wget/wget-hsts\""
 
