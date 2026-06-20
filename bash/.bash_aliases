@@ -32,11 +32,37 @@ alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
 
+# reload bash files
+alias sb="source ~/.dotfiles/bash/.bashrc"
+alias sp="source ~/.dotfiles/bash/.profile"
+
+# edit bash files
+alias eb="nvim ~/.dotfiles/bash/.bashrc"
+alias ep="nvim ~/.dotfiles/bash/.profile"
+alias ea="nvim ~/.dotfiles/bash/.bash_aliases"
+
 # ls
-alias ls="eza --icons --group-directories-first"
-alias ll="eza -l --icons --group-directories-first --git"
-alias la="eza -la --icons --group-directories-first --git"
-alias lt="eza --tree --level=3 --icons"
+alias ls="eza -h--icons --group-directories-first"
+alias ll="eza -hl --icons --group-directories-first --git"
+alias la="eza -hla --icons --group-directories-first --git"
+
+function lt() {
+  local depth=1
+  if [[ -n "$1" ]]; then
+    depth="$1"
+    shift
+  fi
+  command eza -hl --tree --level="$depth" --icons --group-directories-first --git "$@"
+}
+
+function lta() {
+  local depth=1
+  if [[ -n "$1" ]]; then
+    depth="$1"
+    shift
+  fi
+  command eza -hla --tree --level="$depth" --icons --group-directories-first --git "$@"
+} 
 
 # alias chmod commands
 alias mx="chmod a+x"
