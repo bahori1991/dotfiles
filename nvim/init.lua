@@ -1,3 +1,4 @@
-require("config.lazy")
 require("config.options")
 require("config.zenhan")
+require("config.lazy")
+require("config.lsp")

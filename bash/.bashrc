@@ -28,7 +28,10 @@ export EDITOR="nvim"
 export VISUAL="nvim"
 
 # PS1 (Pureline)
-source ~/.dotfiles/bash/pureline/pureline ~/.dotfiles/bash/.pureline.conf
+# source ~/.dotfiles/bash/pureline/pureline ~/.dotfiles/bash/.pureline.conf
+
+# PS1 (Starship)
+eval "$(starship init bash)"
 
 # Alias definitions.
 if [ -f ~/.dotfiles/bash/.bash_aliases ]; then
@@ -58,3 +61,6 @@ export VP_HOME="$HOME/.local/share/.vite-plus"
 
 # Vite+ bin (https://viteplus.dev)
 source "$VP_HOME/env"
+
+# Rust
+source "$HOME/.cargo/env"
