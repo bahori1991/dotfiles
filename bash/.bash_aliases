@@ -48,18 +48,22 @@ alias la="eza -hla --icons --group-directories-first --git"
 
 function lt() {
   local depth=1
-  if [[ -n "$1" ]]; then
+  if [[ "$1" =~ ^[0-9]+$ ]]; then
     depth="$1"
     shift
+  else
+    depth=1
   fi
   command eza -hl --tree --level="$depth" --icons --group-directories-first --git "$@"
 }
 
 function lta() {
   local depth=1
-  if [[ -n "$1" ]]; then
+  if [[ "$1" =~ ^[0-9]+$ ]]; then
     depth="$1"
     shift
+  else
+    depth=1
   fi
   command eza -hla --tree --level="$depth" --icons --group-directories-first --git "$@"
 } 
