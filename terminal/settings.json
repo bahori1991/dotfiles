@@ -1,0 +1,132 @@
+{
+  "$help": "https://aka.ms/terminal-documentation",
+  "$schema": "https://aka.ms/terminal-profiles-schema",
+  "actions": [
+    {
+      "command": { "action": "splitPane", "split": "horizontal" },
+      "keys": "ctrl+shift+minus"
+    },
+    {
+      "command": { "action": "splitPane", "split": "vertical" },
+      "keys": "ctrl+shift+|"
+    },
+    {
+      "command": { "action": "moveFocus", "direction": "left" },
+      "keys": "ctrl+h"
+    },
+    {
+      "command": { "action": "moveFocus", "direction": "right" },
+      "keys": "ctrl+l"
+    },
+    {
+      "command": { "action": "moveFocus", "direction": "up" },
+      "keys": "ctrl+k"
+    },
+    {
+      "command": { "action": "moveFocus", "direction": "down" },
+      "keys": "ctrl+j"
+    },
+    {
+      "command": "scrollUpPage",
+      "keys": "ctrl+up"
+    },
+    {
+      "command": "scrollDownPage",
+      "keys": "ctrl+down"
+    },
+    {
+      "command": { "action": "resizePane", "direction": "left" },
+      "keys": "ctrl+shift+h"
+    },
+    {
+      "command": { "action": "resizePane", "direction": "right" },
+      "keys": "ctrl+shift+l"
+    },
+    {
+      "command": { "action": "resizePane", "direction": "up" },
+      "keys": "ctrl+shift+k"
+    },
+    {
+      "command": { "action": "resizePane", "direction": "down" },
+      "keys": "ctrl+shift+j"
+    },
+    {
+      "command": "closePane",
+      "keys": "ctrl+w"
+    }
+  ],
+  "copyFormatting": "none",
+  "copyOnSelect": false,
+  "defaultProfile": "{c24746a3-330a-51cb-bf23-821424d4806e}",
+  "newTabMenu": [
+    { 
+      "type": "folder",
+      "name": "Linux (WSL)",
+      "icon": "🐧",
+      "entries": [
+        { "type": "matchProfiles", "source": "Windows.Terminal.Wsl" }
+      ]
+    },
+    { "type": "separator" },
+    { "type": "profile", "profile": "PowerShell" },
+    { "type": "profile", "profile": "Command Prompt" },
+    { "type": "remainingProfiles" }
+  ],
+  "profiles": {
+    "defaults": {
+      "opacity": 85,
+      "useAcryilc": false,
+      "colorScheme": "VS Code",
+      "font": { 
+        "face": "HakuMoto Console",
+        "size": 11
+      }
+    },
+    "list": [
+      {
+        "guid": "{c24746a3-330a-51cb-bf23-821424d4806e}",
+        "name": "Ubuntu-24.04",
+        "commandline": "wsl.exe -d Ubuntu-24.04 --user bahori1991",
+        "hidden": false,
+        "source": "Microsoft.WSL",
+        "startingDirectory": "\\\\wsl.localhost\\Ubuntu-24.04\\home\\bahori1991"
+      },
+      {
+        "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
+        "commandline": "%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+        "name": "Windows PowerShell",
+        "hidden": false
+      },
+      {
+        "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
+        "name": "\u30b3\u30de\u30f3\u30c9 \u30d7\u30ed\u30f3\u30d7\u30c8",
+        "commandline": "%SystemRoot%\\System32\\cmd.exe",
+        "hidden": false
+      }
+    ]
+  },
+  "schemes": [
+    {
+      "name": "VS Code",
+      "background": "#21252b",
+      "foreground": "#a9b2c3",
+      "black": "#21252b",
+      "blue": "#61afef",
+      "brightBlack": "#5f6672",
+      "brightBlue": "#007fff",
+      "brightCyan": "#08e8de",
+      "brightGreen": "#66ff00",
+      "brightPurple": "#8b00ff",
+      "brightRed": "#d74e42",
+      "brightWhite": "#d4d7d9",
+      "brightYellow": "#e5c07b",
+      "cyan": "#56b6c2",
+      "green": "#98c379",
+      "purple": "#b57edc",
+      "red": "#e06c75",
+      "white": "#a9b2c3",
+      "yellow": "#d19a66"
+    }
+  ],
+  "themes": []
+}
