@@ -33,13 +33,13 @@ alias ....="cd ../../.."
 alias .....="cd ../../../.."
 
 # reload bash files
-alias sb="source ~/.dotfiles/bash/.bashrc"
-alias sp="source ~/.dotfiles/bash/.profile"
+alias sb="source ~/.config/dotfiles/bash/.bashrc"
+alias sp="source ~/.config/dotfiles/bash/.profile"
 
 # edit bash files
-alias eb="nvim ~/.dotfiles/bash/.bashrc"
-alias ep="nvim ~/.dotfiles/bash/.profile"
-alias ea="nvim ~/.dotfiles/bash/.bash_aliases"
+alias eb="nvim ~/.config/dotfiles/bash/.bashrc"
+alias ep="nvim ~/.config/dotfiles/bash/.profile"
+alias ea="nvim ~/.config/dotfiles/bash/.bash_aliases"
 
 # ls
 alias ls="eza -h --icons --group-directories-first"
@@ -79,3 +79,5 @@ alias 777="chmod -R 777"
 # wget
 alias wget="wget --hsts-file=\"\$XDG_CONFIG_HOME/wget/wget-hsts\""
 
+# update symlinks of dotfiles
+alias updatesymlink="source ~/.config/dotfiles/scripts/symlink.sh"
