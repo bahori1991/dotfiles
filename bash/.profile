@@ -8,6 +8,8 @@
 # for ssh logins, install and configure the libpam-umask package.
 #umask 022
 
+export WIN_USERNAME="bahori1991"
+
 export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
 export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
