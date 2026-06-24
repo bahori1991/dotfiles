@@ -25,7 +25,7 @@ return {
     })
   end,
   keys = {
-    { "<leader>e", "<cmd>NvimTreeOpen<cr>", desc = "NvimTreeOpen" } 
+    { "<leader>e", "<cmd>NvimTreeOpen<cr>", desc = "NvimTreeOpen" }
   },
 }
 
