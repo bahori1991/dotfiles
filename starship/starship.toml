@@ -1,53 +1,54 @@
 format = """
 ${custom.wsl}\
-[ ](fg:color_aqua bg:color_yellow)\
+[ ](fg:color_green bg:color_blue)\
 $username\
-[ ](fg:color_yellow bg:color_blue)\
+[ ](fg:color_blue bg:color_aqua)\
 $directory\
-[ ](fg:color_blue bg:color_orange)\
+[ ](fg:color_aqua bg:color_orange)\
 $git_branch\
+[ ](fg:color_orange bg:color_yellow)\
 $git_status\
-[ ](fg:color_orange bg:color_gray)\
+[ ](fg:color_yellow bg:color_gray)\
 $time\
 [ ](fg:color_gray)\
 $cmd_duration\
 \n$character
 """
 palette = "theme"
+add_newline = false
 
 # set color theme
 [palettes.theme]
-color_white = "#fbf1c7"
+color_white = "#fffef6"
+color_black = "#0d0d0c"
 color_blue = "#0080ff"
 color_aqua = "#008fad"
+color_green = "#0b6623"
 color_yellow = "#b49125"
 color_orange = "#d65d0e"
 color_gray = "#3d3836"
-
-# add one space between command line 
-add_newline = "true"
 
 [custom.wsl]
 command = "echo $WSL_DISTRO_NAME"
 when = "test -n \"$WSL_DISTRO_NAME\""
 format = "[ 󰍺  $output ]($style)" 
-style = "fg:color_white bg:color_aqua"
+style = "fg:color_white bg:color_green"
 disabled = false
 
 [username]
 show_always = true
-style_user = "fg:color_white bg:color_yellow"
-style_root = "fg:color_white bg:color_yellow"
+style_root = "fg:color_black bg:color_blue"
+style_user = "fg:color_white bg:color_blue"
 format = "[ $user ]($style)"
 disabled = false
 
 [directory]
-style = "fg:color_white bg:color_blue"
+style = "fg:color_white bg:color_aqua"
 truncation_length = 10
 truncate_to_repo = false
 truncation_symbol = "…/"
 read_only = ' 󰌾 '
-read_only_style = 'fg:color_yellow bg:color_blue'
+read_only_style = 'fg:color_yellow bg:color_aqua'
 format = '[  $path ]($style)[$read_only]($read_only_style)'
 
 [aws]
@@ -61,8 +62,19 @@ style = "fg:color_white bg:color_orange"
 format = '[[$symbol $branch ](fg:color_white bg:color_orange)]($style)'
 
 [git_status]
-style = "bg:#1d2230"
-format = '[[($all_status$ahead_behind )](fg:color_white bg:color_orange)]($style)'
+conflicted = "!"
+deleted = "D${count} "
+renamed = "R${count} "
+modified = "M${count} "
+staged = "S${count} "
+untracked = "U${count} "
+stashed = "⚑"
+ahead = "${ahead_count} "
+behind = "${behind_count} "
+diverged = "${ahead_count} ${behind_count} "
+up_to_date = "✅ "
+style = "fg:color_white bg:color_yellow"
+format = "([$all_status $ahead_behind ]($style))"
 
 [cmd_duration]
 min_time = 1
@@ -71,7 +83,7 @@ format = "[✨ $duration]($style)" # nf-pl-right_soft_divider, nf-mdi-clock
 
 [time]
 disabled = false
-time_format = "%r" # Hour:Minute Format
+use_12hr = false
 style = "bg:color_gray"
 format = '[ $time ]($style)'
 
