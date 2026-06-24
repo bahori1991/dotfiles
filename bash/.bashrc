@@ -27,15 +27,17 @@ shopt -s checkwinsize
 export EDITOR="nvim"
 export VISUAL="nvim"
 
-# PS1 (Pureline)
-# source ~/.dotfiles/bash/pureline/pureline ~/.dotfiles/bash/.pureline.conf
-
 # PS1 (Starship)
 eval "$(starship init bash)"
 
+# # copy wezterm to windows .config directory
+# if [ -f ~/.config/dotfiles/wezterm/copy.sh ]; then
+#   source ~/.dotfiles/wezterm/copy.sh
+# fi
+
 # Alias definitions.
-if [ -f ~/.dotfiles/bash/.bash_aliases ]; then
-    source ~/.dotfiles/bash/.bash_aliases
+if [ -f ~/.config/dotfiles/bash/.bash_aliases ]; then
+    source ~/.config/dotfiles/bash/.bash_aliases
 fi
 
 # Programmable completion features
