@@ -1,3 +1,9 @@
+-- ================================================================================
+-- TITLE: folke/lazy.nvim
+-- ABOUT: Modern plugin manager for Neovim
+-- LINKS: https://github.com/folke/lazy.nvim
+-- ================================================================================
+
 -- leader key
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "

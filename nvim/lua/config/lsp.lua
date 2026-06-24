@@ -1,3 +1,8 @@
+-- ================================================================================
+-- TITLE: config.lsp.lua
+-- ABOUT: configulation file of LSP
+-- ================================================================================
+
 vim.diagnostic.config({
   severity_sort = true,
   update_in_insert = false,

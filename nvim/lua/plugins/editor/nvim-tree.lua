@@ -1,3 +1,9 @@
+-- ================================================================================
+-- TITLE: nvim-tree/nvim-tree.lua
+-- ABOUT: File Explorer for Neovim
+-- LINKS: https://github.com/nvim-tree/nvim-tree.lua
+-- ================================================================================
+
 return {
   "nvim-tree/nvim-tree.lua",
   dependencies = { "nvim-tree/nvim-web-devicons" },

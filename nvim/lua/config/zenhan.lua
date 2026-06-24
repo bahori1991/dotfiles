@@ -1,3 +1,9 @@
+-- ================================================================================
+-- TITLE: zenhan.lua
+-- ABOUT: Switch the mode of input method editor from terminal.
+-- LINKS: https://neovim.io/doc/user/options/
+-- ================================================================================
+
 if vim.fn.has("wsl") == 1 then
   vim.api.nvim_create_autocmd("InsertLeave", {
     pattern = "*",

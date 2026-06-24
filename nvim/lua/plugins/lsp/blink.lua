@@ -1,3 +1,9 @@
+-- ======================================================================================
+-- TITLE: saghen/blink.cmp
+-- ABOUT: Completion plugin with support for LSPs, cmdline, signature help and snippets.
+-- LINKS: https://github.com/saghen/blink.cmp
+-- ======================================================================================
+
 return {
   "saghen/blink.cmp",
   version = "1.*",
