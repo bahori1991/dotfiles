@@ -8,6 +8,25 @@
 vim.opt.encoding = "utf-8"
 vim.opt.fileencodings = "utf-8,sjis,euc-jp,iso-2022-jp"
 
+-- cursor
+vim.opt.guicursor = {
+  "n:block",
+  "i:ver25",
+  "v:block-vCursor",
+  "r:hor20",
+  "c:block",
+  "t:block",
+}
+
+-- cursoline
+vim.opt.cursorline = true
+
+-- guicolors
+vim.opt.termguicolors = true
+
+-- semi-transparent floating windows (LSP hover, diagnostics, etc.)
+vim.opt.winblend = 15
+
 -- show line number
 vim.opt.number = true
 vim.opt.relativenumber = true
