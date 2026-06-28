@@ -7,25 +7,44 @@
 return {
   "nvim-tree/nvim-tree.lua",
   dependencies = { "nvim-tree/nvim-web-devicons" },
-  config = function()
-    require("nvim-tree").setup({
-      actions = {
-        open_file = {
-          window_picker = {
-            enable = true,
-            picker = "default",
-            chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-            exclude = {
-              filetype = { "notify", "packer", "qf", "diff", "fugitive", "fugitiveblame" },
-              buftype = { "nofile", "terminal", "help" },
-            },
-          },
-        },
-      },
-    })
-  end,
+  ---@module "nvim_tree"
+  ---@type nvim_tree.config
+  opts = {
+    sort = {
+      sorter = "case_sensitive",
+    },
+    view = {
+      width = 40,
+    },
+    renderer = {
+      group_empty = true,
+      icons = {
+        git_placement = "right_align",
+        glyphs = {
+          git = {
+            unstaged = "s",
+            staged = "S",
+            unmerged = "m",
+            renamed = "R",
+            untracked = "t",
+            deleted = "D",
+            ignored = "i",
+          }
+        }
+      }
+    },
+    filters = {
+      dotfiles = true,
+    },
+    git = {
+      ignore = true,
+      show_on_dirs = true,
+      show_on_open_dirs = true,
+      timeout = 1000,
+    },
+  },
   keys = {
-    { "<leader>e", "<cmd>NvimTreeOpen<cr>", desc = "NvimTreeOpen" }
+    { "<leader>e", "<cmd>NvimTreeToggle<cr>", desc = "Toggle Nvim-tree" }
   },
 }
 
