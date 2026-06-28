@@ -39,7 +39,7 @@ disabled = false
 show_always = true
 style_root = "fg:color_black bg:color_blue"
 style_user = "fg:color_white bg:color_blue"
-format = "[ $user ]($style)"
+format = "[  $user ]($style)"
 disabled = false
 
 [directory]
@@ -72,7 +72,7 @@ stashed = "⚑"
 ahead = "${ahead_count} "
 behind = "${behind_count} "
 diverged = "${ahead_count} ${behind_count} "
-up_to_date = "✅ "
+up_to_date = " "
 style = "fg:color_white bg:color_yellow"
 format = "([$all_status $ahead_behind ]($style))"
 
