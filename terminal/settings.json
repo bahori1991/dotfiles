@@ -52,7 +52,7 @@
     },
     {
       "command": "closePane",
-      "keys": "ctrl+w"
+      "keys": "ctrl+shift+w"
     }
   ],
   "copyFormatting": "none",
@@ -74,7 +74,7 @@
   ],
   "profiles": {
     "defaults": {
-      "opacity": 85,
+      "opacity": 100,
       "useAcryilc": false,
       "colorScheme": "VS Code",
       "font": { 
