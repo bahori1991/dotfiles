@@ -1,60 +1,6 @@
 {
   "$help": "https://aka.ms/terminal-documentation",
   "$schema": "https://aka.ms/terminal-profiles-schema",
-  "actions": [
-    {
-      "command": { "action": "splitPane", "split": "horizontal" },
-      "keys": "ctrl+shift+minus"
-    },
-    {
-      "command": { "action": "splitPane", "split": "vertical" },
-      "keys": "ctrl+shift+|"
-    },
-    {
-      "command": { "action": "moveFocus", "direction": "left" },
-      "keys": "ctrl+h"
-    },
-    {
-      "command": { "action": "moveFocus", "direction": "right" },
-      "keys": "ctrl+l"
-    },
-    {
-      "command": { "action": "moveFocus", "direction": "up" },
-      "keys": "ctrl+k"
-    },
-    {
-      "command": { "action": "moveFocus", "direction": "down" },
-      "keys": "ctrl+j"
-    },
-    {
-      "command": "scrollUpPage",
-      "keys": "ctrl+up"
-    },
-    {
-      "command": "scrollDownPage",
-      "keys": "ctrl+down"
-    },
-    {
-      "command": { "action": "resizePane", "direction": "left" },
-      "keys": "ctrl+shift+h"
-    },
-    {
-      "command": { "action": "resizePane", "direction": "right" },
-      "keys": "ctrl+shift+l"
-    },
-    {
-      "command": { "action": "resizePane", "direction": "up" },
-      "keys": "ctrl+shift+k"
-    },
-    {
-      "command": { "action": "resizePane", "direction": "down" },
-      "keys": "ctrl+shift+j"
-    },
-    {
-      "command": "closePane",
-      "keys": "ctrl+shift+w"
-    }
-  ],
   "copyFormatting": "none",
   "copyOnSelect": false,
   "defaultProfile": "{c24746a3-330a-51cb-bf23-821424d4806e}",
