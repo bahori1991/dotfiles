@@ -4,16 +4,33 @@ mkcd() {
   mkdir -p "$1" && cd "$1"
 }
 
-# touch and nvim
-tvim() {
-  touch "$1" && nvim "$1"
+# Neovim and tmux
+NVIM_DEV_SOCK="${XDG_RUNTIME_DIR:-/tmp}/nvim-dev-${UID}.sock"
+
+nvim_tmux() {
+  if [ -n "${NVIM_IN_TMUX:-}" ]; then
+    env -u NVIM NVIM_IN_TMUX=1 /usr/bin/nvim --server "$NVIM_DEV_SOCK" "$@"
+    return
+  fi
+  if [ -n "${TMUX:-}" ] && [ "$(tmux display-message -p '#S' 2>/dev/null)" = "nvim-dev" ]; then
+    if [ "$(tmux display-message -p '#{pane_index}' 2>/dev/null)" = "0" ]; then
+      env -u NVIM NVIM_IN_TMUX=1 /usr/bin/nvim --server "$NVIM_DEV_SOCK" "$@"
+    else
+      env -u NVIM command nvim "$@"
+    fi
+    return
+  fi
+  if [ -n "${TMUX:-}" ]; then
+    env -u NVIM command nvim "$@"
+    return
+  fi
+  ~/.config/dotfiles/scripts/nvim-dev.sh "$@"
 }
+
+alias nvim="nvim_tmux"
 
 # get PATH 
 alias path="echo $PATH | tr ':' '\n'"
-
-# neovim
-alias vim="nvim"
 
 # Add an "alert" alias for long running commands. Ex: sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
@@ -32,6 +49,9 @@ alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
 
+# goto dotfiles directory
+alias dot="cd ~/.config/dotfiles/"
+
 # reload bash files
 alias sb="source ~/.config/dotfiles/bash/.bashrc"
 alias sp="source ~/.config/dotfiles/bash/.profile"
@@ -41,7 +61,7 @@ alias eb="nvim ~/.config/dotfiles/bash/.bashrc"
 alias ep="nvim ~/.config/dotfiles/bash/.profile"
 alias ea="nvim ~/.config/dotfiles/bash/.bash_aliases"
 
-# ls
+# eza
 alias ls="eza -h --icons --group-directories-first"
 alias ll="eza -hl --icons --group-directories-first --git"
 alias la="eza -hla --icons --group-directories-first --git"
