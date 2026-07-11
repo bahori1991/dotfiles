@@ -18,13 +18,6 @@ return {
         if
           not vim.api.nvim_buf_is_valid(buf)
           or not vim.api.nvim_win_is_valid(win)
-        then
-          return false
-        end
-
-        if
-          not vim.api.nvim_buf_is_valid(buf)
-          or not vim.api.nvim_win_is_valid(win)
           or vim.fn.win_gettype(win) ~= ""
           or vim.wo[win].winbar ~= ""
           or vim.bo[buf].ft == "help"

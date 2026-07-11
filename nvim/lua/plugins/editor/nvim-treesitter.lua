@@ -50,10 +50,7 @@ return {
       pattern = filetypes,
       callback = function()
         pcall(vim.treesitter.start)
-        vim.wo.foldexpr = "v:lua.nvim.treesitter.foldexpr()"
-        vim.wo.foldmethod = "expr"
-        vim.wo.foldlevel = 99
-        vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+        vim.bo.indentexpr = "v:lua.vim.treesitter.indentexpr()"
       end,
     })
   end,

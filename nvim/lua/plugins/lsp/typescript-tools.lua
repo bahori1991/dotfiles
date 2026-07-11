@@ -1,0 +1,15 @@
+-- ========================================================================================
+-- TITLE: pmizio/typescript-tools.nvim
+-- ABOUT: Typescript integration Neovim deserves
+-- LINKS: https://github.com/pmizio/typescript-tools.nvim
+-- ========================================================================================
+
+return {
+  "pmizio/typescript-tools.nvim",
+  dependencies = {
+    "nvim-lua/plenary.nvim",
+    "neovim/nvim-lspconfig"
+  },
+  opts = {}
+}
+

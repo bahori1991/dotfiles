@@ -12,7 +12,18 @@ return {
     "nvim-lua/plenary.nvim",
     { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
   },
-  opts = {},
+  opts = {
+    pickers = {
+      find_files = {
+        hidden = true
+      },
+      live_grep = {
+        additional_args = function()
+          return { "--hidden" }
+        end,
+      }
+    },
+  },
   config = function(_, opts)
     local builtin = require("telescope.builtin")
     vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Telescope buffers" })

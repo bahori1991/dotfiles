@@ -8,14 +8,19 @@ return {
   "stevearc/oil.nvim",
   ---@module "oil"
   ---@type oil.SetupOpts
-  opts = {},
+  cmd = { "Oil" },
+  opts = {
+    default_file_explorer = false,
+    view_options = {
+      show_hidden = true,
+    },
+  },
   dependencies = {
     { "nvim-tree/nvim-web-devicons" },
   },
-  lazy = false,
   config = function(_, opts)
     require("oil").setup(opts)
-    vim.keymap.set("n", "-", "<cmd>Oil<cr>", { desc = "Open parent directory" })
+    vim.keymap.set("n", "<leader>-", "<cmd>Oil<cr>", { desc = "Open parent directory" })
     vim.api.nvim_create_autocmd("FileType", {
       pattern = "oil",
       callback = function()
