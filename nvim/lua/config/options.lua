@@ -24,12 +24,48 @@ vim.opt.cursorline = true
 -- guicolors
 vim.opt.termguicolors = true
 
+-- keep terminal buffers when their window is closed
+vim.opt.hidden = true
+
 -- semi-transparent floating windows (LSP hover, diagnostics, etc.)
 vim.opt.winblend = 15
 
 -- show line number
 vim.opt.number = true
 vim.opt.relativenumber = true
+
+-- fold
+vim.opt.foldenable = true
+vim.opt.foldmethod = "expr"
+vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+vim.opt.foldlevel = 99
+vim.opt.foldlevelstart = 99
+vim.opt.foldcolumn = "1"
+vim.opt.fillchars = {
+  eob = " ",
+  foldclose = "",
+  foldopen = "",
+  foldsep = " ",
+  foldinner = " "
+}
+
+-- reset fold foldlevel
+vim.api.nvim_create_autocmd({ "BufReadPost", "FileType", "TextChanged", "InsertLeave" }, {
+  callback = function(args)
+    local buf = args.buf
+    if not vim.api.nvim_buf_is_valid(buf) then
+      return
+    end
+    if vim.api.nvim_buf_get_name(buf) == "" and vim.bo[buf].filetype == "" then
+      return
+    end
+    if not pcall(vim.treesitter.get_parser, buf) then
+      return
+    end
+    vim.wo.foldlevel = vim.o.foldlevelstart
+    vim.cmd("normal! zx")
+  end,
+})
 
 -- indent
 vim.opt.expandtab = true
@@ -62,3 +98,11 @@ end
 
 -- disable resize editor size when closed window
 vim.opt.equalalways = false
+
+if vim.env.NVIM_IN_TMUX == "1" and not vim.o.shortmess:find("W", 1, true) then
+  vim.o.shortmess = vim.o.shortmess .. "W"
+end
+
+if vim.env.NVIM_IN_TMUX == "1" then
+  vim.o.autoread = false
+end
