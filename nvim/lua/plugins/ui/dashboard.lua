@@ -13,21 +13,23 @@ local logo = [[
                 ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝                
 ]]
 
-logo = string.rep("\n", 8) .. logo .. "\n\n"
+logo = string.rep("\n", 2) .. logo .. "\n\n"
 
-local find_dotfiles = function()
-  local builtin = require("telescope.builtin")
-  builtin.find_files({
-    cwd = "~/.config/dotfiles",
-    hidden = true,
-  })
-end
+-- local find_dotfiles = function()
+--   local builtin = require("telescope.builtin")
+--   builtin.find_files({
+--     cwd = "~/.config/dotfiles",
+--     hidden = true,
+--   })
+-- end
 
 return {
   "nvimdev/dashboard-nvim",
-  event = "VimEnter",
+  lazy = false,
+  priority = 999,
   opts = {
     theme = "hyper",
+    project = { enable = false },
     config = {
       header = vim.split(logo, "\n"),
       shortcut = {
@@ -53,7 +55,11 @@ return {
           key = "d",
         },
       },
+      footer = {},
     },
   },
-  dependencies = { { "nvim-tree/nvim-web-devicons" } }
+  dependencies = { { "nvim-tree/nvim-web-devicons" } },
+  config = function(_, opts)
+    require("dashboard").setup(opts)
+  end,
 }
