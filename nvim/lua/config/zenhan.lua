@@ -4,20 +4,21 @@
 -- LINKS: https://neovim.io/doc/user/options/
 -- ================================================================================
 
+local zenhan_script = vim.fn.expand("~/.config/dotfiles/scripts/zenhan-off.sh")
+
 local ime_off = function()
-  local zenhan_path = "/mnt/c/users/bahori1991/bin/zenhan/zenhan.exe"
-  if vim.fn.executable(zenhan_path) == 1 then
-    vim.fn.system(zenhan_path .. " 0")
+  if vim.fn.executable("bash") == 1 and vim.fn.filereadable(zenhan_script) == 1 then
+    vim.fn.system({ "bash", zenhan_script })
   else
-    print("cannot find zenhan_path")
+    vim.notify("cannot find zenhan script", vim.log.levels.WARN)
   end
 end
 
 if vim.fn.has("wsl") == 1 then
-  vim.api.nvim_create_autocmd("InsertLeave", {
-    pattern = "*",
-    callback = ime_off
-  })
+  -- vim.api.nvim_create_autocmd("InsertLeave", {
+  --   pattern = "*",
+  --   callback = ime_off
+  -- })
   vim.keymap.set("n", "<Esc>", ime_off, { desc = "IME off" })
 end
 
