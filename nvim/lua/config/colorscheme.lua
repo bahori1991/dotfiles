@@ -20,6 +20,13 @@ function M.vscode_opts()
       BlinkCmpDocBorder = { bg = colors.bg_float, fg = colors.border },
       BlinkCmpSignatureHelp = { bg = colors.bg_float },
       BlinkCmpSignatureHelpBorder = { bg = colors.bg_float, fg = colors.border },
+      -- blink.indent
+      BlinkIndent = { fg = colors.gray },
+      BlinkIndentBlue = { fg = colors.blue },
+      -- blink.pairs
+      BlinkPairsBlue = { fg = colors.blue },
+      BlinkPairsUnmatched = { fg = colors.red },
+      BlinkPairsUnmatchParen = { bg = colors.bg_select, bold = true },
       -- general floating windows (LSP hover, diagnostics, etc.)
       NormalFloat = { bg = colors.bg_float },
       FloatBorder = { bg = colors.bg_float, fg = colors.border },

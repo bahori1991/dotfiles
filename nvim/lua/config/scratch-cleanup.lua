@@ -16,9 +16,41 @@ function M.drop_empty_argv()
   end
 end
 
---- Remove every checktime autocommand (FocusGained + VimResume both fire it).
-function M.disable_all_checktime()
-  pcall(vim.cmd, "autocmd! * checktime")
+--- Run :checktime only when not in cmdline/replace/terminal mode.
+function M.run_safe_checktime()
+  local mode = vim.api.nvim_get_mode().mode
+  if mode:match("^[cr!t]") then
+    return
+  end
+  if vim.fn.getcmdwintype() ~= "" then
+    return
+  end
+  pcall(vim.cmd, "checktime")
+end
+
+local function clear_checktime_autocmds(events)
+  for _, event in ipairs(events) do
+    for _, ac in ipairs(vim.api.nvim_get_autocmds({ event = event })) do
+      if ac.command == "checktime" then
+        pcall(vim.api.nvim_del_autocmd, ac.id)
+      end
+    end
+  end
+end
+
+--- Replace focus/resume checktime hooks instead of disabling all checktime events.
+function M.setup_focus_checktime(group)
+  local events = { "FocusGained", "VimResume" }
+  clear_checktime_autocmds(events)
+  vim.api.nvim_clear_autocmds({ group = group, event = events })
+
+  vim.api.nvim_create_autocmd(events, {
+    group = group,
+    callback = function()
+      M.wipe_scratch_buffers()
+      M.run_safe_checktime()
+    end,
+  })
 end
 
 function M.apply_shortmess()
@@ -40,12 +72,16 @@ function M.delete_buffer(buf)
   vim.bo[buf].bufhidden = "wipe"
 
   for _, win in ipairs(vim.api.nvim_list_wins()) do
+    if not vim.api.nvim_win_is_valid(win) then
+      goto continue
+    end
     if vim.api.nvim_win_get_buf(win) == buf then
       local alt = vim.fn.bufnr("#")
       if alt > 0 and alt ~= buf and vim.api.nvim_buf_is_valid(alt) then
         pcall(vim.api.nvim_win_set_buf, win, alt)
       end
     end
+    ::continue::
   end
 
   pcall(vim.api.nvim_buf_delete, buf, { force = true })
@@ -132,10 +168,7 @@ end
 
 function M.schedule_startup_wipes()
   for _, ms in ipairs({ 0, 50, 200, 500, 1000 }) do
-    vim.defer_fn(function()
-      M.disable_all_checktime()
-      M.wipe_scratch_buffers()
-    end, ms)
+    vim.defer_fn(M.wipe_scratch_buffers, ms)
   end
 end
 
@@ -152,24 +185,18 @@ function M.normalize_dashboard_buffer()
   end
 end
 
-function M.on_focus_event()
-  M.disable_all_checktime()
-  M.wipe_scratch_buffers()
-end
-
 function M.setup_autocmds()
   local group = vim.api.nvim_create_augroup("ScratchCleanup", { clear = true })
 
   if vim.env.NVIM_IN_TMUX == "1" then
     M.apply_shortmess()
-    M.disable_all_checktime()
+    M.setup_focus_checktime(group)
   end
 
   vim.api.nvim_create_autocmd("FileType", {
     group = group,
     pattern = "dashboard",
     callback = function()
-      M.disable_all_checktime()
       M.normalize_dashboard_buffer()
       M.wipe_scratch_buffers()
       M.schedule_startup_wipes()
@@ -191,17 +218,18 @@ function M.setup_autocmds()
     callback = function()
       if vim.env.NVIM_IN_TMUX == "1" then
         M.apply_shortmess()
+        M.setup_focus_checktime(group)
       end
-      M.disable_all_checktime()
       M.wipe_scratch_buffers()
       M.schedule_startup_wipes()
     end,
   })
 
   if vim.env.NVIM_IN_TMUX == "1" then
-    vim.api.nvim_create_autocmd({ "FocusLost", "FocusGained", "VimSuspend", "VimResume" }, {
+    -- Neutralize scratch buffers before the built-in timestamp check on focus regain.
+    vim.api.nvim_create_autocmd({ "FocusLost", "VimSuspend" }, {
       group = group,
-      callback = M.on_focus_event,
+      callback = M.wipe_scratch_buffers,
     })
   end
 

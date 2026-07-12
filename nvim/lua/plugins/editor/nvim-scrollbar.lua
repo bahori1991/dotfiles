@@ -30,7 +30,7 @@ return {
         text = "*",
         color = colors.fg,
       },
-      Search = { text = { "✔", "✔" }, color = colors.teal },
+      Search = { text = { "✔", "✔" }, color = colors.cyan },
       Error = { text = { "✘", "✘" } },
       Warn = { text = { "!", "!" } },
       Info = { text = { "i", "i" } },

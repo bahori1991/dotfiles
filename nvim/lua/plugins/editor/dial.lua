@@ -9,7 +9,7 @@ return {
   event = { "BufReadPre", "BufNewFile" },
   keys = {
     {
-      "+",
+      "<leader>+",
       function()
         require("dial.map").manipulate("increment", "normal")
       end,
@@ -17,7 +17,7 @@ return {
       desc = "Increment number under the cursor",
     },
     {
-      "g+",
+      "<leader>g+",
       function()
         require("dial.map").manipulate("increment", "gnormal")
       end,
@@ -25,7 +25,7 @@ return {
       desc = "Increment number under the cursor (dot repeat)",
     },
     {
-      "-",
+      "<leader>-",
       function()
         require("dial.map").manipulate("decrement", "normal")
       end,
@@ -33,7 +33,7 @@ return {
       desc = "Decrement number under the cursor",
     },
     {
-      "g-",
+      "<leader>g-",
       function()
         require("dial.map").manipulate("decrement", "gnormal")
       end,

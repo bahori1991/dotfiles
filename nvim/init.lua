@@ -1,3 +1,5 @@
+require("vim._core.ui2").enable({})
+
 local scratch_cleanup = require("config.scratch-cleanup")
 scratch_cleanup.drop_empty_argv()
 scratch_cleanup.setup_autocmds()
@@ -34,7 +36,6 @@ vim.api.nvim_create_autocmd("VimEnter", {
       require("dashboard"):instance()
       vim.schedule(function()
         local dash_buf = vim.api.nvim_get_current_buf()
-        scratch_cleanup.disable_all_checktime()
         scratch_cleanup.normalize_dashboard_buffer()
         if pre_buf ~= dash_buf and vim.api.nvim_buf_is_valid(pre_buf) then
           scratch_cleanup.clean_scratch_buffer(pre_buf)

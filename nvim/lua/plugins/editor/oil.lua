@@ -18,9 +18,11 @@ return {
   dependencies = {
     { "nvim-tree/nvim-web-devicons" },
   },
+  keys = {
+    { "-", function() require("oil").open() end, desc = "Open parent directory" },
+  },
   config = function(_, opts)
     require("oil").setup(opts)
-    vim.keymap.set("n", "<leader>-", "<cmd>Oil<cr>", { desc = "Open parent directory" })
     vim.api.nvim_create_autocmd("FileType", {
       pattern = "oil",
       callback = function()

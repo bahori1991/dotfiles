@@ -50,7 +50,7 @@ return {
       pattern = filetypes,
       callback = function()
         pcall(vim.treesitter.start)
-        vim.bo.indentexpr = "v:lua.vim.treesitter.indentexpr()"
+        -- vim.bo.indentexpr = "v:lua.vim.treesitter.indentexpr()"
       end,
     })
   end,

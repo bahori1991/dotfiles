@@ -50,7 +50,7 @@ vim.opt.fillchars = {
 }
 
 -- reset fold foldlevel
-vim.api.nvim_create_autocmd({ "BufReadPost", "FileType", "TextChanged", "InsertLeave" }, {
+vim.api.nvim_create_autocmd({ "BufReadPost", "InsertLeave" }, {
   callback = function(args)
     local buf = args.buf
     if not vim.api.nvim_buf_is_valid(buf) then
@@ -71,6 +71,7 @@ vim.api.nvim_create_autocmd({ "BufReadPost", "FileType", "TextChanged", "InsertL
 vim.opt.expandtab = true
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
+vim.opt.autoindent = true
 
 -- search
 vim.opt.ignorecase = true
@@ -103,6 +104,4 @@ if vim.env.NVIM_IN_TMUX == "1" and not vim.o.shortmess:find("W", 1, true) then
   vim.o.shortmess = vim.o.shortmess .. "W"
 end
 
-if vim.env.NVIM_IN_TMUX == "1" then
-  vim.o.autoread = false
-end
+-- autoread stays enabled in tmux; scratch-cleanup handles empty buffers before checktime.

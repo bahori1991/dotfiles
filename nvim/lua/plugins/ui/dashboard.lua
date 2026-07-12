@@ -15,14 +15,6 @@ local logo = [[
 
 logo = string.rep("\n", 2) .. logo .. "\n\n"
 
--- local find_dotfiles = function()
---   local builtin = require("telescope.builtin")
---   builtin.find_files({
---     cwd = "~/.config/dotfiles",
---     hidden = true,
---   })
--- end
-
 return {
   "nvimdev/dashboard-nvim",
   lazy = false,
@@ -51,7 +43,7 @@ return {
         {
           desc = " dotfiles",
           group = "Number",
-          action = "Telescope find_dotfiles",
+          action = "Telescope find_files cwd=~/.config/dotfiles",
           key = "d",
         },
       },
