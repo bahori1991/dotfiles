@@ -4,7 +4,7 @@
 -- LINKS: https://github.com/nvim-telescope/telescope.nvim
 -- ================================================================================
 
-local colors = require("config/colors")
+local colors = require("config.ui.colors")
 
 return {
   "nvim-telescope/telescope.nvim",

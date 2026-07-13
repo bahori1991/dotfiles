@@ -4,7 +4,7 @@
 -- LINKS: https://github.com/nvim-lualine/lualine.nvim
 -- ================================================================================
 
-local lualine_theme = require("config.lualine-theme")
+local lualine_theme = require("config.ui.lualine-theme")
 
 local function lsp_clients()
   local clients = vim.lsp.get_clients({ bufnr = 0})

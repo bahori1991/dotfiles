@@ -5,66 +5,66 @@
 -- ======================================================================================
 
 return {
-  "saghen/blink.cmp",
-  version = "1.*",
-  ---@module "blink.cmp"
-  ---@type blink.cmp.Config
-  dependencies = { "saghen/blink.pairs" },
-  opts = {
-    keymap = {
-      preset = "default",
-      ["<Tab>"] = { "select_next", "fallback" },
-      ["<S-Tab>"] = { "select_prev", "fallback" },
-      ["<CR>"] = {
-        function(cmp)
-          if cmp.is_menu_visible() then
-            return cmp.select_and_accept()
-          end
-          local keys = require("blink.cmp.keymap.fallback").wrap("i", "<cr>")()
-          if not keys then
-            keys = vim.api.nvim_replace_termcodes("<cr>", true, true, true)
-          end
-          return require("config.blink-cr").fix_indent(keys)
-        end
-      },
-      ["<C-CR>"] = { "fallback" },
-      ["<Up>"] = { "fallback" },
-      ["<Down>"] = { "fallback" },
-    },
-    appearance = {
-      nerd_font_variant = "mono",
-    },
-    signature = {
-      window = { winblend = 15 },
-    },
-    completion = {
-      keyword = { range = "full" },
-      accept = { auto_brackets = { enabled = true }, },
-      list = { selection = { preselect = true, auto_insert = false } },
-      ghost_text = { enabled = false },
-      menu = { winblend = 15 },
-      documentation = {
-        window = {
-          winblend = 15
-        },
-      },
-    },
-    sources = {
-      default = { "lazydev", "lsp", "path", "buffer" },
-      providers = {
-        lazydev = {
-          name = "LazyDev",
-          module = "lazydev.integrations.blink",
-          score_offset = 100,
-        },
-      },
-    },
-    fuzzy = {
-      implementation = "prefer_rust_with_warning"
-    },
-  },
-  opts_extend = { "sources.default" },
-  config = function(_, opts)
-    require("blink.cmp").setup(opts)
-  end,
+	"saghen/blink.cmp",
+	version = "1.*",
+	---@module "blink.cmp"
+	---@type blink.cmp.Config
+	dependencies = { "saghen/blink.pairs" },
+	opts = {
+		keymap = {
+			preset = "default",
+			["<Tab>"] = { "select_next", "fallback" },
+			["<S-Tab>"] = { "select_prev", "fallback" },
+			["<CR>"] = {
+				function(cmp)
+					if cmp.is_menu_visible() then
+						return cmp.select_and_accept()
+					end
+					local keys = require("blink.cmp.keymap.fallback").wrap("i", "<cr>")()
+					if not keys then
+						keys = vim.api.nvim_replace_termcodes("<cr>", true, true, true)
+					end
+					return require("config.completion.blink-cr").fix_indent(keys)
+				end,
+			},
+			["<C-CR>"] = { "fallback" },
+			["<Up>"] = { "fallback" },
+			["<Down>"] = { "fallback" },
+		},
+		appearance = {
+			nerd_font_variant = "mono",
+		},
+		signature = {
+			window = { winblend = 15 },
+		},
+		completion = {
+			keyword = { range = "prefix" },
+			accept = { auto_brackets = { enabled = true } },
+			list = { selection = { preselect = true, auto_insert = false } },
+			ghost_text = { enabled = false },
+			menu = { winblend = 15 },
+			documentation = {
+				window = {
+					winblend = 15,
+				},
+			},
+		},
+		sources = {
+			default = { "lazydev", "lsp", "path", "buffer" },
+			providers = {
+				lazydev = {
+					name = "LazyDev",
+					module = "lazydev.integrations.blink",
+					score_offset = 100,
+				},
+			},
+		},
+		fuzzy = {
+			implementation = "prefer_rust_with_warning",
+		},
+	},
+	opts_extend = { "sources.default" },
+	config = function(_, opts)
+		require("blink.cmp").setup(opts)
+	end,
 }

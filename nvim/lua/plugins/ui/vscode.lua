@@ -4,13 +4,12 @@
 -- LINKS: https://github.com/mofiqul/vscode.nvim
 -- ================================================================================
 
-local colorscheme = require("config.colorscheme")
+local colorscheme = require("config.ui.colorscheme")
 return {
-  "Mofiqul/vscode.nvim",
-  lazy = false,
-  priority = 1000,
-  -- opts = colorscheme.vscode_opts(),
-  config = function()
-    colorscheme.apply_vscode()
-  end,
+	"Mofiqul/vscode.nvim",
+	lazy = false,
+	priority = 1000,
+	config = function()
+		colorscheme.apply_vscode()
+	end,
 }

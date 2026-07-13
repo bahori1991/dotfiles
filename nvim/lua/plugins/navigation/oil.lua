@@ -5,29 +5,35 @@
 -- ================================================================================
 
 return {
-  "stevearc/oil.nvim",
-  ---@module "oil"
-  ---@type oil.SetupOpts
-  cmd = { "Oil" },
-  opts = {
-    default_file_explorer = false,
-    view_options = {
-      show_hidden = true,
-    },
-  },
-  dependencies = {
-    { "nvim-tree/nvim-web-devicons" },
-  },
-  keys = {
-    { "-", function() require("oil").open() end, desc = "Open parent directory" },
-  },
-  config = function(_, opts)
-    require("oil").setup(opts)
-    vim.api.nvim_create_autocmd("FileType", {
-      pattern = "oil",
-      callback = function()
-        vim.wo.winbar = ""
-      end,
-    })
-  end,
+	"stevearc/oil.nvim",
+	---@module "oil"
+	---@type oil.SetupOpts
+	cmd = { "Oil" },
+	opts = {
+		default_file_explorer = false,
+		view_options = {
+			show_hidden = true,
+		},
+	},
+	dependencies = {
+		{ "nvim-tree/nvim-web-devicons" },
+	},
+	keys = {
+		{
+			"-",
+			function()
+				require("oil").open()
+			end,
+			desc = "Open parent directory",
+		},
+	},
+	config = function(_, opts)
+		require("oil").setup(opts)
+		vim.api.nvim_create_autocmd("FileType", {
+			pattern = "oil",
+			callback = function()
+				vim.wo.winbar = ""
+			end,
+		})
+	end,
 }
