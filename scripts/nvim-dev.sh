@@ -2,6 +2,7 @@
 
 set -euo pipefail
 SESSION="nvim-dev"
+START_DIR="$PWD"
 TMUX_TERM_SOCK="nvim-dev-term"
 TMUX_TERM_CONF="${TMUX_TERM_CONF:-$HOME/.tmux.term.conf}"
 AGENT_CMD="${AGENT_CMD:-agent --yolo --mode ask}"
@@ -36,6 +37,7 @@ ensure_editor_nvim() {
 if tmux has-session -t "$SESSION" 2>/dev/null; then
   echo "[INFO] tmux session exists"
   ensure_editor_nvim
+  tmux send-keys -t "${SESSION}:editor.2" "cd $(printf '%q' "$START_DIR")" C-m
   tmux attach -t "$SESSION"
   exit 0
 fi
@@ -50,8 +52,12 @@ MAIN_PANE=$(tmux list-panes -t "$SESSION" -F '#{pane_id}' | head -1)
 tmux split-window -h -t "$MAIN_PANE" -p 35 "$AGENT_CMD"
 
 # pane 2 - Terminal (tabbed inner tmux)
-tmux split-window -v -t "$MAIN_PANE" -p 25 \
-  "tmux -L ${TMUX_TERM_SOCK} -f ${TMUX_TERM_CONF} new-session -A -s term"
+# tmux split-window -v -t "$MAIN_PANE" -p 25 -c "$START_DIR" \
+#   "tmux -L ${TMUX_TERM_SOCK} -f ${TMUX_TERM_CONF} new-session -A -s term -c $(printf '%q' "$START_DIR")"
+tmux -L "$TMUX_TERM_SOCK" kill-session -t term 2>/dev/null || true
+tmux split-window -v -t "$MAIN_PANE" -p 25 -c "$START_DIR" \
+  "tmux -L ${TMUX_TERM_SOCK} -f ${TMUX_TERM_CONF} new-session -s term -c $(printf '%q' "$START_DIR")"
+
 
 # focus to Neovim
 tmux select-pane -t "$MAIN_PANE"
