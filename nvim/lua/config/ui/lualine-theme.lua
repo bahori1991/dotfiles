@@ -3,7 +3,7 @@
 -- ABOUT: Explicit lualine theme (avoids auto/vscode inactive gray)
 -- ================================================================================
 
-local colors = require("config.colors")
+local colors = require("config.ui.colors")
 
 local M = {}
 

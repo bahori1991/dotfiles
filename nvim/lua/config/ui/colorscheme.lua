@@ -3,7 +3,7 @@
 -- ABOUT: Shared vscode colorscheme setup and restore
 -- ================================================================================
 
-local colors = require("config.colors")
+local colors = require("config.ui.colors")
 
 local M = {}
 
@@ -35,6 +35,9 @@ function M.vscode_opts()
       -- cursor line
       CursorLine = { bg = colors.bg_select },
       CursorLineNr = { bg = colors.bg_select, fg = colors.yellow, bold = true },
+      -- nvim-tree (match editor cursor line)
+      NvimTreeCursorLine = { bg = colors.bg_select },
+      NvimTreeCursorLineNr = { bg = colors.bg_select, fg = colors.yellow, bold = true },
       -- dropbar
       WinBar = { bg = colors.bg_select },
       WinBarNC = { bg = colors.bg_select },

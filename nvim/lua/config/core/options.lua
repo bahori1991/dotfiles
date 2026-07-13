@@ -10,12 +10,12 @@ vim.opt.fileencodings = "utf-8,sjis,euc-jp,iso-2022-jp"
 
 -- cursor
 vim.opt.guicursor = {
-  "n:block",
-  "i:ver25",
-  "v:block-vCursor",
-  "r:hor20",
-  "c:block",
-  "t:block",
+	"n:block",
+	"i:ver25",
+	"v:block-vCursor",
+	"r:hor20",
+	"c:block",
+	"t:block",
 }
 
 -- cursoline
@@ -28,7 +28,7 @@ vim.opt.termguicolors = true
 vim.opt.hidden = true
 
 -- semi-transparent floating windows (LSP hover, diagnostics, etc.)
-vim.opt.winblend = 15
+vim.opt.winblend = 10
 
 -- show line number
 vim.opt.number = true
@@ -42,29 +42,29 @@ vim.opt.foldlevel = 99
 vim.opt.foldlevelstart = 99
 vim.opt.foldcolumn = "1"
 vim.opt.fillchars = {
-  eob = " ",
-  foldclose = "",
-  foldopen = "",
-  foldsep = " ",
-  foldinner = " "
+	eob = " ",
+	foldclose = "",
+	foldopen = "",
+	foldsep = " ",
+	foldinner = " ",
 }
 
 -- reset fold foldlevel
-vim.api.nvim_create_autocmd({ "BufReadPost", "InsertLeave" }, {
-  callback = function(args)
-    local buf = args.buf
-    if not vim.api.nvim_buf_is_valid(buf) then
-      return
-    end
-    if vim.api.nvim_buf_get_name(buf) == "" and vim.bo[buf].filetype == "" then
-      return
-    end
-    if not pcall(vim.treesitter.get_parser, buf) then
-      return
-    end
-    vim.wo.foldlevel = vim.o.foldlevelstart
-    vim.cmd("normal! zx")
-  end,
+vim.api.nvim_create_autocmd({ "BufReadPost" }, {
+	callback = function(args)
+		local buf = args.buf
+		if not vim.api.nvim_buf_is_valid(buf) then
+			return
+		end
+		if vim.api.nvim_buf_get_name(buf) == "" and vim.bo[buf].filetype == "" then
+			return
+		end
+		if not pcall(vim.treesitter.get_parser, buf) then
+			return
+		end
+		vim.wo.foldlevel = vim.o.foldlevelstart
+		vim.cmd("normal! zx")
+	end,
 })
 
 -- indent
@@ -83,25 +83,25 @@ vim.opt.signcolumn = "yes:1"
 -- clipboard
 vim.opt.clipboard = "unnamedplus"
 if vim.fn.has("wsl") == 1 then
-  vim.g.clipboard = {
-    name = "win32yank-wsl",
-    copy = {
-      ["+"] = "win32yank.exe -i --crlf",
-      ["*"] = "win32yank.exe -i --crlf",
-    },
-    paste = {
-      ["+"] = "win32yank.exe -o --lf",
-      ["*"] = "win32yank.exe -o --lf",
-    },
-    cache_enabled = 0,
-  }
+	vim.g.clipboard = {
+		name = "win32yank-wsl",
+		copy = {
+			["+"] = "win32yank.exe -i --crlf",
+			["*"] = "win32yank.exe -i --crlf",
+		},
+		paste = {
+			["+"] = "win32yank.exe -o --lf",
+			["*"] = "win32yank.exe -o --lf",
+		},
+		cache_enabled = 0,
+	}
 end
 
 -- disable resize editor size when closed window
 vim.opt.equalalways = false
 
 if vim.env.NVIM_IN_TMUX == "1" and not vim.o.shortmess:find("W", 1, true) then
-  vim.o.shortmess = vim.o.shortmess .. "W"
+	vim.o.shortmess = vim.o.shortmess .. "W"
 end
 
 -- autoread stays enabled in tmux; scratch-cleanup handles empty buffers before checktime.
