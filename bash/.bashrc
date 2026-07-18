@@ -66,3 +66,6 @@ source "$VP_HOME/env"
 
 # Rust
 source "$HOME/.cargo/env"
+
+# ghcup-env (Haskell)
+[ -f "/home/bahori1991/.ghcup/env" ] && . "/home/bahori1991/.ghcup/env"

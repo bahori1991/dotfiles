@@ -52,6 +52,11 @@ alias .....="cd ../../../.."
 # goto dotfiles directory
 alias dot="cd ~/.config/dotfiles/"
 
+# goto apps directory
+function apps() {
+  command cd ${HOME}/apps${1}
+}
+
 # reload bash files
 alias sb="source ~/.config/dotfiles/bash/.bashrc"
 alias sp="source ~/.config/dotfiles/bash/.profile"

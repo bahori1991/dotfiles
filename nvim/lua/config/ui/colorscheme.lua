@@ -39,8 +39,8 @@ function M.vscode_opts()
       NvimTreeCursorLine = { bg = colors.bg_select },
       NvimTreeCursorLineNr = { bg = colors.bg_select, fg = colors.yellow, bold = true },
       -- dropbar
-      WinBar = { bg = colors.bg_select },
-      WinBarNC = { bg = colors.bg_select },
+      WinBar = { bg = colors.bg_dropbar },
+      WinBarNC = { bg = colors.bg_dropbar },
       -- Folded
       Folded = { fg = colors.gray },
     },

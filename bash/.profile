@@ -28,3 +28,5 @@ if [ -n "$BASH_VERSION" ]; then
     fi
 fi
 
+
+[ -f "/home/bahori1991/.ghcup/env" ] && . "/home/bahori1991/.ghcup/env" # ghcup-env

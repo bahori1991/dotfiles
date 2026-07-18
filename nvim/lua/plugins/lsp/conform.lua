@@ -11,6 +11,7 @@ return {
 	opts = {
 		formatters_by_ft = {
 			lua = { "stylua" },
+			haskell = { "fourmolu" },
 		},
 		format_on_save = {
 			timeout_ms = 30,

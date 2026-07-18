@@ -1,0 +1,49 @@
+---
+description: Safe tmux validation — never kill the user's live session
+alwaysApply: true
+---
+
+# tmux validation (Agent shell commands)
+
+When testing or validating tmux config, **never disrupt the user's default tmux server**.
+
+## Forbidden on the default socket
+
+- `tmux kill-server` (no `-L`)
+- `tmux kill-session` on sessions the user is using (e.g. `nvim-dev`)
+- Any command that stops or replaces the user's attached session
+
+## Safe reload (live config)
+
+Apply changes to a running server without restarting:
+
+```bash
+tmux source-file ~/.tmux.conf \; display-message "reloaded"
+```
+
+Read-only checks are safe: `tmux list-sessions`, `tmux list-keys`, etc.
+
+## Isolated validation (preferred for tests)
+
+Use a **separate socket** so cleanup cannot affect the user:
+
+```bash
+SOCK="agent-tmux-test-$$"
+tmux -L "$SOCK" -f /path/to/.tmux.conf new-session -d -s test
+# ... run checks ...
+tmux -L "$SOCK" kill-server   # only kills the test server
+```
+
+Always pass `-L "$SOCK"` to every tmux command in that test block (including `kill-server`).
+
+## Examples
+
+```bash
+# BAD — kills all user sessions
+tmux kill-server
+
+# GOOD — test server only
+SOCK="agent-tmux-test-$$"
+tmux -L "$SOCK" -f ~/.tmux.conf new-session -d && tmux -L "$SOCK" list-keys
+tmux -L "$SOCK" kill-server
+```

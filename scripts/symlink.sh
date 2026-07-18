@@ -21,6 +21,7 @@ ln -snf "$DOTFILES_DIR/starship/starship.toml" "$HOME_DIR/.config/starship.toml"
 # tmux
 ln -snf "$DOTFILES_DIR/tmux/.tmux.conf" "$HOME_DIR/.tmux.conf"
 ln -snf "$DOTFILES_DIR/tmux/.tmux.term.conf" "$HOME_DIR/.tmux.term.conf"
+ln -snf "$DOTFILES_DIR/tmux/.tmux.agent.conf" "$HOME_DIR/.tmux.agent.conf"
 
 # gitconfig
 ln -snf "$DOTFILES_DIR/git/config" "$HOME_DIR/.config/git/config"

@@ -5,19 +5,20 @@
 -- ========================================================================================
 
 return {
-  "neovim/nvim-lspconfig",
-  dependencies = {
-    "saghen/blink.cmp"
-  },
-  opts = {
-    servers = {
-      lua_ls = {},
-    }
-  },
-  config = function(_, opts)
-    for server, config in pairs(opts.servers) do
-      config.capabilities = require("blink.cmp").get_lsp_capabilities(config.capabilities)
-      vim.lsp.enable(server)
-    end
-  end,
+	"neovim/nvim-lspconfig",
+	dependencies = {
+		"saghen/blink.cmp",
+	},
+	opts = {
+		servers = {
+			lua_ls = {}, -- lua-language-server
+			hls = {}, -- haskell-language-server
+		},
+	},
+	config = function(_, opts)
+		for server, config in pairs(opts.servers) do
+			config.capabilities = require("blink.cmp").get_lsp_capabilities(config.capabilities)
+			vim.lsp.enable(server)
+		end
+	end,
 }

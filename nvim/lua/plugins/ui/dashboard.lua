@@ -21,6 +21,7 @@ return {
 	priority = 999,
 	opts = {
 		theme = "hyper",
+		letter_list = "abcdefghilmnoprstuvwxyz",
 		project = { enable = false },
 		config = {
 			header = vim.split(logo, "\n"),
@@ -31,7 +32,7 @@ return {
 					icon_hl = "@variable",
 					desc = "files",
 					group = "Label",
-					action = "Telescope find_files",
+					action = "lua require('telescope.builtin').find_files({ cwd = vim.fn.getcwd() })",
 					key = "f",
 				},
 				{
@@ -53,5 +54,18 @@ return {
 	dependencies = { { "nvim-tree/nvim-web-devicons" } },
 	config = function(_, opts)
 		require("dashboard").setup(opts)
+
+		vim.api.nvim_create_autocmd("User", {
+			pattern = "DashboardLoaded",
+			callback = function()
+				vim.schedule(function()
+					if vim.bo.filetype ~= "dashboard" then
+						return
+					end
+					vim.api.nvim_win_set_cursor(0, { 1, 0 })
+					pcall(vim.fn.winrestview, { lnum = 1, col = 0, topline = 1, leftcol = 0 })
+				end)
+			end,
+		})
 	end,
 }

@@ -14,4 +14,3 @@ return {
     { "<C-l>", "<cmd>TmuxNavigateRight<cr>", desc = "Move to right pane (vim-tmux-navigator)" },
   },
 }
-

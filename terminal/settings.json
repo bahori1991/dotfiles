@@ -1,11 +1,35 @@
 {
   "$help": "https://aka.ms/terminal-documentation",
   "$schema": "https://aka.ms/terminal-profiles-schema",
+  "actions": [
+    {
+      "command": { "action": "sendInput", "input": "\u001b[104;6u" },
+      "id": "User.TmuxResizeLeft"
+    },
+    {
+      "command": { "action": "sendInput", "input": "\u001b[106;6u" },
+      "id": "User.TmuxResizeDown"
+    },
+    {
+      "command": { "action": "sendInput", "input": "\u001b[107;6u" },
+      "id": "User.TmuxResizeUp"
+    },
+    {
+      "command": { "action": "sendInput", "input": "\u001b[108;6u" },
+      "id": "User.TmuxResizeRight"
+    }
+  ],
+  "keybindings": [
+    { "id": "User.TmuxResizeLeft", "keys": "ctrl+shift+h" },
+    { "id": "User.TmuxResizeDown", "keys": "ctrl+shift+j" },
+    { "id": "User.TmuxResizeUp", "keys": "ctrl+shift+k" },
+    { "id": "User.TmuxResizeRight", "keys": "ctrl+shift+l" }
+  ],
   "copyFormatting": "none",
   "copyOnSelect": false,
   "defaultProfile": "{c24746a3-330a-51cb-bf23-821424d4806e}",
   "newTabMenu": [
-    { 
+    {
       "type": "folder",
       "name": "Linux (WSL)",
       "icon": "🐧",
@@ -23,7 +47,7 @@
       "opacity": 100,
       "useAcryilc": false,
       "colorScheme": "VS Code",
-      "font": { 
+      "font": {
         "face": "HakuMoto Console",
         "size": 11
       }
