@@ -13,6 +13,8 @@ return {
 	opts = {
 		keymap = {
 			preset = "default",
+			["<C-k>"] = false, -- tmux pane up (tmux-navigator)
+			["<C-.>"] = { "show_signature", "hide_signature", "fallback" },
 			["<Tab>"] = { "select_next", "fallback" },
 			["<S-Tab>"] = { "select_prev", "fallback" },
 			["<CR>"] = {
@@ -35,17 +37,22 @@ return {
 			nerd_font_variant = "mono",
 		},
 		signature = {
-			window = { winblend = 15 },
+			enabled = true,
+			window = {
+				scrollbar = false,
+			},
 		},
 		completion = {
 			keyword = { range = "prefix" },
 			accept = { auto_brackets = { enabled = true } },
 			list = { selection = { preselect = true, auto_insert = false } },
-			ghost_text = { enabled = false },
-			menu = { winblend = 15 },
+			ghost_text = { enabled = true },
+			menu = {
+				scrollbar = false,
+			},
 			documentation = {
 				window = {
-					winblend = 15,
+					scrollbar = false,
 				},
 			},
 		},

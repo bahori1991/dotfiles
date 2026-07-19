@@ -6,12 +6,13 @@
 
 return {
 	"saghen/blink.indent",
+	version = "*",
 	--- @module "blink.indent"
 	--- @type blink.indent.Config
 	opts = {
 		blocked = {
 			buftypes = { include_defaults = true },
-			filetypes = { include_defaults = true, "lazy", "mason" },
+			filetypes = { include_defaults = true, "lazy", "mason", "NvimTree" },
 		},
 		static = {
 			enabled = true,
