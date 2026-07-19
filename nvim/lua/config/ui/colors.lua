@@ -1,25 +1,51 @@
 -- ================================================================================
 -- TITLE: colors.lua
--- ABOUT: set colors of Neovim
+-- ABOUT: VS Code Dark+ palette grouped by color
 -- ================================================================================
 
 return {
-	bg = "#1e1e1e",
-	bg_float = "#252526",
-	bg_select = "#3f4242",
-	bg_dropbar = "#252526",
-	border = "#454545",
-	fg = "#d4d4d4",
-	fg_muted = "#9cdcfe",
-	red = "#f14c4c",
-	yellow = "#dcdcaa",
-	blue = "#569cd6",
-	orange = "#ce9178",
-	green = "#6a9955",
-	violet = "#c586c0",
-	cyan = "#4ec9b0",
-	gray = "#6a6a6a",
-	-- tmux inactive pane (grayish, derived from bg_float + gray)
-	pane_inactive_bg = "#252526",
-	pane_inactive_fg = "#757575",
+	gray = {
+		[950] = "#1e1e1e",
+		[900] = "#252526",
+		[800] = "#3f4242",
+		[700] = "#454545",
+		[500] = "#6a6a6a",
+		[400] = "#757575",
+		[100] = "#d4d4d4",
+	},
+	blue = {
+		[700] = "#264f78",
+		[500] = "#569cd6",
+		[200] = "#9cdcfe",
+	},
+	red = {
+		[700] = "#8b2e2e",
+		[500] = "#f14c4c",
+		[200] = "#f48771",
+	},
+	yellow = {
+		[700] = "#797044",
+		[500] = "#dcdcaa",
+		[200] = "#ececc8",
+	},
+	orange = {
+		[700] = "#8b5a42",
+		[500] = "#ce9178",
+		[200] = "#deb89e",
+	},
+	green = {
+		[700] = "#3d5e30",
+		[500] = "#6a9955",
+		[200] = "#b5cea8",
+	},
+	violet = {
+		[700] = "#7a4d76",
+		[500] = "#c586c0",
+		[200] = "#daa8d6",
+	},
+	cyan = {
+		[700] = "#2d8a78",
+		[500] = "#4ec9b0",
+		[200] = "#89d8cb",
+	},
 }

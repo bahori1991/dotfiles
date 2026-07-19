@@ -9,61 +9,26 @@ local colors = require("config.ui.colors")
 return {
 	"petertriho/nvim-scrollbar",
 	event = "VimEnter",
-	dependencies = {
-		"lewis6991/gitsigns.nvim",
-		"kevinhwang91/nvim-hlslens",
-	},
 	opts = {
 		handle = {
 			text = " ",
 			blend = 0,
 			priority = 10,
-			color = colors.gray,
-			hide_if_all_visible = false,
-		},
-		handlers = {
-			gitsigns = false,
-			hlslens = false,
+			color = colors.gray[500],
+			hide_if_all_visible = true,
 		},
 		marks = {
 			Cursor = {
 				priority = 0,
 				text = "*",
-				color = colors.fg,
+				color = colors.gray[100],
 			},
-			Search = { text = { "✔", "✔" }, color = colors.cyan },
+			Search = { text = { "✔", "✔" }, color = colors.cyan[500] },
 			Error = { text = { "✘", "✘" } },
 			Warn = { text = { "!", "!" } },
 			Info = { text = { "i", "i" } },
 			Hint = { text = { "★", "★" } },
 			Misc = { text = { " ", " " } },
-			GitAdd = {
-				text = "█",
-				priority = 7,
-				gui = nil,
-				color = colors.green,
-				cterm = nil,
-				color_nr = nil, -- cterm
-				highlight = "GitSignsAdd",
-			},
-			GitChange = {
-				text = "█",
-				priority = 7,
-				gui = nil,
-				color = colors.yellow,
-				cterm = nil,
-				color_nr = nil, -- cterm
-				highlight = "GitSignsChange",
-			},
-			GitDelete = {
-				text = "█",
-				priority = 7,
-				gui = nil,
-				color = colors.red,
-				cterm = nil,
-				color_nr = nil, -- cterm
-				highlight = "GitSignsDelete",
-			},
 		},
 		excluded_filetypes = {
 			"neo-tree",

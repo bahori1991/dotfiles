@@ -9,6 +9,6 @@ return {
   cmd = "NerdIcons",
   opts = {},
   keys = {
-    { "<leader>ni", "<cmd>NerdIcons<cr>", desc = "Add NerdFont icons", mode = "n" },
+    { "<leader>ni", "<cmd>NerdIcons<cr>", desc = "Icons: add", mode = "n" },
   },
 }
