@@ -19,6 +19,6 @@ if vim.fn.has("wsl") == 1 then
   --   pattern = "*",
   --   callback = ime_off
   -- })
-  vim.keymap.set("n", "<Esc>", ime_off, { desc = "IME off" })
+  vim.keymap.set("n", "<Esc>", ime_off, { desc = "IME: off" })
 end
 

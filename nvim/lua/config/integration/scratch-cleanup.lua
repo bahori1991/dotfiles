@@ -25,20 +25,10 @@ function M.run_safe_checktime()
 	pcall(vim.cmd, "checktime")
 end
 
-local function clear_checktime_autocmds(events)
-	for _, event in ipairs(events) do
-		for _, ac in ipairs(vim.api.nvim_get_autocmds({ event = event })) do
-			if ac.command == "checktime" then
-				pcall(vim.api.nvim_del_autocmd, ac.id)
-			end
-		end
-	end
-end
-
---- Replace focus/resume checktime hooks instead of disabling all checktime events.
+--- Register focus/resume hooks (registered before lazy.nvim so wipe runs first).
+--- Does not delete foreign :checktime autocmds; Neovim 0.12+ autoread uses file watchers.
 function M.setup_focus_checktime(group)
 	local events = { "FocusGained", "VimResume" }
-	clear_checktime_autocmds(events)
 	vim.api.nvim_clear_autocmds({ group = group, event = events })
 
 	vim.api.nvim_create_autocmd(events, {
@@ -191,10 +181,7 @@ function M.setup_autocmds()
 	vim.api.nvim_create_autocmd("User", {
 		group = group,
 		pattern = "LazyDone",
-		callback = function()
-			M.setup_focus_checktime(group)
-			M.wipe_scratch_buffers()
-		end,
+		callback = M.wipe_scratch_buffers,
 	})
 
 	vim.api.nvim_create_autocmd({ "FocusLost", "VimSuspend" }, {
@@ -210,6 +197,8 @@ function M.setup_autocmds()
 	})
 end
 
-M.setup_autocmds()
+if vim.env.NVIM_IN_TMUX == "1" then
+	M.setup_autocmds()
+end
 
 return M
