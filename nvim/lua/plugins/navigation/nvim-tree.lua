@@ -4,6 +4,8 @@
 -- LINKS: https://github.com/nvim-tree/nvim-tree.lua
 -- ================================================================================
 
+local anchor = require("config.navigation.nvim-tree-anchor")
+
 return {
 	"nvim-tree/nvim-tree.lua",
 	event = "VimEnter",
@@ -16,6 +18,7 @@ return {
 		},
 		view = {
 			width = 45,
+			cursorlineopt = "line",
 		},
 		renderer = {
 			group_empty = true,
@@ -23,45 +26,65 @@ return {
 				git_placement = "right_align",
 				glyphs = {
 					git = {
-						unstaged = "us",
-						staged = "s",
-						unmerged = "um",
-						renamed = "r",
-						untracked = "ut",
-						deleted = "d",
-						ignored = "i",
+						unstaged = "!",
+						staged = "✓",
+						unmerged = "",
+						renamed = "➜",
+						untracked = "?",
+						deleted = "D",
+						ignored = "◌",
 					},
 				},
 			},
 		},
 		filters = {
 			dotfiles = false,
+			-- Show .gitignore'd entries in the tree (dotfile visibility).
 			git_ignored = false,
 		},
 		git = {
+			-- Skip git status for ignored files; does not hide them (see filters.git_ignored).
 			ignore = true,
 			show_on_dirs = true,
 			show_on_open_dirs = true,
 			timeout = 1000,
 		},
+		prefer_startup_root = true,
+		-- Match Telescope initial_cwd anchor; do not follow :cd.
+		sync_root_with_cwd = false,
 		update_focused_file = {
 			enable = true,
 			update_root = {
 				enable = true,
 				ignore_list = { "dashboard", "NvimTree" },
 			},
-			exclude = function(args)
-				local ft = vim.bo[args.buf].filetype
-				return ft == "dashboard" or ft == "NvimTree" or ft == ""
-			end,
 		},
+		on_attach = function(bufnr)
+			local api = require("nvim-tree.api")
+			api.map.on_attach.default(bufnr)
+		end,
 	},
 	keys = {
-		{ "<leader>e", "<cmd>NvimTreeFindFileToggle<cr>", desc = "Toggle Nvim-tree" },
+		{ "<leader>e", "<cmd>NvimTreeFindFileToggle<cr>", desc = "Explorer: tree toggle" },
 	},
 	config = function(_, opts)
+		opts.update_focused_file.exclude = function(args)
+			local ft = vim.bo[args.buf].filetype
+			if ft == "dashboard" or ft == "NvimTree" or ft == "" then
+				return true
+			end
+			local path = vim.api.nvim_buf_get_name(args.buf)
+			if path == "" then
+				return true
+			end
+			-- Skip tree updates for files outside the startup project.
+			return not anchor.under_root(path, anchor.get_anchor_root())
+		end
+
 		require("nvim-tree").setup(opts)
 		local tree_opened = false
+		local buf_enter_group = vim.api.nvim_create_augroup("NvimTreeOpenOnFile", { clear = true })
+
 		local function open_tree()
 			if tree_opened then
 				return
@@ -74,15 +97,29 @@ return {
 					return
 				end
 			end
+			local api = require("nvim-tree.api")
+			local root = anchor.get_anchor_root()
 			if not require("nvim-tree.view").is_visible() then
-				require("nvim-tree.api").tree.open({
-					find_file = true,
-					update_root = true,
-				})
+				api.tree.open({ find_file = false, update_root = false })
+				api.tree.change_root(root)
+				api.tree.find_file()
 			else
-				require("nvim-tree.api").tree.find_file({ update_root = true })
+				api.tree.change_root(root)
+				api.tree.find_file()
 			end
 			tree_opened = true
+			vim.api.nvim_clear_autocmds({ group = buf_enter_group, event = "BufEnter" })
+
+			-- focus on Editor pane
+			vim.schedule(function()
+				for _, win in ipairs(vim.api.nvim_list_wins()) do
+					local ft = vim.bo[vim.api.nvim_win_get_buf(win)].filetype
+					if ft ~= "NvimTree" then
+						vim.api.nvim_set_current_win(win)
+						break
+					end
+				end
+			end)
 		end
 
 		local function has_startup_files()
@@ -104,8 +141,9 @@ return {
 				end
 			end,
 		})
-		-- When open file from dashboard
+		-- When open file from dashboard (cleared after first open)
 		vim.api.nvim_create_autocmd("BufEnter", {
+			group = buf_enter_group,
 			callback = function(args)
 				if tree_opened then
 					return

@@ -4,11 +4,12 @@
 -- LINKS: https://github.com/Bekaboo/dropbar.nvim
 -- ================================================================================
 
+local anchor = require("config.navigation.nvim-tree-anchor")
+
 return {
 	"Bekaboo/dropbar.nvim",
 	dependencies = {
 		"nvim-tree/nvim-web-devicons",
-		{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
 	},
 	opts = {
 		bar = {
@@ -20,6 +21,7 @@ return {
 					or not vim.api.nvim_win_is_valid(win)
 					or vim.fn.win_gettype(win) ~= ""
 					or vim.wo[win].winbar ~= ""
+					or vim.bo[buf].bt ~= ""
 					or vim.bo[buf].ft == "help"
 					or vim.bo[buf].ft == "dashboard"
 					or vim.bo[buf].ft == "NvimTree"
@@ -30,8 +32,7 @@ return {
 				if stat and stat.size > 1024 * 1024 then
 					return false
 				end
-				return vim.bo[buf].bt == "terminal"
-					or vim.bo[buf].ft == "markdown"
+				return vim.bo[buf].ft == "markdown"
 					or pcall(vim.treesitter.get_parser, buf)
 					or not vim.tbl_isempty(vim.lsp.get_clients({
 						bufnr = buf,
@@ -44,7 +45,7 @@ return {
 		},
 		sources = {
 			path = {
-				relative_to = function(buf, win)
+				relative_to = function(buf)
 					local bufname = vim.api.nvim_buf_get_name(buf)
 					if vim.startswith(bufname, "oil://") or vim.startswith(bufname, "fugitive://") then
 						local root = bufname:gsub("^%S+://", "", 1)
@@ -53,8 +54,7 @@ return {
 						end
 						return root
 					end
-					local ok, cwd = pcall(vim.fn.getcwd, win)
-					return ok and cwd or vim.fn.getcwd()
+					return anchor.get_anchor_root()
 				end,
 			},
 		},
