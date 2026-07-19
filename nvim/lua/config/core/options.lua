@@ -5,7 +5,6 @@
 -- ================================================================================
 
 -- encode
-vim.opt.encoding = "utf-8"
 vim.opt.fileencodings = "utf-8,sjis,euc-jp,iso-2022-jp"
 
 -- cursor
@@ -27,12 +26,29 @@ vim.opt.termguicolors = true
 -- keep terminal buffers when their window is closed
 vim.opt.hidden = true
 
--- semi-transparent floating windows (LSP hover, diagnostics, etc.)
-vim.opt.winblend = 10
-
 -- show line number
 vim.opt.number = true
 vim.opt.relativenumber = true
+
+local number_group = vim.api.nvim_create_augroup("UserNumberToggle", { clear = true })
+vim.api.nvim_create_autocmd("InsertEnter", {
+	group = number_group,
+	callback = function()
+		vim.opt.relativenumber = false
+	end,
+})
+vim.api.nvim_create_autocmd({ "InsertLeave", "BufEnter" }, {
+	group = number_group,
+	callback = function()
+		local ft = vim.bo.filetype
+		if ft == "NvimTree" or ft == "dashboard" or ft:match("^Telescope") then
+			return
+		end
+		if vim.api.nvim_get_mode().mode:sub(1, 1) ~= "i" then
+			vim.opt.relativenumber = true
+		end
+	end,
+})
 
 -- fold
 vim.opt.foldenable = true
@@ -49,11 +65,14 @@ vim.opt.fillchars = {
 	foldinner = " ",
 }
 
--- reset fold foldlevel
+-- reset foldlevel once per buffer (treesitter foldexpr; no zx to preserve manual folds)
 vim.api.nvim_create_autocmd({ "BufReadPost" }, {
 	callback = function(args)
 		local buf = args.buf
 		if not vim.api.nvim_buf_is_valid(buf) then
+			return
+		end
+		if vim.b[buf].fold_initialized then
 			return
 		end
 		if vim.api.nvim_buf_get_name(buf) == "" and vim.bo[buf].filetype == "" then
@@ -62,8 +81,8 @@ vim.api.nvim_create_autocmd({ "BufReadPost" }, {
 		if not pcall(vim.treesitter.get_parser, buf) then
 			return
 		end
+		vim.b[buf].fold_initialized = true
 		vim.wo.foldlevel = vim.o.foldlevelstart
-		vim.cmd("normal! zx")
 	end,
 })
 
@@ -104,4 +123,10 @@ if vim.env.NVIM_IN_TMUX == "1" and not vim.o.shortmess:find("W", 1, true) then
 	vim.o.shortmess = vim.o.shortmess .. "W"
 end
 
--- autoread stays enabled in tmux; scratch-cleanup handles empty buffers before checktime.
+-- Viteplus settings
+local vp_home = vim.env.VP_HOME or (vim.env.HOME .. "/.local/share/.vite-plus")
+vim.env.VP_HOME = vp_home
+local vp_bin = vp_home .. "/bin"
+if vim.uv.fs_stat(vp_bin) then
+	vim.env.PATH = vp_bin .. ":" .. (vim.env.PATH or "")
+end

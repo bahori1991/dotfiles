@@ -4,9 +4,9 @@
 -- LINKS: https://github.com/folke/lazy.nvim
 -- ================================================================================
 
--- leader key
+-- leader keys (localleader must differ from mapleader to avoid plugin key clashes)
 vim.g.mapleader = " "
-vim.g.maplocalleader = " "
+vim.g.maplocalleader = ","
 
 -- disable netrw at the very start of init
 vim.g.loaded_netrw = 1
