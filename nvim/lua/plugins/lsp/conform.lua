@@ -12,11 +12,15 @@ return {
 		formatters_by_ft = {
 			lua = { "stylua" },
 			haskell = { "fourmolu" },
+			javascript = { "oxfmt" },
+			javascriptreact = { "oxfmt" },
+			typescript = { "oxfmt" },
+			typescriptreact = { "oxfmt" },
 		},
 		format_on_save = {
-			timeout_ms = 30,
+			timeout_ms = 2000,
 			lsp_format = "fallback",
 		},
-		notify_on_error = false,
+		notify_on_error = true,
 	},
 }

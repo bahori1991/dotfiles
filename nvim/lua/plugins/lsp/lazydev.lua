@@ -3,6 +3,9 @@
 -- ABOUT: configure LuaLS for editing Neovim config by lazily updating workspace libraries.
 -- LINKS: https://github.com/folke/lazydev.nvim
 -- ========================================================================================
+--
+-- lua_ls static settings (runtime, diagnostics, checkThirdParty) live in nvim-lspconfig.lua.
+-- lazydev only augments workspace library paths for Lua buffers.
 
 return {
   "folke/lazydev.nvim",

@@ -9,10 +9,12 @@ return {
 	dependencies = { "mason-org/mason.nvim" },
 	opts = {
 		ensure_installed = {
-			"lua_ls",
 			"stylua",
 			"fourmolu", -- formatter of haskell
-			"hlint", -- linter for haskell
+			"hlint", -- linter for haskell (used by nvim-lint)
 		},
+		run_on_start = true,
+		start_delay = 3000, -- reduce Mason UI noise on startup
+		debounce_hours = 24, -- skip reinstall attempts within 24h
 	},
 }

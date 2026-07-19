@@ -30,16 +30,42 @@ vim.api.nvim_create_autocmd("LspAttach", {
 	group = vim.api.nvim_create_augroup("UserLspConfig", {}),
 	callback = function(args)
 		local bufnr = args.buf
+		local client = vim.lsp.get_client_by_id(args.data.client_id)
+		local map = { buffer = bufnr, noremap = true, silent = true }
 
-		vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = bufnr, desc = "LSP Hover" })
-		vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = bufnr, desc = "Go to definition" })
-		vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { buffer = bufnr, desc = "Go to declaration" })
-		vim.keymap.set("n", "gi", vim.lsp.buf.implementation, { buffer = bufnr, desc = "Go to implementaton" })
-		vim.keymap.set("n", "gr", vim.lsp.buf.references, { buffer = bufnr, desc = "References" })
-		vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { buffer = bufnr, desc = "Rename symbol" })
-		vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { buffer = bufnr, desc = "Code action" })
-		vim.keymap.set("n", "<leader>fm", function()
+		if client and client:supports_method("textDocument/inlayHint") then
+			vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+		end
+
+		vim.keymap.set("n", "K", vim.lsp.buf.hover, vim.tbl_extend("force", map, { desc = "LSP: hover" }))
+		vim.keymap.set(
+			"n",
+			"gd",
+			vim.lsp.buf.definition,
+			vim.tbl_extend("force", map, { desc = "LSP: definition" })
+		)
+		vim.keymap.set(
+			"n",
+			"gD",
+			vim.lsp.buf.declaration,
+			vim.tbl_extend("force", map, { desc = "LSP: declaration" })
+		)
+		vim.keymap.set(
+			"n",
+			"gi",
+			vim.lsp.buf.implementation,
+			vim.tbl_extend("force", map, { desc = "LSP: implementation" })
+		)
+		vim.keymap.set("n", "gr", vim.lsp.buf.references, vim.tbl_extend("force", map, { desc = "LSP: references" }))
+		vim.keymap.set("n", "<leader>lr", vim.lsp.buf.rename, vim.tbl_extend("force", map, { desc = "LSP: rename" }))
+		vim.keymap.set(
+			{ "n", "v" },
+			"<leader>la",
+			vim.lsp.buf.code_action,
+			vim.tbl_extend("force", map, { desc = "LSP: code action" })
+		)
+		vim.keymap.set("n", "<leader>lf", function()
 			require("conform").format({ async = true, lsp_format = "fallback" })
-		end, { buffer = bufnr, desc = "Format buffer" })
+		end, vim.tbl_extend("force", map, { desc = "LSP: format" }))
 	end,
 })
