@@ -5,47 +5,47 @@
 -- ================================================================================
 
 return {
-  "monaqa/dial.nvim",
-  event = { "BufReadPre", "BufNewFile" },
-  keys = {
-    {
-      "<leader>+",
-      function()
-        require("dial.map").manipulate("increment", "normal")
-      end,
-      mode = { "n", "v" },
-      desc = "Increment number under the cursor",
-    },
-    {
-      "<leader>g+",
-      function()
-        require("dial.map").manipulate("increment", "gnormal")
-      end,
-      mode = { "n", "v" },
-      desc = "Increment number under the cursor (dot repeat)",
-    },
-    {
-      "<leader>-",
-      function()
-        require("dial.map").manipulate("decrement", "normal")
-      end,
-      mode = { "n", "v" },
-      desc = "Decrement number under the cursor",
-    },
-    {
-      "<leader>g-",
-      function()
-        require("dial.map").manipulate("decrement", "gnormal")
-      end,
-      mode = { "n", "v" },
-      desc = "Decrement number under the cursor (dot repeat)",
-    },
-  },
-  config = function()
-    local augend = require("dial.augend")
-    require("dial.config").augends:register_group({
-      default = {
-        augend.integer.alias.decimal,
+	"monaqa/dial.nvim",
+	event = { "BufReadPre", "BufNewFile" },
+	keys = {
+		{
+			"<leader>+",
+			function()
+				require("dial.map").manipulate("increment", "normal")
+			end,
+			mode = { "n", "v" },
+			desc = "Adjust: increment",
+		},
+		{
+			"<leader>G+",
+			function()
+				require("dial.map").manipulate("increment", "gnormal")
+			end,
+			mode = { "n", "v" },
+			desc = "Adjust: increment (dot repeat)",
+		},
+		{
+			"<leader>-",
+			function()
+				require("dial.map").manipulate("decrement", "normal")
+			end,
+			mode = { "n", "v" },
+			desc = "Adjust: decrement",
+		},
+		{
+			"<leader>G-",
+			function()
+				require("dial.map").manipulate("decrement", "gnormal")
+			end,
+			mode = { "n", "v" },
+			desc = "Adjust: decrement (dot repeat)",
+		},
+	},
+	config = function()
+		local augend = require("dial.augend")
+		require("dial.config").augends:register_group({
+			default = {
+				augend.integer.alias.decimal,
 				augend.integer.alias.hex,
 				augend.date.alias["%Y/%m/%d"],
 				augend.date.alias["%m/%d"],
@@ -79,8 +79,7 @@ return {
 					},
 					cyclic = true,
 				}),
-      }
-    })
-  end,
+			},
+		})
+	end,
 }
-
