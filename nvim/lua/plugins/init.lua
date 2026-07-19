@@ -12,13 +12,14 @@ return {
 	{ import = "plugins.navigation.nvim-tree" },
 	{ import = "plugins.navigation.telescope" },
 	{ import = "plugins.navigation.tmux-navigator" },
+	{ import = "plugins.navigation.lazygit" },
 	-- syntax
 	{ import = "plugins.syntax.nvim-treesitter" },
-	{ import = "plugins.syntax.nvim-treesitter-context" },
 	-- editing
 	{ import = "plugins.editing.dial" },
 	{ import = "plugins.editing.neoscroll" },
 	{ import = "plugins.editing.vim-doge" },
+	{ import = "plugins.editing.nvim-surround" },
 	-- completion
 	{ import = "plugins.completion.blink" },
 	{ import = "plugins.completion.blink-indent" },
@@ -29,6 +30,7 @@ return {
 	{ import = "plugins.lsp.mason-tool-installer" },
 	{ import = "plugins.lsp.nvim-lspconfig" },
 	{ import = "plugins.lsp.conform" },
+	{ import = "plugins.lsp.nvim-lint" },
 	{ import = "plugins.lsp.lazydev" },
 	{ import = "plugins.lsp.typescript-tools" },
 }
