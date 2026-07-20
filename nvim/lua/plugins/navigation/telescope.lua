@@ -4,9 +4,6 @@
 -- LINKS: https://github.com/nvim-telescope/telescope.nvim
 -- ================================================================================
 
-local colors = require("config.ui.colors")
-local pickers = require("config.navigation.telescope_pickers")
-
 --- Debian/Ubuntu ship fd as `fdfind`; other distros use `fd`.
 local function fd_binary()
 	if vim.fn.executable("fd") == 1 then
@@ -33,9 +30,78 @@ end
 
 return {
 	"nvim-telescope/telescope.nvim",
+	cmd = "Telescope",
 	dependencies = {
 		"nvim-lua/plenary.nvim",
 		{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+	},
+	keys = {
+		{
+			"<leader>fb",
+			function()
+				require("telescope.builtin").buffers()
+			end,
+			desc = "Find: buffers",
+		},
+		{
+			"<leader>fc",
+			function()
+				require("telescope.builtin").commands()
+			end,
+			desc = "Find: commands",
+		},
+		{
+			"<leader>fd",
+			function()
+				require("telescope.builtin").diagnostics()
+			end,
+			desc = "Find: diagnostics",
+		},
+		{
+			"<leader>fe",
+			"<cmd>Telescope diagnostics bufnr=0<cr>",
+			desc = "Find: diagnostics (buffer)",
+		},
+		{
+			"<leader>ff",
+			function()
+				require("config.navigation.telescope_pickers").find_files()
+			end,
+			desc = "Find: files",
+		},
+		{
+			"<leader>fG",
+			function()
+				require("telescope.builtin").git_files()
+			end,
+			desc = "Find: git files",
+		},
+		{
+			"<leader>fg",
+			function()
+				require("config.navigation.telescope_pickers").live_grep()
+			end,
+			desc = "Find: live grep",
+		},
+		{
+			"<leader>fh",
+			function()
+				require("telescope.builtin").help_tags()
+			end,
+			desc = "Find: help",
+		},
+		{
+			"<leader>fo",
+			function()
+				require("telescope.builtin").oldfiles()
+			end,
+			desc = "Find: recent files",
+		},
+		{
+			"<leader>fn",
+			"<cmd>Telescope noice<cr>",
+			desc = "Find: notifications",
+		},
 	},
 	opts = {
 		defaults = {
@@ -67,27 +133,6 @@ return {
 		},
 	},
 	config = function(_, opts)
-		local builtin = require("telescope.builtin")
-
-		vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Find: buffers" })
-		vim.keymap.set("n", "<leader>fc", builtin.commands, { desc = "Find: commands" })
-		vim.keymap.set("n", "<leader>fd", builtin.diagnostics, { desc = "Find: diagnostics" })
-		vim.keymap.set(
-			"n",
-			"<leader>fe",
-			"<cmd>Telescope diagnostics bufnr=0<cr>",
-			{ desc = "Find: diagnostics (buffer)" }
-		)
-		vim.keymap.set("n", "<leader>ff", pickers.find_files, { desc = "Find: files" })
-		vim.keymap.set("n", "<leader>fG", builtin.git_files, { desc = "Find: git files" })
-		vim.keymap.set("n", "<leader>fg", pickers.live_grep, { desc = "Find: live grep" })
-		vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Find: help" })
-		vim.keymap.set("n", "<leader>fo", builtin.oldfiles, { desc = "Find: recent files" })
-
-		vim.api.nvim_set_hl(0, "TelescopePromptBorder", { fg = colors.blue[500], bg = colors.gray[950] })
-		vim.api.nvim_set_hl(0, "TelescopeResultsBorder", { fg = colors.blue[500], bg = colors.gray[950] })
-		vim.api.nvim_set_hl(0, "TelescopePreviewBorder", { fg = colors.blue[500], bg = colors.gray[950] })
-
 		require("telescope").setup(opts)
 		pcall(require("telescope").load_extension, "fzf")
 	end,

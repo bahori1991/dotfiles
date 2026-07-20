@@ -30,8 +30,6 @@ local function schedule_time_refresh()
 	vim.defer_fn(schedule_time_refresh, delay)
 end
 
-schedule_time_refresh()
-
 local function current_time()
 	return cached_time
 end
@@ -39,6 +37,20 @@ end
 local function line_status()
 	local col = vim.api.nvim_win_get_cursor(0)[2]
 	return "row:" .. vim.fn.line(".") .. "/" .. vim.fn.line("$") .. " col:" .. (col + 1)
+end
+
+local function lsp_status()
+	local noice = package.loaded["noice"] and require("noice")
+	---@diagnostic disable-next-line: undefined-field
+	if noice and noice.api.status.lsp_progress.has() then
+		---@diagnostic disable-next-line: undefined-field
+		local msg = noice.api.status.lsp_progress.get() or ""
+		if #msg > 40 then
+			return msg:sub(1, 37) .. "..."
+		end
+		return msg
+	end
+	return lsp_clients()
 end
 
 local sections = {
@@ -49,6 +61,19 @@ local sections = {
 		{ "branch" },
 	},
 	lualine_c = {
+		{
+			"filename",
+			path = 1,
+			file_status = true,
+			newfile_status = false,
+			shorting_target = 40,
+			symbols = {
+				modified = "[Modified]",
+				readonly = "[Readonly]",
+				unnamed = "[No name]",
+				newfile = "[New]",
+			},
+		},
 		{ "diagnostics", symbols = { error = " ", warn = " ", info = " ", hint = " " } },
 		{ "diff", symbols = { added = "+", modified = "*", removed = "-" } },
 	},
@@ -59,15 +84,17 @@ local sections = {
 		{ line_status },
 	},
 	lualine_z = {
-		{ lsp_clients },
+		{ lsp_status },
 		{ current_time },
 	},
 }
 
 return {
 	"nvim-lualine/lualine.nvim",
+	event = "VeryLazy",
 	dependencies = { "nvim-tree/nvim-web-devicons" },
 	config = function()
+		schedule_time_refresh()
 		require("lualine").setup({
 			options = {
 				theme = lualine_theme.build,

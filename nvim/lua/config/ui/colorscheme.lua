@@ -51,11 +51,31 @@ function M.vscode_opts()
 			-- cursor line
 			CursorLine = { bg = colors.gray[800] },
 			CursorLineNr = { bg = colors.gray[800], fg = colors.yellow[500], bold = true },
+			-- Notify
+			NotifyBackground = { bg = colors.gray[900] },
 			-- nvim-tree (match editor cursor line)
 			NvimTreeCursorLine = { bg = colors.blue[700] },
 			NvimTreeCursorLineNr = { bg = colors.blue[700], fg = colors.blue[700], bold = true },
+			NvimTreeGitFileIgnoredHL = { fg = colors.gray[400] },
+			NvimTreeGitFolderIgnoredHL = { fg = colors.gray[400] },
+			-- Only gray out gitignored entries; other git statuses keep normal tree colors.
+			NvimTreeGitFileDirtyHL = { link = "NvimTreeNormal" },
+			NvimTreeGitFileStagedHL = { link = "NvimTreeNormal" },
+			NvimTreeGitFileNewHL = { link = "NvimTreeNormal" },
+			NvimTreeGitFileDeletedHL = { link = "NvimTreeNormal" },
+			NvimTreeGitFileRenamedHL = { link = "NvimTreeNormal" },
+			NvimTreeGitFileMergeHL = { link = "NvimTreeNormal" },
+			NvimTreeGitFolderDirtyHL = { link = "NvimTreeNormal" },
+			NvimTreeGitFolderStagedHL = { link = "NvimTreeNormal" },
+			NvimTreeGitFolderNewHL = { link = "NvimTreeNormal" },
+			NvimTreeGitFolderDeletedHL = { link = "NvimTreeNormal" },
+			NvimTreeGitFolderRenamedHL = { link = "NvimTreeNormal" },
+			NvimTreeGitFolderMergeHL = { link = "NvimTreeNormal" },
 			-- telescope
 			TelescopeSelection = { bg = colors.blue[700], fg = colors.blue[200] },
+			TelescopePromptBorder = { fg = colors.blue[500], bg = colors.gray[950] },
+			TelescopeResultsBorder = { fg = colors.blue[500], bg = colors.gray[950] },
+			TelescopePreviewBorder = { fg = colors.blue[500], bg = colors.gray[950] },
 			-- dropbar
 			WinBar = { bg = colors.gray[900] },
 			WinBarNC = { bg = colors.gray[900] },
