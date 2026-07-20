@@ -11,6 +11,9 @@ vim.keymap.set({ "n", "i", "v", "c" }, "<Down>", "<Nop>", noop)
 vim.keymap.set({ "n", "i", "v", "c" }, "<Left>", "<Nop>", noop)
 vim.keymap.set({ "n", "i", "v", "c" }, "<Right>", "<Nop>", noop)
 
+-- Disable keymaps
+vim.keymap.del("n", "gcc")
+
 -- Diagnostics
 vim.keymap.set("n", "[d", function()
 	vim.diagnostic.jump({ count = -1 })
@@ -20,6 +23,11 @@ vim.keymap.set("n", "]d", function()
 	vim.diagnostic.jump({ count = 1 })
 end, { desc = "Diagnostic: next" })
 
-vim.keymap.set("n", "<leader>do", function()
+vim.keymap.set("n", "<leader>d", function()
 	vim.diagnostic.open_float()
 end, { desc = "Diagnostic: float" })
+
+-- inlayHint
+vim.keymap.set("n", "<leader>i", function()
+	vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = 0 }), { bufnr = 0 })
+end, { desc = "Toggle inlay Hints" })

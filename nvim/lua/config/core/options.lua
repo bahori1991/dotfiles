@@ -7,6 +7,11 @@
 -- encode
 vim.opt.fileencodings = "utf-8,sjis,euc-jp,iso-2022-jp"
 
+-- cmdline UI is handled by noice.nvim (see plugins/ui/noice.lua)
+vim.opt.showmode = false
+vim.opt.showcmd = false
+vim.opt.cmdheight = 0
+
 -- cursor
 vim.opt.guicursor = {
 	"n:block",
@@ -53,7 +58,7 @@ vim.api.nvim_create_autocmd({ "InsertLeave", "BufEnter" }, {
 -- fold
 vim.opt.foldenable = true
 vim.opt.foldmethod = "expr"
-vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+vim.opt.foldexpr = "v:lua.require'config.core.foldexpr'.expr()"
 vim.opt.foldlevel = 99
 vim.opt.foldlevelstart = 99
 vim.opt.foldcolumn = "1"
@@ -91,6 +96,9 @@ vim.opt.expandtab = true
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.autoindent = true
+
+-- not wrap
+vim.opt.wrap = false
 
 -- search
 vim.opt.ignorecase = true

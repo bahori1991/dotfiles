@@ -1,3 +1,5 @@
+vim.loader.enable()
+
 require("config.ui.ui2")
 require("config.startup.argv")
 require("config.core.options")
