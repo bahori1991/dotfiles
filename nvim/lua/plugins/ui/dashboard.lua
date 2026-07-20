@@ -21,7 +21,7 @@ local function dashboard_footer()
 	local version = vim.version()
 	lines[#lines + 1] = string.format("Neovim %d.%d.%d", version.major, version.minor, version.patch)
 
-	local cwd = require("config.navigation.telescope_pickers").cwd()
+	local cwd = vim.fn.getcwd()
 	if vim.fn.isdirectory(cwd .. "/.git") == 1 then
 		local branch = vim.fn.systemlist({ "git", "-C", cwd, "branch", "--show-current" })
 		if vim.v.shell_error == 0 and branch[1] and branch[1] ~= "" then
@@ -93,7 +93,6 @@ return {
 	},
 	dependencies = { { "nvim-tree/nvim-web-devicons" } },
 	config = function(_, opts)
-		require("config.navigation.telescope_pickers")
 		require("dashboard").setup(opts)
 
 		vim.api.nvim_create_autocmd("User", {

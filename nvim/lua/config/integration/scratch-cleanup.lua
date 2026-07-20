@@ -45,6 +45,9 @@ function M.delete_buffer(buf)
 		return
 	end
 
+	-- Drop stale diagnostic cache entries before wipe (avoids Invalid buffer id on config refresh)
+	pcall(vim.diagnostic.reset, nil, buf)
+
 	vim.bo[buf].modified = false
 	vim.bo[buf].buflisted = false
 	vim.bo[buf].bufhidden = "wipe"
@@ -181,7 +184,13 @@ function M.setup_autocmds()
 	vim.api.nvim_create_autocmd("User", {
 		group = group,
 		pattern = "LazyDone",
-		callback = M.wipe_scratch_buffers,
+		callback = function()
+			-- Keep the startup buffer modifiable until dashboard opens on UIEnter.
+			if vim.fn.argc() == 0 then
+				return
+			end
+			M.wipe_scratch_buffers()
+		end,
 	})
 
 	vim.api.nvim_create_autocmd({ "FocusLost", "VimSuspend" }, {

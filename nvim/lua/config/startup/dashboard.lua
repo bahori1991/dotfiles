@@ -19,10 +19,20 @@ local function has_dashboard_buffer()
 	return false
 end
 
+local function prepare_dashboard_buffer()
+	-- scratch-cleanup neutralizes the startup buffer on LazyDone before UIEnter.
+	if vim.bo.modifiable and vim.api.nvim_buf_get_name(0) == "" then
+		return
+	end
+	vim.cmd.enew()
+end
+
 local function open_dashboard()
 	if vim.fn.argc() > 0 or vim.bo.filetype == "dashboard" or has_dashboard_buffer() then
 		return
 	end
+
+	prepare_dashboard_buffer()
 
 	local ok, err = pcall(function()
 		require("dashboard"):instance()
