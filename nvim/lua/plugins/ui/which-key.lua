@@ -16,19 +16,9 @@ return {
 		spec = {
 			-- leader prefix groups
 			{ "<leader>f", group = "find" },
-			{ "<leader>e", group = "explorer" },
-			{ "<leader>d", group = "diagnostics" },
-			{ "<leader>D", group = "docs" },
 			{ "<leader>l", group = "LSP" },
-			{ "<leader>n", group = "icons" },
 			{ "<leader>g", group = "git" },
-			{ "<leader>G", group = "adjust (dot repeat)" },
-
-			-- mappings without desc (plugin defaults / non-lazy keys)
-			{ "-", desc = "Explorer: oil (split)" },
-			{ "ys", desc = "Surround: add" },
-			{ "ds", desc = "Surround: delete" },
-			{ "cs", desc = "Surround: change" },
+			{ "<leader>t", group = "treesj" },
 		},
 		disable = {
 			ft = { "TelescopePrompt" },

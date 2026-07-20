@@ -17,28 +17,12 @@ return {
 			desc = "Adjust: increment",
 		},
 		{
-			"<leader>G+",
-			function()
-				require("dial.map").manipulate("increment", "gnormal")
-			end,
-			mode = { "n", "v" },
-			desc = "Adjust: increment (dot repeat)",
-		},
-		{
 			"<leader>-",
 			function()
 				require("dial.map").manipulate("decrement", "normal")
 			end,
 			mode = { "n", "v" },
 			desc = "Adjust: decrement",
-		},
-		{
-			"<leader>G-",
-			function()
-				require("dial.map").manipulate("decrement", "gnormal")
-			end,
-			mode = { "n", "v" },
-			desc = "Adjust: decrement (dot repeat)",
 		},
 	},
 	config = function()

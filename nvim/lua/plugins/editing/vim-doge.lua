@@ -36,7 +36,7 @@ return {
 			destructuring_props = 1,
 			omit_redundant_param_types = 1,
 		}
-		vim.keymap.set("n", "<leader>Dg", "<Plug>(doge-generate)", { desc = "Doc: generate" })
+		vim.keymap.set("n", "<leader>D", "<Plug>(doge-generate)", { desc = "Doc: generate" })
 		-- tmux-navigator uses <C-j>/<C-k> for pane navigation (Normal mode)
 		vim.g.doge_mapping_comment_jump_forward = "]]"
 		vim.g.doge_mapping_comment_jump_backward = "[["
