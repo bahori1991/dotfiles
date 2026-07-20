@@ -7,6 +7,7 @@
 return {
 	"saghen/blink.indent",
 	version = "*",
+	event = { "InsertEnter", "BufReadPost", "BufNewFile" },
 	--- @module "blink.indent"
 	--- @type blink.indent.Config
 	opts = {

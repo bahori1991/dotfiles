@@ -6,6 +6,7 @@
 
 return {
 	"saghen/blink.pairs",
+	event = { "InsertEnter", "CmdlineEnter" },
 	dependencies = { "saghen/blink.lib" },
 	version = "*",
 	build = function()

@@ -8,7 +8,7 @@ local anchor = require("config.navigation.nvim-tree-anchor")
 
 return {
 	"nvim-tree/nvim-tree.lua",
-	event = "VimEnter",
+	event = { "BufReadPost", "BufNewFile" },
 	dependencies = { "nvim-tree/nvim-web-devicons" },
 	---@module "nvim_tree"
 	---@type nvim_tree.config
@@ -21,6 +21,7 @@ return {
 			cursorlineopt = "line",
 		},
 		renderer = {
+			highlight_git = "name",
 			group_empty = true,
 			icons = {
 				git_placement = "right_align",
@@ -29,22 +30,24 @@ return {
 						unstaged = "!",
 						staged = "✓",
 						unmerged = "",
-						renamed = "➜",
+						renamed = "R",
 						untracked = "?",
 						deleted = "D",
-						ignored = "◌",
+						ignored = "",
 					},
 				},
 			},
 		},
 		filters = {
 			dotfiles = false,
-			-- Show .gitignore'd entries in the tree (dotfile visibility).
 			git_ignored = false,
+			custom = {
+				"^\\.git$",
+				"node_modules",
+			},
 		},
 		git = {
-			-- Skip git status for ignored files; does not hide them (see filters.git_ignored).
-			ignore = true,
+			enable = true,
 			show_on_dirs = true,
 			show_on_open_dirs = true,
 			timeout = 1000,

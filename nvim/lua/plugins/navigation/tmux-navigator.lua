@@ -12,7 +12,6 @@
 
 return {
 	"christoomey/vim-tmux-navigator",
-	lazy = false,
 	keys = {
 		{ "<C-h>", "<cmd>TmuxNavigateLeft<cr>", desc = "Navigate: left pane" },
 		{ "<C-j>", "<cmd>TmuxNavigateDown<cr>", desc = "Navigate: down pane" },

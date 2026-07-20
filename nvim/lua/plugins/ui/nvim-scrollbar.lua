@@ -8,7 +8,7 @@ local colors = require("config.ui.colors")
 
 return {
 	"petertriho/nvim-scrollbar",
-	event = "VimEnter",
+	event = "VeryLazy",
 	opts = {
 		handle = {
 			text = " ",
@@ -20,15 +20,15 @@ return {
 		marks = {
 			Cursor = {
 				priority = 0,
-				text = "*",
+				text = "▌",
 				color = colors.gray[100],
 			},
-			Search = { text = { "✔", "✔" }, color = colors.cyan[500] },
-			Error = { text = { "✘", "✘" } },
-			Warn = { text = { "!", "!" } },
-			Info = { text = { "i", "i" } },
-			Hint = { text = { "★", "★" } },
-			Misc = { text = { " ", " " } },
+			Search = { text = { "▌", "█" }, color = colors.cyan[500] },
+			Error = { text = { "▌", "█" }, color = colors.red[500] },
+			Warn = { text = { "▌", "█" }, color = colors.yellow[500] },
+			Info = { text = { "▌", "█" }, color = colors.blue[500] },
+			Hint = { text = { "▌", "█" }, color = colors.violet[500] },
+			Misc = { text = { "▌", "█" }, color = colors.gray[400] },
 		},
 		excluded_filetypes = {
 			"neo-tree",

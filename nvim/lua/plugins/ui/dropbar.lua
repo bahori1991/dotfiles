@@ -8,6 +8,7 @@ local anchor = require("config.navigation.nvim-tree-anchor")
 
 return {
 	"Bekaboo/dropbar.nvim",
+	event = "VeryLazy",
 	dependencies = {
 		"nvim-tree/nvim-web-devicons",
 	},

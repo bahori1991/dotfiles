@@ -52,13 +52,6 @@ return {
 			end,
 			desc = "Explorer: oil (split)",
 		},
-		{
-			"<leader>O",
-			function()
-				require("oil").open_float()
-			end,
-			desc = "Explorer: oil (float)",
-		},
 	},
 	config = function(_, opts)
 		require("oil").setup(opts)
