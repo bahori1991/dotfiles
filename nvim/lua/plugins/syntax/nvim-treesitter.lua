@@ -1,12 +1,11 @@
 -- ================================================================================
--- TITLE: neovim-treesitter/nvim-treesitter
+-- TITLE: nvim-treesitter/nvim-treesitter
 -- ABOUT: manage parser and query
--- LINKS: https://github.com/neovim-treesitter/nvim-treesitter
+-- LINKS: https://github.com/nvim-treesitter/nvim-treesitter
 -- ================================================================================
 
 return {
-	"neovim-treesitter/nvim-treesitter",
-	dependencies = { "neovim-treesitter/treesitter-parser-registry" },
+	"nvim-treesitter/nvim-treesitter",
 	event = { "BufReadPost", "BufNewFile" },
 	build = ":TSUpdate",
 	config = function()
