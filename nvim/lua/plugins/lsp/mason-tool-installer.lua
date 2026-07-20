@@ -6,6 +6,7 @@
 
 return {
 	"WhoIsSethDaniel/mason-tool-installer.nvim",
+	event = { "BufReadPost", "BufNewFile" },
 	dependencies = { "mason-org/mason.nvim" },
 	opts = {
 		ensure_installed = {

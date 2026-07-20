@@ -33,30 +33,16 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		local client = vim.lsp.get_client_by_id(args.data.client_id)
 		local map = { buffer = bufnr, noremap = true, silent = true }
 
-		if client and client:supports_method("textDocument/inlayHint") then
-			vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
-		end
-
 		vim.keymap.set("n", "K", vim.lsp.buf.hover, vim.tbl_extend("force", map, { desc = "LSP: hover" }))
-		vim.keymap.set(
-			"n",
-			"gd",
-			vim.lsp.buf.definition,
-			vim.tbl_extend("force", map, { desc = "LSP: definition" })
-		)
-		vim.keymap.set(
-			"n",
-			"gD",
-			vim.lsp.buf.declaration,
-			vim.tbl_extend("force", map, { desc = "LSP: declaration" })
-		)
+		vim.keymap.set("n", "gd", vim.lsp.buf.definition, vim.tbl_extend("force", map, { desc = "LSP: definition" }))
+		vim.keymap.set("n", "gD", vim.lsp.buf.declaration, vim.tbl_extend("force", map, { desc = "LSP: declaration" }))
 		vim.keymap.set(
 			"n",
 			"gi",
 			vim.lsp.buf.implementation,
 			vim.tbl_extend("force", map, { desc = "LSP: implementation" })
 		)
-		vim.keymap.set("n", "gr", vim.lsp.buf.references, vim.tbl_extend("force", map, { desc = "LSP: references" }))
+		-- references: Neovim built-in grr (see :help lsp-defaults)
 		vim.keymap.set("n", "<leader>lr", vim.lsp.buf.rename, vim.tbl_extend("force", map, { desc = "LSP: rename" }))
 		vim.keymap.set(
 			{ "n", "v" },

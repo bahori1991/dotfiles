@@ -12,11 +12,18 @@
 --
 -- Migrated from nvim/after/lsp/lua_ls.lua (settings only; root_markers use lspconfig defaults).
 
+local function lsp_capabilities(base)
+	local capabilities = base or vim.lsp.protocol.make_client_capabilities()
+	local ok, blink = pcall(require, "blink.cmp")
+	if ok then
+		capabilities = blink.get_lsp_capabilities(capabilities)
+	end
+	return capabilities
+end
+
 return {
 	"neovim/nvim-lspconfig",
-	dependencies = {
-		"saghen/blink.cmp",
-	},
+	event = { "BufReadPost", "BufNewFile" },
 	opts = {
 		servers = {
 			-- Static lua_ls settings; workspace library paths are lazydev's job (see lazydev.lua).
@@ -38,7 +45,7 @@ return {
 	},
 	config = function(_, opts)
 		for server, config in pairs(opts.servers) do
-			config.capabilities = require("blink.cmp").get_lsp_capabilities(config.capabilities)
+			config.capabilities = lsp_capabilities(config.capabilities)
 			vim.lsp.config(server, config)
 			vim.lsp.enable(server)
 		end
