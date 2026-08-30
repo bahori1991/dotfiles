@@ -8,6 +8,9 @@ ln -snf "$DOTFILES_DIR/bash/.bashrc" "$HOME_DIR/.bashrc"
 ln -snf "$DOTFILES_DIR/bash/.bash_logout" "$HOME_DIR/.bash_logout"
 ln -snf "$DOTFILES_DIR/bash/.profile" "$HOME_DIR/.profile"
 
+# editor defaults
+ln -snf "$DOTFILES_DIR/.editorconfig" "$HOME_DIR/.editorconfig"
+
 # utils
 ln -snf "$DOTFILES_DIR/utils/.hushlogin" "$HOME_DIR/.hushlogin"
 ln -snf "$DOTFILES_DIR/utils/.sudo_as_admin_successful" "$HOME_DIR/.sudo_as_admin_successful"
@@ -22,9 +25,10 @@ ln -snf "$DOTFILES_DIR/starship/starship.toml" "$HOME_DIR/.config/starship.toml"
 ln -snf "$DOTFILES_DIR/tmux/.tmux.conf" "$HOME_DIR/.tmux.conf"
 ln -snf "$DOTFILES_DIR/tmux/.tmux.term.conf" "$HOME_DIR/.tmux.term.conf"
 ln -snf "$DOTFILES_DIR/tmux/.tmux.agent.conf" "$HOME_DIR/.tmux.agent.conf"
+ln -snf "$DOTFILES_DIR/tmux/.tmux.clipboard.conf" "$HOME_DIR/.tmux.clipboard.conf"
 
 # gitconfig
 ln -snf "$DOTFILES_DIR/git/config" "$HOME_DIR/.config/git/config"
 
 # copy windows terminal settings.json
-cp -u "$DOTFILES_DIR/terminal/settings.json" "/mnt/c/users/bahori1991/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json"
+/bin/cp -f "$DOTFILES_DIR/terminal/settings.json" "/mnt/c/Users/bahori1991/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json"

@@ -116,6 +116,10 @@ function M.is_scratch_buffer(buf)
 	if TELESCOPE_FT[vim.bo[buf].filetype] then
 		return false
 	end
+	-- blink.cmp menu/docs/signature buffers are unnamed; wiping them breaks open completion UI
+	if vim.startswith(vim.bo[buf].filetype, "blink-cmp") then
+		return false
+	end
 	if vim.bo[buf].buftype == "terminal" then
 		return false
 	end

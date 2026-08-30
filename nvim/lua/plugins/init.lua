@@ -7,7 +7,6 @@ return {
 	{ import = "plugins.ui.dropbar" },
 	{ import = "plugins.ui.nvim-scrollbar" },
 	{ import = "plugins.ui.nerdicons" },
-	{ import = "plugins.ui.noice" },
 	-- navigation
 	{ import = "plugins.navigation.oil" },
 	{ import = "plugins.navigation.nvim-tree" },

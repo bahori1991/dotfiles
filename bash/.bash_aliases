@@ -52,10 +52,31 @@ alias .....="cd ../../../.."
 # goto dotfiles directory
 alias dot="cd ~/.config/dotfiles/"
 
-# goto apps directory
+# goto apps directory or a project under ~/apps
 function apps() {
-  command cd ${HOME}/apps${1}
+  local base="${HOME}/apps"
+
+  if [ $# -eq 0 ]; then
+    command cd "$base" || return
+    return
+  fi
+
+  local target="$base/$1"
+  if [ -d "$target" ]; then
+    command cd "$target" || return
+  else
+    echo "apps: no such project: $1" >&2
+    return 1
+  fi
 }
+
+_apps_completion() {
+  local cur=${COMP_WORDS[COMP_CWORD]}
+  if [ "$COMP_CWORD" -eq 1 ]; then
+    COMPREPLY=( $(compgen -W "$(command ls -1 "${HOME}/apps" 2>/dev/null)" -- "$cur") )
+  fi
+}
+complete -F _apps_completion apps
 
 # reload bash files
 alias sb="source ~/.config/dotfiles/bash/.bashrc"

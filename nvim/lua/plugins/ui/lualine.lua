@@ -81,10 +81,10 @@ local sections = {
 	lualine_y = {
 		"encoding",
 		"filetype",
-		{ line_status },
+		{ lsp_status },
 	},
 	lualine_z = {
-		{ lsp_status },
+		{ line_status },
 		{ current_time },
 	},
 }
@@ -109,6 +109,26 @@ return {
 			sections = sections,
 			tabline = {},
 			extensions = { "nvim-tree", "oil" },
+		})
+
+		-- dashboard-nvim restores laststatus=2 on BufEnter after startup (saved before
+		-- lualine loads). Re-apply global statusline after dashboard's restore runs.
+		local group = vim.api.nvim_create_augroup("LualineGlobalStatus", { clear = true })
+		vim.api.nvim_create_autocmd("BufEnter", {
+			group = group,
+			callback = function()
+				if vim.bo.filetype == "dashboard" then
+					return
+				end
+				vim.schedule(function()
+					if vim.bo.filetype == "dashboard" then
+						return
+					end
+					if vim.opt.laststatus:get() ~= 3 then
+						vim.opt.laststatus = 3
+					end
+				end)
+			end,
 		})
 	end,
 }

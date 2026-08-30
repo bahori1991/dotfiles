@@ -78,15 +78,20 @@ MAIN_PANE=$(tmux list-panes -t "$SESSION" -F '#{pane_id}' | head -1)
 
 # pane 1 - Agent tabs (right, inner tmux)
 tmux -L "$TMUX_AGENT_SOCK" kill-session -t agent 2>/dev/null || true
-tmux split-window -h -t "$MAIN_PANE" -p 35 \
-  "tmux -L ${TMUX_AGENT_SOCK} -f ${TMUX_AGENT_CONF} \
-    new-session -e NVIM_DEV_OUTER_PANE='#{pane_id}' -e AGENT_CMD=$(printf '%q' "$AGENT_CMD") \
-    -s agent -c $(printf '%q' "$START_DIR") $(printf '%q' "$AGENT_TAB") new"
+AGENT_PANE=$(
+  tmux split-window -h -t "$MAIN_PANE" -p 35 -P -F '#{pane_id}' \
+    "tmux -L ${TMUX_AGENT_SOCK} -f ${TMUX_AGENT_CONF} \
+      new-session -e NVIM_DEV_OUTER_PANE='#{pane_id}' -e AGENT_CMD=$(printf '%q' "$AGENT_CMD") \
+      -s agent -c $(printf '%q' "$START_DIR") $(printf '%q' "$AGENT_TAB") new"
+)
+tmux set-environment -g NVIM_DEV_AGENT_PANE "$AGENT_PANE"
+tmux set-environment -g NVIM_DEV_AGENT_PCT 30
+tmux set-environment -g NVIM_DEV_AGENT_HIDDEN 0
 
 # pane 2 - Terminal (tabbed inner tmux)
 tmux -L "$TMUX_TERM_SOCK" kill-session -t term 2>/dev/null || true
 TERM_PANE=$(
-  tmux split-window -v -t "$MAIN_PANE" -p 25 -c "$START_DIR" -P -F '#{pane_id}' \
+  tmux split-window -v -t "$MAIN_PANE" -p 30 -c "$START_DIR" -P -F '#{pane_id}' \
     "tmux -L ${TMUX_TERM_SOCK} -f ${TMUX_TERM_CONF} new-session -e NVIM_DEV_OUTER_PANE='#{pane_id}' -s term -c $(printf '%q' "$START_DIR")"
 )
 tmux set-environment -g NVIM_DEV_TERM_PANE "$TERM_PANE"

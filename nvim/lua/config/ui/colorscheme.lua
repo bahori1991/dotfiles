@@ -14,6 +14,10 @@ function M.vscode_opts()
 		group_overrides = {
 			-- transparent editor (terminal wallpaper shows through)
 			Normal = { fg = colors.gray[100], bg = "NONE" },
+			-- comments (default vscGreen #6A9955 is too dim on transparent bg)
+			Comment = { fg = colors.green[200] },
+			SpecialComment = { fg = colors.green[200] },
+			["@comment"] = { fg = colors.green[200] },
 			EndOfBuffer = { fg = "NONE", bg = "NONE" },
 			-- diagnostics (align with config.ui.colors)
 			DiagnosticError = { fg = colors.red[500] },
@@ -51,8 +55,6 @@ function M.vscode_opts()
 			-- cursor line
 			CursorLine = { bg = colors.gray[800] },
 			CursorLineNr = { bg = colors.gray[800], fg = colors.yellow[500], bold = true },
-			-- Notify
-			NotifyBackground = { bg = colors.gray[900] },
 			-- nvim-tree (match editor cursor line)
 			NvimTreeCursorLine = { bg = colors.blue[700] },
 			NvimTreeCursorLineNr = { bg = colors.blue[700], fg = colors.blue[700], bold = true },

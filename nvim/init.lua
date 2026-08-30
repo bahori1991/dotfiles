@@ -1,12 +1,17 @@
 vim.loader.enable()
 
+require("config.core.treesitter-safe").setup()
+
 require("config.ui.ui2")
 require("config.startup.argv")
 require("config.core.options")
 require("config.integration.scratch-cleanup")
 require("config.integration.zenhan")
+require("config.integration.ime-cursorline")
 require("config.core.lazy")
+require("config.navigation.nvim-tree-open").setup()
 require("config.startup.dashboard")
 require("config.lsp.lsp")
 require("config.core.keymaps")
 require("config.integration.kill-session")
+require("config.integration.tmux-agent-toggle")

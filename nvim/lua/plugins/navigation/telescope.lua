@@ -97,11 +97,6 @@ return {
 			end,
 			desc = "Find: recent files",
 		},
-		{
-			"<leader>fn",
-			"<cmd>Telescope noice<cr>",
-			desc = "Find: notifications",
-		},
 	},
 	opts = {
 		defaults = {

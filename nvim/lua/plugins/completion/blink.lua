@@ -15,6 +15,12 @@ return {
 		keymap = {
 			preset = "default",
 			["<C-k>"] = false, -- tmux pane up (tmux-navigator)
+			["<C-e>"] = {
+				function(cmp)
+					return cmp.show({ providers = { "lsp" } })
+				end,
+				"fallback",
+			},
 			["<C-.>"] = { "show_signature", "hide_signature", "fallback" },
 			["<Tab>"] = { "select_next", "fallback" },
 			["<S-Tab>"] = { "select_prev", "fallback" },
@@ -41,6 +47,12 @@ return {
 			enabled = true,
 			window = {
 				scrollbar = false,
+				-- Default is { "n", "s" }, which places the popup above the cursor and hides the line you type on.
+				-- "s" uses relative = "cursor", row = 1, col = 0 (directly below, left edge at cursor).
+				direction_priority = { "s", "n" },
+				max_width = 80,
+				max_height = 5,
+				show_documentation = false,
 			},
 		},
 		completion = {
@@ -50,6 +62,8 @@ return {
 			ghost_text = { enabled = true },
 			menu = {
 				scrollbar = false,
+				-- blink.cmp puts signature on the opposite side of the completion menu; menu above leaves room below the cursor.
+				direction_priority = { "n", "s" },
 			},
 			documentation = {
 				window = {
@@ -58,8 +72,9 @@ return {
 			},
 		},
 		sources = {
-			default = { "lazydev", "lsp", "path", "buffer" },
+			default = { "lazydev", "lsp", "path" },
 			providers = {
+				buffer = { enabled = false },
 				lazydev = {
 					name = "LazyDev",
 					module = "lazydev.integrations.blink",

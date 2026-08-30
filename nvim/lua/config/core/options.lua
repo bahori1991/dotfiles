@@ -7,10 +7,10 @@
 -- encode
 vim.opt.fileencodings = "utf-8,sjis,euc-jp,iso-2022-jp"
 
--- cmdline UI is handled by noice.nvim (see plugins/ui/noice.lua)
+-- mode in lualine; native cmdline for :, /, ?
 vim.opt.showmode = false
-vim.opt.showcmd = false
-vim.opt.cmdheight = 0
+vim.opt.showcmd = true
+vim.opt.cmdheight = 1
 
 -- cursor
 vim.opt.guicursor = {
@@ -30,6 +30,9 @@ vim.opt.termguicolors = true
 
 -- keep terminal buffers when their window is closed
 vim.opt.hidden = true
+
+-- scroll window before reaching the edge
+vim.opt.scrolloff = 0
 
 -- show line number
 vim.opt.number = true
@@ -91,11 +94,47 @@ vim.api.nvim_create_autocmd({ "BufReadPost" }, {
 	end,
 })
 
+-- ensure files end with a newline on write (POSIX; see also .editorconfig)
+vim.opt.fixendofline = true
+
+-- conform.nvim respects vim.bo.eol when formatting; noeol buffers keep no trailing newline
+local ensure_eol_group = vim.api.nvim_create_augroup("UserEnsureFinalNewline", { clear = true })
+local function ensure_final_newline(bufnr)
+	if vim.bo[bufnr].modifiable and vim.bo[bufnr].buftype == "" then
+		vim.bo[bufnr].eol = true
+	end
+end
+vim.api.nvim_create_autocmd("BufWritePre", {
+	group = ensure_eol_group,
+	callback = function(args)
+		ensure_final_newline(args.buf)
+	end,
+})
+vim.api.nvim_create_autocmd("User", {
+	group = ensure_eol_group,
+	pattern = "ConformFormatPre",
+	callback = function()
+		ensure_final_newline(vim.api.nvim_get_current_buf())
+	end,
+})
+
 -- indent
 vim.opt.expandtab = true
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.autoindent = true
+
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "haskell",
+	callback = function()
+		vim.bo.tabstop = 4
+		vim.bo.shiftwidth = 4
+		vim.bo.softtabstop = 4
+	end,
+})
+
+-- comment auto-insert (formatoptions r/o); toggle with <leader>ci
+require("config.core.comment-auto-insert").setup()
 
 -- not wrap
 vim.opt.wrap = false
