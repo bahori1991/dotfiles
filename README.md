@@ -132,6 +132,59 @@ nvim
 
 Treesitter パーサーのインストールにも数分かかることがあります。
 
+### LSP / Formatter / Lint（Docker コンテナ）
+
+TypeScript / C# 向けの LSP・フォーマッタ・Lint は、**Node.js と .NET SDK を Docker コンテナ内に置き、Neovim もコンテナ内で使う**前提で設定しています。  
+WSL ホスト上の Neovim から、コンテナ内の Node.js / .NET SDK を直接使うことはできません。
+
+環境判定は `nvim/lua/config/lsp-env.lua` が行います（`/.dockerenv` または `DEVCONTAINER=true`）。
+
+| 環境 | 動作 |
+|------|------|
+| WSL ホスト | TS/C# 向け LSP・Lint プラグインは読み込まない。Mason も `roslyn` / `oxfmt` / `oxlint` をインストールしない |
+| Docker コンテナ（Node.js あり） | `typescript-tools.nvim`、`oxfmt`、`nvim-lint`（oxlint）が有効 |
+| Docker コンテナ（.NET SDK あり） | `roslyn.nvim`、`dotnet format` が有効 |
+
+#### ツール一覧
+
+| 種類 | ツール | Neovim 連携 | Mason | コンテナ側の要件 |
+|------|--------|-------------|-------|------------------|
+| LSP | TypeScript | [typescript-tools.nvim](https://github.com/pmizio/typescript-tools.nvim) | なし（`ts_ls` は使わない） | Node.js |
+| LSP | C# | [roslyn.nvim](https://github.com/seblyng/roslyn.nvim) | `roslyn` | .NET SDK |
+| Formatter | JS/TS 等 | [conform.nvim](https://github.com/stevearc/conform.nvim) + `oxfmt` | `oxfmt` | Node.js |
+| Linter | JS/TS | [nvim-lint](https://github.com/mfussenegger/nvim-lint) + `oxlint` | `oxlint` | Node.js |
+| Formatter | C# | conform.nvim + `dotnet format` | なし | .NET SDK（`dotnet format` は SDK 同梱） |
+
+`mason-lspconfig` の `automatic_enable` では `roslyn` と `oxlint` を除外しています。  
+LSP は各専用プラグイン、Lint は `nvim-lint` が担当するため、二重 attach を防ぐためです。
+
+#### コンテナ側で必要なもの
+
+**TypeScript 向け**
+
+- Node.js / npm（PATH に通す）
+- 各プロジェクトで `npm install`（`typescript` を devDependency に含めること。`typescript-tools` が `tsserver.js` を探します）
+
+**C# 向け**
+
+- .NET SDK 6 以降（`dotnet format` 利用時。Roslyn 本体は .NET 10 以上を推奨）
+- `.sln` / `.csproj` が存在するディレクトリ（`dotnet format` の作業ディレクトリとして使用）
+
+#### ホスト側の挙動
+
+WSL ホストでは Neovim の起動エラーは出ません。  
+ただし TS/JS ファイルを保存すると、formatter が見つからない旨の通知が出ることがあります（コンテナ外では format / lint が意図的にスキップされるため）。  
+コンテナ専用で開発する場合は問題ありません。
+
+#### コンテナ内での確認
+
+```vim
+:checkhealth        " 起動時エラーがないか
+:Mason              " oxfmt, oxlint, roslyn が Installed か（コンテナ内のみ）
+:LspInfo            " TS ファイル → typescript-tools / C# ファイル → roslyn
+:ConformInfo        " oxfmt, dotnet_format が available か
+```
+
 ## 7. tmux の初回起動
 
 ```bash
@@ -192,6 +245,8 @@ WSL の Windows 連携が有効である必要があります。
 - [ ] `ls -l ~/.config/nvim` が dotfiles へのシンボリックリンクになっている
 - [ ] `git config user.name` / `git config user.email` が期待どおり
 - [ ] `nvim` がエラーなく起動し、プラグインが読み込まれる
+- [ ] （コンテナ内）`:Mason` で `oxfmt` / `oxlint` / `roslyn` が Installed になっている
+- [ ] （コンテナ内）TS / C# ファイルで `:LspInfo` に LSP client が表示される
 - [ ] `tmux` が起動し、treemux（`e`）が開ける
 - [ ] `lazygit` が `g` またはコマンドラインから起動できる
 

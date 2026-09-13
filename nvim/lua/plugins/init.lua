@@ -20,4 +20,7 @@ return {
   { import = "plugins.nvim-notify" },
   { import = "plugins.noice" },
   { import = "plugins.which-key" },
+  { import = "plugins.typescript-tools" },
+  { import = "plugins.roslyn" },
+  { import = "plugins.nvim-lint" },
 }
