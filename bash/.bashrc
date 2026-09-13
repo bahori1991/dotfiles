@@ -44,3 +44,6 @@ if [ ! -f /.dockerenv ]; then
   source $HOME/.keychain/$(uname -n)-sh
 fi
 
+# git config global (for not login shell)
+export GIT_CONFIG_GLOBAL="$XDG_CONFIG_HOME/dotfiles/git/config"
+

@@ -14,6 +14,9 @@ alias mkdir="mkdir -p"
 alias c="clear"
 alias :c="clear"
 
+# profile
+alias profile="source ~/.profile"
+
 # Go to dotfiles directory
 alias dot="cd ~/.config/dotfiles"
 
