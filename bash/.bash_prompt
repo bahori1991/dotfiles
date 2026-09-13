@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+
+# Set a fancy prompt (non-color, unless we know we "want" color)
+case "$TERM" in
+  xterm-color|*-256color) color_prompt=yes;;
+esac
+
+# Set variable identifying the chroot you work in
+if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
+  debian_chroot=$(cat /etc/debian_chroot)
+fi
+
+# Load Git prompt helper when available
+if [ -f /usr/lib/git-core/git-sh-prompt ]; then
+  . /usr/lib/git-core/git-sh-prompt
+elif [ -f /etc/bash_completion.d/git-prompt ]; then
+  . /etc/bash_completion.d/git-prompt
+fi
+
+# Set Git prompt properties
+export GIT_PS1_SHOWDIRTYSTATE=true
+export GIT_PS1_SHOWUNTRACKEDFILES=true
+export GIT_PS1_SHOWSTASHSTATE=true
+export GIT_PS1_SHOWUPSTREAM=true
+
+# Display WSL or container in prompt
+__prompt_ctx() {
+  if [ -f /.dockerenv ]; then
+    printf '\e[92m\][docker]\e[0m'
+  elif [ -n "${WSL_DISTRO_NAME:-}" ]; then
+    printf '\e[92m[WSL]\e[0m'
+  else
+    printf '\e[92m[host]\e[0m'
+  fi
+}
+
+# Display User and Host
+__prompt_user_and_host() {
+  if [ "$color_prompt" = yes ]; then
+    printf '\e[34m %s@%s\e[0m' "$USER" "$HOSTNAME"
+  else
+    printf '%s@%s' "$USER" "$HOSTNAME"
+  fi
+}
+
+# Get current path
+__prompt_path() {
+  local home="${HOME%/}"
+  local dir="${PWD/#${home}/'~'}"
+  if [ "$color_prompt" = yes ]; then
+    printf '\e[33m󰉋 %s\e[0m' "$dir"
+  else
+    printf '%s' "$dir"
+  fi
+}
+
+# Get current branch of git
+__prompt_git() {
+  git rev-parse --git-dir >/dev/null 2>&1 || return 0
+  if [ "$color_prompt" = yes ]; then
+    if declare -F __git_ps1 >/dev/null 2>&1; then
+      printf '\e[31m󰊢 %s \e[0m' "$(__git_ps1 '(%s)')"
+    fi
+  else
+    if declare -F __git_ps1 >/dev/null 2>&1; then
+      printf '%s' "$(__git_ps1 '(%s)')"
+    fi
+  fi
+}
+
+# Display PS1
+PS1='$(__prompt_ctx)${debian_chroot:+($debian_chroot)} $(__prompt_user_and_host) $(__prompt_path) $(__prompt_git)\n> '
+

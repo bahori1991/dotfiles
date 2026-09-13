@@ -1,0 +1,87 @@
+{
+  "$help": "https://aka.ms/terminal-documentation",
+  "$schema": "https://aka.ms/terminal-profiles-schema",
+  "copyFormatting": "none",
+  "copyOnSelect": false,
+  "defaultProfile": "{c24746a3-330a-51cb-bf23-821424d4806e}",
+  "alwaysShowTabs": false,
+  "showTabsInTitlebar": false,
+  "newTabMenu": [
+    {
+      "type": "folder",
+      "name": "Linux (WSL)",
+      "icon": "🐧",
+      "entries": [
+        { "type": "matchProfiles", "source": "Windows.Terminal.Wsl" }
+      ]
+    },
+    { "type": "separator" },
+    { "type": "profile", "profile": "PowerShell" },
+    { "type": "profile", "profile": "Command Prompt" },
+    { "type": "remainingProfiles" }
+  ],
+  "profiles": {
+    "defaults": {
+      "opacity": 100,
+      "useAcryilc": false,
+      "colorScheme": "VS Code",
+      "font": {
+        "face": "MomiageMono Nerd Font",
+        "size": 10.5,
+        "features": {
+          "zero": 1,
+          "liga": 0,
+          "calt": 0
+        }
+      },
+      "scrollbarState": "hidden"
+    },
+    "list": [
+      {
+        "guid": "{c24746a3-330a-51cb-bf23-821424d4806e}",
+        "name": "Ubuntu-24.04",
+        "commandline": "wsl.exe -d Ubuntu-24.04 --user __WSL_USER__",
+        "hidden": false,
+        "source": "Microsoft.WSL",
+        "startingDirectory": "\\\\wsl.localhost\\Ubuntu-24.04\\home\\__WSL_USER__"
+      },
+      {
+        "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
+        "commandline": "%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+        "name": "Windows PowerShell",
+        "hidden": false
+      },
+      {
+        "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
+        "name": "\u30b3\u30de\u30f3\u30c9 \u30d7\u30ed\u30f3\u30d7\u30c8",
+        "commandline": "%SystemRoot%\\System32\\cmd.exe",
+        "hidden": false
+      }
+    ]
+  },
+  "schemes": [
+    {
+      "name": "VS Code",
+      "background": "#121212",
+      "foreground": "#d4d4d4",
+      "cursorColor": "#aeafad",
+      "black": "#121212",
+      "white": "#d4d4d4",
+      "red": "#f5511e",
+      "blue": "#569cd6",
+      "green": "#6a9955",
+      "cyan": "#56b6c2",
+      "purple": "#c586c0",
+      "yellow": "#dcdcaa",
+      "brightBlack": "#5f6672",
+      "brightWhite": "#d4d7d9",
+      "brightRed": "#f44747",
+      "brightBlue": "#007fff",
+      "brightGreen": "#66ff00",
+      "brightCyan": "#08e8de",
+      "brightPurple": "#8b00ff",
+      "brightYellow": "#ffd600"
+    }
+  ],
+  "themes": []
+}

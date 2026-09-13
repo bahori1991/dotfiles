@@ -1,0 +1,14 @@
+# git local
+git/config.local
+
+# Machine-specific overrides
+scripts/user.local.sh
+**/*.local
+
+# Editor / OS artifacts
+*~
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+

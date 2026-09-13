@@ -1,0 +1,6 @@
+[core]
+  editor = nvim
+[color]
+  ui = auto
+[include]
+  path = ~/.config/dotfiles/git/config.local
