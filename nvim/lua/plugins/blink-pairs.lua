@@ -26,12 +26,7 @@ return {
     highlights = {
       enabled = true,
       cmdline = true,
-      groups = {
-        "BlinkPairsBlue",
-        "BlinkPairsYellow",
-        "BlinkPairsGreen",
-        "BlinkPairsOrange",
-      },
+      groups = { "BlinkPairs" },
       unmatched_group = "BlinkPairsUnmatched",
       matchparen = {
         enabled = true,

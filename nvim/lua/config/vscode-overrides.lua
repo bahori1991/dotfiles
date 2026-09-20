@@ -34,10 +34,6 @@ function M.build_group_overrides(c)
     WinBar = { bg = c.vscBack, fg = c.vscFront },
     WinBarNC = { bg = c.vscTabOther, fg = c.vscFront },
 
-    BlinkPairsYellow = { fg = c.vscYellowOrange },
-    BlinkPairsGreen = { fg = c.vscGreen },
-    BlinkPairsBlue = { fg = c.vscBlue },
-    BlinkPairsOrange = { fg = c.vscOrange },
     BlinkPairsUnmatched = { fg = c.vscRed, bold = true },
     BlinkPairsMatchParen = { fg = c.vscOrange, bold = true },
 
