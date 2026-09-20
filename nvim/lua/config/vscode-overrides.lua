@@ -21,6 +21,9 @@ function M.build_group_overrides(c)
     CursorLineNC = { bg = c.vscTabOther },
     CursorLineNr = { bg = c.vscBack, fg = c.vscPopupFront },
     CursorLineNrNC = { bg = c.vscTabOther, fg = c.vscPopupFront },
+
+    Folded = { bg = c.vscBack, fg = c.vscLineNumber },
+
     SignColumn = { bg = c.vscBack, fg = "NONE" },
     SignColumnNC = { bg = c.vscTabOther, fg = "NONE" },
     BlinkCmpMenu = { fg = c.vscFront, bg = c.vscLeftMid },
@@ -57,6 +60,8 @@ function M.build_group_overrides(c)
     TelescopePreviewTitle = { fg = c.vscFront, bg = c.vscBack },
     TelescopeSelection = { fg = c.vscPopupFront, bg = c.vscPopupHighlightBlue },
     TelescopeMatching = { fg = c.vscBlue, bold = true },
+
+    VirtColumn = { fg = c.vscBlue },
   }
 end
 

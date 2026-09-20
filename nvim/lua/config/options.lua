@@ -51,3 +51,19 @@ vim.opt.smartcase = true
 
 -- signcolumn
 vim.opt.signcolumn = "yes:1"
+
+-- code fold
+vim.opt.foldmethod = "expr"
+vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+vim.opt.foldenable = true
+vim.opt.foldlevelstart = 99
+vim.opt.foldnestmax = 20
+vim.opt.foldminlines = 1
+vim.opt.foldcolumn = "0"
+vim.opt.fillchars = vim.tbl_extend("force", vim.opt.fillchars:get(), {
+  foldopen = "-",
+  foldclose = "+",
+  fold = " ",
+  foldsep = " ",
+})
+vim.opt.foldtext = "v:lua.require('config.foldtext').get()"
