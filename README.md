@@ -27,7 +27,7 @@ Ubuntu / WSL の例:
 ```bash
 sudo apt update
 sudo apt install -y \
-  git tmux neovim python3 python3-pip lsof keychain bash-completion
+  git tmux neovim python3 python3-pip lsof keychain bash-completion curl
 ```
 
 以下は apt にない、またはバージョンが古い場合があります。必要に応じて [GitHub Releases](https://github.com/) などから `~/.local/bin` に配置してください。
@@ -39,6 +39,7 @@ sudo apt install -y \
 | **lazygit** | tmux から `g` で起動 |
 | **eza** | `ls` / `ll` / `la` エイリアス |
 | **pynvim** | tmux プラグイン treemux 用 |
+| **curl** | Neovim プラグイン rest.nvim（HTTP クライアント） |
 
 ```bash
 python3 -m pip install --user pynvim
@@ -132,6 +133,52 @@ nvim
 
 Treesitter パーサーのインストールにも数分かかることがあります。
 
+### HTTP クライアント（rest.nvim）
+
+[rest.nvim](https://github.com/rest-nvim/rest.nvim) で `.http` ファイルから API リクエストを送れます。  
+設定は `nvim/lua/plugins/rest-nvim.lua`、Treesitter の `http` パーサーは `nvim/lua/plugins/nvim-treesitter.lua` で初回起動時にインストールされます。
+
+| 要件 | 内容 |
+|------|------|
+| Neovim | 0.10.1 以上（rest.nvim 公式要件） |
+| 外部コマンド | `curl`（リクエスト実行に必須） |
+| プラグイン依存 | `plenary.nvim`、`nvim-treesitter`（`http` パーサー） |
+
+`.http` バッファ（filetype `http`）を開くと lazy.nvim が rest.nvim を読み込みます。
+
+#### 主な操作
+
+| 操作 | 説明 |
+|------|------|
+| `<leader>rr` | カーソル下のリクエストを実行（`:belowright horizontal Rest run`） |
+| `:Rest run` | 同上 |
+| `:Rest last` | 直前のリクエストを再実行 |
+| `:Rest open` | 結果ペインを開く |
+| `:Rest env select` | 現在の `.http` に紐付ける `.env` を選択 |
+| `:Rest env show` | 登録済みの `.env` を表示 |
+
+結果バッファでは `H` / `L` で結果ペインを切り替えられます（rest.nvim デフォルト）。
+
+#### 環境変数（`.env`）
+
+`vim.g.rest_nvim.env.enable = true` のため、プロジェクト直下からファイル名が `.*%.env.*` にマッチするファイルを探して変数を読み込みます（例: `.env`, `dev.env`）。  
+HTTP ファイル内では `{{HOST}}` のように参照できます。紐付けを明示したい場合は `:Rest env select` または `:Rest env set {path}` を使います。
+
+#### 設定の要点
+
+- レスポンス body はフックで `gq` フォーマット有効（`response.hooks.format = true`）
+- Cookie は rest.nvim のデータディレクトリに保存（デフォルト動作）
+- ログレベルは `_log_level = "DEBUG"`（トラブル時は `:Rest logs` で確認）
+
+`.http` ファイルの書き方は [IntelliJ HTTP Client 構文](https://www.jetbrains.com/help/idea/http-client-in-product-code-editor.html) に準じます。最小例:
+
+```http
+GET https://httpbin.org/get
+Accept: application/json
+```
+
+カーソルをリクエスト行に置き `<leader>rr` で実行すると、下に水平分割された結果ウィンドウにステータス・統計・ body が表示されます。
+
 ### LSP / Formatter / Lint（Docker コンテナ）
 
 TypeScript / C# 向けの LSP・フォーマッタ・Lint は、**Node.js と .NET SDK を Docker コンテナ内に置き、Neovim もコンテナ内で使う**前提で設定しています。  
@@ -198,6 +245,7 @@ tmux -f ~/.config/dotfiles/tmux/tmux.conf
 - プレフィックスキー: `Ctrl-t`（デフォルトの `Ctrl-b` ではありません）
 - treemux サイドバー: `e`
 - lazygit: `g`
+- 設定再読み込み: プレフィックス + `r`
 
 tmux プラグイン（tpm / vim-tmux-navigator / treemux）は submodule として同梱されているため、  
 別途 TPM でのインストール操作は不要です。
@@ -245,6 +293,8 @@ WSL の Windows 連携が有効である必要があります。
 - [ ] `ls -l ~/.config/nvim` が dotfiles へのシンボリックリンクになっている
 - [ ] `git config user.name` / `git config user.email` が期待どおり
 - [ ] `nvim` がエラーなく起動し、プラグインが読み込まれる
+- [ ] `curl --version` が表示され、`.http` ファイルで `<leader>rr` がリクエストを実行できる
+- [ ] `.http` を開いたときにハイライトがあり、`:Rest run` / `<leader>rr` で結果ペインが開く
 - [ ] （コンテナ内）`:Mason` で `oxfmt` / `oxlint` / `roslyn` が Installed になっている
 - [ ] （コンテナ内）TS / C# ファイルで `:LspInfo` に LSP client が表示される
 - [ ] `tmux` が起動し、treemux（`e`）が開ける
@@ -275,9 +325,14 @@ dotfiles/
 ├── git/               # Git 共通設定（config.local はローカルのみ）
 ├── lazygit/           # lazygit 設定
 ├── nvim/              # Neovim 設定（lazy.nvim）
+│   └── lua/
+│       ├── config/    # キーマップ、LSP 環境判定、tmux 連携など
+│       └── plugins/   # プラグイン spec（rest-nvim.lua など）
 ├── scripts/           # symlink.sh, user.sh など
 ├── terminal/          # Windows Terminal テンプレート
 └── tmux/              # tmux 設定とプラグイン（submodule）
+    ├── colors.conf    # カラーパレット（tmux.conf から source）
+    ├── configs/       # treemux 用 Neovim 初期化（treemux_init.lua）
     └── plugins/
         ├── tpm/
         ├── treemux/
