@@ -69,6 +69,7 @@ function lta() {
 
 # tmux
 alias tmux="tmux -f ~/.config/dotfiles/tmux/tmux.conf"
+alias tkill="tmux kill-session"
 
 # Wget
 alias wget="wget --hsts-file=\"\$XDG_CONFIG_HOME/wget/wget-hsts\""
