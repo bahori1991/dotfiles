@@ -10,6 +10,13 @@ return {
   dependencies = {
     "MunifTanjim/nui.nvim",
   },
+  keys = {
+    {
+      "<leader>nd",
+      "<cmd>Noice dismiss<cr>",
+      desc = "Dismiss Noice messages",
+    },
+  },
   opts = {
     cmdline = {
       view = "cmdline_popup",
