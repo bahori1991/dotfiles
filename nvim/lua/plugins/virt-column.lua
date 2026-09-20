@@ -9,7 +9,7 @@ return {
   event = { "BufReadPost", "BufNewFile" },
   opts = {
     char = "┊",
-    virtcolumn = "80",
+    virtcolumn = "100",
     highlight = "VirtColumn",
   },
 }
