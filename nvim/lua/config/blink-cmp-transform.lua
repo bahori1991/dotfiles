@@ -27,10 +27,11 @@ local function transform_item(item)
   return item
 end
 
-function M.single_to_double_quoted(_,items)
+function M.single_to_double_quoted(_, items)
   for i, item in ipairs(items) do
     items[i] = transform_item(item)
   end
   return items
 end
+
 return M
