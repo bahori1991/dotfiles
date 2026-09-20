@@ -8,6 +8,9 @@ return {
   "folke/which-key.nvim",
   event = "VeryLazy",
   opts = {
+    defer = function(ctx)
+      return ctx.mode == "v" or ctx.mode == "V" or ctx.mode == "<C-V>"
+    end,
     preset = "modern",
     delay = 200,
     notify = true,
