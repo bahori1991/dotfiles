@@ -48,7 +48,7 @@ __prompt_path() {
   local home="${HOME%/}"
   local dir="${PWD/#${home}/'~'}"
   if [ "$color_prompt" = yes ]; then
-    printf '\e[33m󰉋 %s\e[0m' "$dir"
+    printf '\e[93m󰉋 %s\e[0m' "$dir"
   else
     printf '%s' "$dir"
   fi
