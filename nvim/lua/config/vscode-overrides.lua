@@ -37,6 +37,13 @@ function M.build_group_overrides(c)
     BlinkPairsUnmatched = { fg = c.vscRed, bold = true },
     BlinkPairsMatchParen = { fg = c.vscOrange, bold = true },
 
+    NvimTreeNormal = { bg = c.vscBack, fg = c.vscFront },
+    NvimTreeNormalNC = { bg = c.vscTabOther, fg = c.vscFront },
+    NvimTreeSignColumn = { bg = c.vscBack, fg = "NONE" },
+    NvimTreeLineNr = { bg = c.vscBack, fg = c.vscLineNumber },
+    NvimTreeCursorLine = { bg = c.vscLeftMid },
+    NvimTreeCursorLineNr = { bg = c.vscBack, fg = c.vscPopupFront },
+
     NormalFloat = { fg = c.vscFront, bg = c.vscPopupBack },
     FloatBorder = { fg = c.vscBlue, bg = c.vscPopupBack },
     LspFloatWinNormal = { fg = c.vscFront, bg = c.vscLeftMid },

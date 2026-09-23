@@ -4,7 +4,6 @@
 -- LINKS: https://github.com/nvim-telescope/telescope.nvim
 -- =====================================================================================================
 
-local tmux = require("config.tmux-select-pane")
 return {
   "nvim-telescope/telescope.nvim",
   dependencies = {
@@ -58,14 +57,13 @@ return {
           },
         },
         path_display = { "truncate" },
-        mappings = {
-          i = {
-            -- tmux move pane
-            ["<C-h>"] = tmux.select_pane("h"),
-            ["<C-j>"] = tmux.select_pane("j"),
-            ["<C-k>"] = tmux.select_pane("k"),
-            ["<C-l>"] = tmux.select_pane("l"),
-          },
+        file_ignore_patterns = {
+          "node_modules",
+          "%.DS_STORE",
+          "%.git",
+          "%.pnpm%-store",
+          "%.tanstack",
+          "%.vite-hooks",
         },
       },
       pickers = {
@@ -74,9 +72,7 @@ return {
           no_ignore = false,
         },
         live_grep = {
-          additional_args = function(_)
-            return { "--hidden" }
-          end,
+          hidden = true,
         },
       },
       extensions = {
