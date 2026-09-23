@@ -9,7 +9,7 @@ WSL2 上の Linux 環境を主な想定としていますが、Linux 単体で�
 |------|------|----------|
 | Bash | `bash/` | `~/.bashrc`, `~/.profile` など |
 | Neovim | `nvim/` | `~/.config/nvim` |
-| tmux | `tmux/` | `~/.config/tmux/tmux.conf`, `~/.config/tmux/plugins` |
+| tmux | `tmux/` | `~/.config/tmux/tmux.conf` |
 | lazygit | `lazygit/` | `~/.config/lazygit/config.yml` |
 | Git | `git/` | `GIT_CONFIG_GLOBAL` 経由で読み込み |
 | Windows Terminal | `terminal/` | WSL 利用時のみ自動生成 |
@@ -18,8 +18,6 @@ WSL2 上の Linux 環境を主な想定としていますが、Linux 単体で�
 
 - **OS**: WSL2 + Ubuntu 24.04 推奨（Windows Terminal 連携を使う場合）
 - **シェル**: Bash
-- **Git**: submodule を含むクローンが可能なこと
-
 ## 1. 依存ツールのインストール
 
 Ubuntu / WSL の例:
@@ -27,7 +25,7 @@ Ubuntu / WSL の例:
 ```bash
 sudo apt update
 sudo apt install -y \
-  git tmux neovim python3 python3-pip lsof keychain bash-completion curl
+  git tmux neovim keychain bash-completion curl
 ```
 
 以下は apt にない、またはバージョンが古い場合があります。必要に応じて [GitHub Releases](https://github.com/) などから `~/.local/bin` に配置してください。
@@ -38,27 +36,15 @@ sudo apt install -y \
 | **tmux** 3.x | ターミナル multiplexer |
 | **lazygit** | tmux から `g` で起動 |
 | **eza** | `ls` / `ll` / `la` エイリアス |
-| **pynvim** | tmux プラグイン treemux 用 |
 | **curl** | Neovim プラグイン rest.nvim（HTTP クライアント） |
-
-```bash
-python3 -m pip install --user pynvim
-```
 
 ## 2. リポジトリのクローン
 
-`~/.config/dotfiles` にクローンします。submodule（tmux プラグイン）も同時に取得してください。
+`~/.config/dotfiles` にクローンします。
 
 ```bash
 mkdir -p ~/.config
-git clone --recurse-submodules <リポジトリURL> ~/.config/dotfiles
-```
-
-すでにクローン済みで submodule が空の場合:
-
-```bash
-cd ~/.config/dotfiles
-git submodule update --init --recursive
+git clone <リポジトリURL> ~/.config/dotfiles
 ```
 
 ## 3. ユーザー固有の設定
@@ -104,7 +90,7 @@ source ~/.config/dotfiles/scripts/symlink.sh
 
 - `~/.bashrc`, `~/.profile` などを `bash/` にリンク
 - `~/.config/nvim` を `nvim/` にリンク
-- `~/.config/tmux/` 配下を `tmux/` にリンク
+- `~/.config/tmux/tmux.conf` を `tmux/tmux.conf` にリンク（`colors.conf` は `tmux.conf` から読み込まれます）
 - `~/.config/lazygit/config.yml` をリンク
 - WSL 利用時: Windows Terminal の `settings.json` をテンプレートから生成
 
@@ -240,17 +226,20 @@ tmux
 tmux -f ~/.config/dotfiles/tmux/tmux.conf
 ```
 
-主な設定:
+tmux プラグイン（TPM 等）は使わず、`tmux.conf` と `colors.conf` のみで構成しています。
 
-- プレフィックスキー: `Ctrl-t`（デフォルトの `Ctrl-b` ではありません）
-- treemux サイドバー: `e`
-- lazygit: `g`
-- 設定再読み込み: プレフィックス + `r`
+主な操作（プレフィックスは `Ctrl-t`。デフォルトの `Ctrl-b` ではありません）:
 
-tmux プラグイン（tpm / vim-tmux-navigator / treemux）は submodule として同梱されているため、  
-別途 TPM でのインストール操作は不要です。
+| 操作 | キー |
+|------|------|
+| ペイン移動 | `Ctrl-h` / `Ctrl-j` / `Ctrl-k` / `Ctrl-l`（ウィンドウ最大化中は無効） |
+| 垂直分割 | プレフィックス + `V` |
+| 水平分割 | プレフィックス + `H` |
+| ペイン名変更 | プレフィックス + `+` |
+| lazygit | プレフィックス + `g` |
+| 設定再読み込み | プレフィックス + `r` |
 
-treemux が動作しない場合は `pynvim` と `lsof` のインストールを確認してください。
+コピーモードは vi キー。選択後 `y` で Windows クリップボード（`clip.exe`）へコピーします（WSL 想定）。
 
 ## 8. Windows Terminal の設定（WSL のみ・任意）
 
@@ -297,7 +286,7 @@ WSL の Windows 連携が有効である必要があります。
 - [ ] `.http` を開いたときにハイライトがあり、`:Rest run` / `<leader>rr` で結果ペインが開く
 - [ ] （コンテナ内）`:Mason` で `oxfmt` / `oxlint` / `roslyn` が Installed になっている
 - [ ] （コンテナ内）TS / C# ファイルで `:LspInfo` に LSP client が表示される
-- [ ] `tmux` が起動し、treemux（`e`）が開ける
+- [ ] `tmux` が起動し、プレフィックス + `r` で設定が再読み込みできる
 - [ ] `lazygit` が `g` またはコマンドラインから起動できる
 
 ## 更新方法
@@ -305,7 +294,6 @@ WSL の Windows 連携が有効である必要があります。
 ```bash
 cd ~/.config/dotfiles
 git pull
-git submodule update --init --recursive
 source ~/.config/dotfiles/scripts/symlink.sh
 ```
 
@@ -326,15 +314,11 @@ dotfiles/
 ├── lazygit/           # lazygit 設定
 ├── nvim/              # Neovim 設定（lazy.nvim）
 │   └── lua/
-│       ├── config/    # キーマップ、LSP 環境判定、tmux 連携など
+│       ├── config/    # キーマップ、LSP 環境判定、zenhan など
 │       └── plugins/   # プラグイン spec（rest-nvim.lua など）
 ├── scripts/           # symlink.sh, user.sh など
 ├── terminal/          # Windows Terminal テンプレート
-└── tmux/              # tmux 設定とプラグイン（submodule）
+└── tmux/
     ├── colors.conf    # カラーパレット（tmux.conf から source）
-    ├── configs/       # treemux 用 Neovim 初期化（treemux_init.lua）
-    └── plugins/
-        ├── tpm/
-        ├── treemux/
-        └── vim-tmux-navigator/
+    └── tmux.conf      # メイン設定（プラグインなし）
 ```
