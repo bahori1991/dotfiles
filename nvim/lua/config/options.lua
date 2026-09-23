@@ -29,9 +29,6 @@ vim.opt.formatoptions:remove({ "c", "r", "o" })
 -- guicolors
 vim.opt.termguicolors = true
 
--- clipboard
-vim.opt.clipboard = "unnamedplus"
-
 -- indent
 vim.opt.expandtab = true
 vim.opt.tabstop = 2
