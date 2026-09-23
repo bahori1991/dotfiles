@@ -17,6 +17,10 @@ alias :c="clear"
 # profile
 alias profile="source ~/.profile"
 
+# Go to parent directory
+alias ..="cd .."
+alias ~="cd ~"
+
 # Go to dotfiles directory
 alias dot="cd ~/.config/dotfiles"
 
@@ -31,6 +35,9 @@ function apps() {
   local target="$base/$1"
   if [ -d "$target" ]; then
     command cd "$target" || return
+    if [ -d ".docker" ]; then
+      command cd ".docker" || return
+    fi
   else
     echo "apps: no such project: $1" >&2
     return 1

@@ -7,7 +7,7 @@ case $- in
 esac
 
 # Command History
-HISTFILE="$XDG_STATE_HOME/bash_history"
+HISTFILE="$HOME/.local/state/bash_history"
 HISTSIZE=10000
 HISTFILESIZE=10000
 HISTTIMEFORMAT="[%Y/%m/%d %H:%M:%S]"
@@ -45,5 +45,5 @@ if [ ! -f /.dockerenv ]; then
 fi
 
 # git config global (for not login shell)
-export GIT_CONFIG_GLOBAL="$XDG_CONFIG_HOME/dotfiles/git/config"
+export GIT_CONFIG_GLOBAL="$HOME/.config/dotfiles/git/config"
 

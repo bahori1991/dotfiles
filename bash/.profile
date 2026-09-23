@@ -5,8 +5,6 @@ source "$HOME/.config/dotfiles/scripts/user.sh"
 export EDITOR="nvim"
 export VISUAL="nvim"
 
-# export PATH="$HOME/.local/bin:$PATH"
-
 if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
   export PATH="$HOME/.local/bin:$PATH"
 fi
@@ -21,12 +19,9 @@ export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
 export GIT_CONFIG_GLOBAL="$XDG_CONFIG_HOME/dotfiles/git/config"
 export WGETRC="$XDG_CONFIG_HOME/wget/wgetrc"
 
-export BROWSER="/mnt/c/Windows/System32/rundll32.exe url.dll,FileProtocolHandler"
-
 if [ -n "$BASH_VERSION" ]; then
   if [ -f "$HOME/.bashrc" ]; then
     . "$HOME/.bashrc"
   fi
 fi
-
 
