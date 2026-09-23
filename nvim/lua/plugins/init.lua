@@ -1,5 +1,4 @@
 return {
-  { import = "plugins.vim-tmux-navigator" },
   { import = "plugins.vscode-theme" },
   { import = "plugins.oil" },
   { import = "plugins.lazydev" },
@@ -12,6 +11,7 @@ return {
   { import = "plugins.telescope" },
   { import = "plugins.mason-lspconfig" },
   { import = "plugins.mason-tool-installer" },
+  { import = "plugins.nvim-tree" },
   { import = "plugins.nvim-treesitter" },
   { import = "plugins.treesj" },
   { import = "plugins.vim-doge" },
