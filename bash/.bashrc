@@ -47,3 +47,8 @@ fi
 # git config global (for not login shell)
 export GIT_CONFIG_GLOBAL="$HOME/.config/dotfiles/git/config"
 
+# vite-plus env (for frontend Vite+)
+if [ -f "$HOME/.local/share/vite-plus/env" ]; then
+  source "$HOME/.local/share/vite-plus/env"
+fi
+
