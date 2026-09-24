@@ -22,6 +22,9 @@ function M.build_group_overrides(c)
     CursorLineNr = { bg = c.vscBack, fg = c.vscPopupFront },
     CursorLineNrNC = { bg = c.vscTabOther, fg = c.vscPopupFront },
 
+    Directory = { bg = "NONE", fg = c.vscBlue },
+    OilDir = { bg = "NONE", fg = c.vscBlue },
+
     Folded = { bg = c.vscBack, fg = c.vscLineNumber },
 
     SignColumn = { bg = c.vscBack, fg = "NONE" },
