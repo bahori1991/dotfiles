@@ -17,7 +17,6 @@ export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.local/cache}"
 export LESSHISTFILE="$XDG_STATE_HOME/lesshst"
 export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
 export GIT_CONFIG_GLOBAL="$XDG_CONFIG_HOME/dotfiles/git/config"
-export WGETRC="$XDG_CONFIG_HOME/wget/wgetrc"
 
 if [ -n "$BASH_VERSION" ]; then
   if [ -f "$HOME/.bashrc" ]; then
