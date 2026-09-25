@@ -1,5 +1,5 @@
 gui:
-  border: double
+  border: single
   theme:
     defaultFgColor:
       - "#d4d4d4"

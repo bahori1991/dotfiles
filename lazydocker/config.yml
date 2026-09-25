@@ -1,0 +1,21 @@
+gui:
+  border: single
+  language: auto
+  scrollHeight: 2
+  wrapMainPanel: true
+  sidePanelWidth: 0.333
+  showBottomLine: true
+  expandFocusedSidePanel: false
+  screenMode: normal
+  containerStatusHealthStyle: long
+  theme:
+    activeBorderColor:
+      - "#007fff"
+      - bold
+    inactiveBorderColor:
+      - "#666666"
+    selectedLineBgColor:
+      - "#264f78"
+    optionsTextColor:
+      - "#007fff"
+
