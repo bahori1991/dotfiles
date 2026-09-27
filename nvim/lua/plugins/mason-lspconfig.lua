@@ -28,5 +28,6 @@ return {
       capabilities = require("blink.cmp").get_lsp_capabilities(),
     })
     require("mason-lspconfig").setup(opts)
+    vim.lsp.enable("sqls")
   end,
 }

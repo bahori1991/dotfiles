@@ -2,8 +2,9 @@
 
 source "$HOME/.config/dotfiles/scripts/user.sh"
 
-export EDITOR="nvim"
-export VISUAL="nvim"
+export SQL_EDITOR=nvim
+export EDITOR=nvim
+export VISUAL=nvim
 
 if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
   export PATH="$HOME/.local/bin:$PATH"

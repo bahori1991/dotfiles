@@ -25,6 +25,10 @@ ln -snf "$DOTFILES_DIR/lazygit/config.yml" ~/.config/lazygit/config.yml
 mkdir -p ~/.config/lazydocker
 ln -snf "$DOTFILES_DIR/lazydocker/config.yml" ~/.config/lazydocker/config.yml
 
+# lazysql
+mkdir -p ~/.config/lazysql
+ln -snf "$DOTFILES_DIR/lazysql/config.toml" ~/.config/lazysql/config.toml
+
 # copy windows terminal settings.json (WSL only)
 WT_SETTINGS="/mnt/c/Users/$WIN_USER/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json"
 WT_TEMPLATE="$DOTFILES_DIR/terminal/settings.json.template"

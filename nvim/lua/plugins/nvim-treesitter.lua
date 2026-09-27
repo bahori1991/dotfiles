@@ -25,6 +25,7 @@ return {
       "tsx",
       "jsx",
       "c_sharp",
+      "sql",
       "vim",
       "vimdoc",
       "query",

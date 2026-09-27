@@ -11,6 +11,8 @@ WSL2 上の Linux 環境を主な想定としていますが、Linux 単体で�
 | Neovim | `nvim/` | `~/.config/nvim` |
 | tmux | `tmux/` | `~/.config/tmux/tmux.conf` |
 | lazygit | `lazygit/` | `~/.config/lazygit/config.yml` |
+| lazydocker | `lazydocker/` | `~/.config/lazydocker/config.yml` |
+| lazysql | `lazysql/` | `~/.config/lazysql/config.toml` |
 | Git | `git/` | `GIT_CONFIG_GLOBAL` 経由で読み込み |
 | Windows Terminal | `terminal/` | WSL 利用時のみ自動生成 |
 
@@ -18,6 +20,7 @@ WSL2 上の Linux 環境を主な想定としていますが、Linux 単体で�
 
 - **OS**: WSL2 + Ubuntu 24.04 推奨（Windows Terminal 連携を使う場合）
 - **シェル**: Bash
+
 ## 1. 依存ツールのインストール
 
 Ubuntu / WSL の例:
@@ -25,7 +28,7 @@ Ubuntu / WSL の例:
 ```bash
 sudo apt update
 sudo apt install -y \
-  git tmux neovim keychain bash-completion curl
+  git tmux neovim keychain bash-completion curl unzip
 ```
 
 以下は apt にない、またはバージョンが古い場合があります。必要に応じて [GitHub Releases](https://github.com/) などから `~/.local/bin` に配置してください。
@@ -37,6 +40,27 @@ sudo apt install -y \
 | **lazygit** | tmux から `g` で起動 |
 | **eza** | `ls` / `ll` / `la` エイリアス |
 | **curl** | Neovim プラグイン rest.nvim（HTTP クライアント） |
+| **unzip** | [sqls](https://github.com/sqls-server/sqls) バイナリ展開（SQL LSP） |
+| **sqls** | PostgreSQL 向け SQL LSP（Mason ではなく `~/.local/bin` に配置） |
+| **lazysql** | tmux から `S` で起動する TUI SQL クライアント（任意） |
+
+### sqls（SQL Language Server）のインストール
+
+Mason の `sqls` パッケージは Go が必要なため、**GitHub のビルド済みバイナリ**を `~/.local/bin` に置きます（`.profile` で PATH に含まれます）。
+
+```bash
+mkdir -p ~/.local/bin
+tmpdir=$(mktemp -d)
+curl -fsSL -o "$tmpdir/sqls-linux.zip" \
+  https://github.com/sqls-server/sqls/releases/download/v0.2.48/sqls-linux-0.2.48.zip
+unzip -o "$tmpdir/sqls-linux.zip" -d "$tmpdir"
+install -m 755 "$tmpdir/sqls" ~/.local/bin/sqls
+rm -rf "$tmpdir"
+sqls --version
+```
+
+Neovim から `:echo exepath('sqls')` でパスが表示されれば OK です。  
+バージョン更新時は同手順で `~/.local/bin/sqls` を上書きしてください。
 
 ## 2. リポジトリのクローン
 
@@ -92,6 +116,8 @@ source ~/.config/dotfiles/scripts/symlink.sh
 - `~/.config/nvim` を `nvim/` にリンク
 - `~/.config/tmux/tmux.conf` を `tmux/tmux.conf` にリンク（`colors.conf` は `tmux.conf` から読み込まれます）
 - `~/.config/lazygit/config.yml` をリンク
+- `~/.config/lazydocker/config.yml` をリンク
+- `~/.config/lazysql/config.toml` をリンク
 - WSL 利用時: Windows Terminal の `settings.json` をテンプレートから生成
 
 設定を更新したあと再リンクする場合:
@@ -115,9 +141,9 @@ nvim
 
 初回起動時に [lazy.nvim](https://github.com/folke/lazy.nvim) が自動インストールされ、  
 `lazy-lock.json` に記載されたプラグインがダウンロードされます。  
-[Mason](https://github.com/mason-org/mason.nvim) 経由で `lua_ls` や `stylua` なども自動導入されます。
+[Mason](https://github.com/mason-org/mason.nvim) 経由で `lua_ls` や `stylua` なども自動導入されます（`sqls` は Mason 対象外。上記「sqls のインストール」を参照）。
 
-Treesitter パーサーのインストールにも数分かかることがあります。
+Treesitter パーサーのインストール（`sql` 含む）にも数分かかることがあります。
 
 ### HTTP クライアント（rest.nvim）
 
@@ -165,6 +191,51 @@ Accept: application/json
 
 カーソルをリクエスト行に置き `<leader>rr` で実行すると、下に水平分割された結果ウィンドウにステータス・統計・ body が表示されます。
 
+### SQL LSP（sqls + blink.cmp）
+
+PostgreSQL 向けに [sqls](https://github.com/sqls-server/sqls) を LSP として使い、[blink.cmp](https://github.com/saghen/blink.cmp) で補完します。  
+**DB 接続情報は dotfiles に書かず**、プロジェクト直下の `.env` から読み込みます。
+
+| 要件 | 内容 |
+|------|------|
+| バイナリ | `~/.local/bin/sqls`（Mason 非使用） |
+| ワークスペース | バッファから上方向に `.env` があるディレクトリが root（`after/lsp/sqls.lua` の `root_markers`） |
+| 補完 | blink.cmp の LSP ソース（`mason-lspconfig` で capabilities 付与） |
+
+#### 設定ファイルの役割
+
+| ファイル | 役割 |
+|----------|------|
+| `nvim/after/lsp/sqls.lua` | プロジェクト root ごとに `sqls -config …` で起動 |
+| `nvim/lua/config/getenv.lua` | `.env` の `POSTGRES_*` を sqls 接続形式に変換 |
+| `nvim/lua/config/sqls-config.lua` | 接続 YAML を `stdpath("data")/sqls/<hash>/config.yml` に生成 |
+| `nvim/lua/plugins/mason-lspconfig.lua` | `vim.lsp.enable("sqls")`（Mason 未インストールのため手動 enable） |
+
+生成された sqls 用 config の例: `~/.local/share/nvim/sqls/*/config.yml`
+
+#### プロジェクト側の `.env`
+
+ルートの `.env` に次の変数を置きます（`POSTGRES_USER` と `POSTGRES_DB` は必須）。
+
+| 変数 | 省略時の既定 |
+|------|----------------|
+| `POSTGRES_HOST` | `127.0.0.1` |
+| `POSTGRES_PORT` | `5432` |
+| `POSTGRES_USER` | （必須） |
+| `POSTGRES_PASSWORD` | 空 |
+| `POSTGRES_DB` | （必須） |
+| `POSTGRES_SSLMODE` | `disable` |
+
+`.env` は git 管理外にしてください。`.env.example` にキー名だけ載せる運用を推奨します。
+
+#### 使い方
+
+1. `.env` があるプロジェクト配下の `.sql` を Neovim で開く（例: `migrations/foo.sql`）
+2. `:LspInfo` または `:lua vim.print(vim.inspect(vim.lsp.get_clients({ bufnr = 0 })))` で `sqls` が attach しているか確認
+3. Insert モードでテーブル名などを入力し、blink.cmp の候補を確認（PostgreSQL が起動・接続可能であること）
+
+`.env` のない場所の `.sql` では LSP は attach しません。
+
 ### LSP / Formatter / Lint（Docker コンテナ）
 
 TypeScript / C# 向けの LSP・フォーマッタ・Lint は、**Node.js と .NET SDK を Docker コンテナ内に置き、Neovim もコンテナ内で使う**前提で設定しています。  
@@ -182,6 +253,7 @@ WSL ホスト上の Neovim から、コンテナ内の Node.js / .NET SDK を直
 
 | 種類 | ツール | Neovim 連携 | Mason | コンテナ側の要件 |
 |------|--------|-------------|-------|------------------|
+| LSP | SQL（PostgreSQL） | sqls + blink.cmp | なし（`~/.local/bin/sqls`） | ホスト WSL で利用可 |
 | LSP | TypeScript | [typescript-tools.nvim](https://github.com/pmizio/typescript-tools.nvim) | なし（`ts_ls` は使わない） | Node.js |
 | LSP | C# | [roslyn.nvim](https://github.com/seblyng/roslyn.nvim) | `roslyn` | .NET SDK |
 | Formatter | JS/TS 等 | [conform.nvim](https://github.com/stevearc/conform.nvim) + `oxfmt` | `oxfmt` | Node.js |
@@ -237,6 +309,7 @@ tmux プラグイン（TPM 等）は使わず、`tmux.conf` と `colors.conf` �
 | 水平分割 | プレフィックス + `H` |
 | ペイン名変更 | プレフィックス + `+` |
 | lazygit | プレフィックス + `g` |
+| lazysql | プレフィックス + `S`（現在のペインの cwd で新規ウィンドウ） |
 | 設定再読み込み | プレフィックス + `r` |
 
 コピーモードは vi キー。選択後 `y` で Windows クリップボード（`clip.exe`）へコピーします（WSL 想定）。
@@ -284,6 +357,8 @@ WSL の Windows 連携が有効である必要があります。
 - [ ] `nvim` がエラーなく起動し、プラグインが読み込まれる
 - [ ] `curl --version` が表示され、`.http` ファイルで `<leader>rr` がリクエストを実行できる
 - [ ] `.http` を開いたときにハイライトがあり、`:Rest run` / `<leader>rr` で結果ペインが開く
+- [ ] `exepath('sqls')` が `~/.local/bin/sqls` を指す
+- [ ] `.env` 付きプロジェクトの `.sql` で `:LspInfo` に `sqls` が表示される
 - [ ] （コンテナ内）`:Mason` で `oxfmt` / `oxlint` / `roslyn` が Installed になっている
 - [ ] （コンテナ内）TS / C# ファイルで `:LspInfo` に LSP client が表示される
 - [ ] `tmux` が起動し、プレフィックス + `r` で設定が再読み込みできる
@@ -312,9 +387,12 @@ dotfiles/
 ├── bash/              # Bash 設定
 ├── git/               # Git 共通設定（config.local はローカルのみ）
 ├── lazygit/           # lazygit 設定
+├── lazydocker/        # lazydocker 設定
+├── lazysql/           # lazysql 設定
 ├── nvim/              # Neovim 設定（lazy.nvim）
+│   ├── after/lsp/     # LSP サーバー別設定（sqls.lua, lua_ls.lua など）
 │   └── lua/
-│       ├── config/    # キーマップ、LSP 環境判定、zenhan など
+│       ├── config/    # キーマップ、getenv / sqls-config、LSP 環境判定など
 │       └── plugins/   # プラグイン spec（rest-nvim.lua など）
 ├── scripts/           # symlink.sh, user.sh など
 ├── terminal/          # Windows Terminal テンプレート
