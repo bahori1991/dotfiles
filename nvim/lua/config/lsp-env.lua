@@ -6,7 +6,9 @@
 local M = {}
 
 function M.in_container()
-  return vim.fn.filereadable("/.dockerenv") == 1 or vim.env.DEVCONTAINER == "true"
+  return vim.fn.filereadable("/.dockerenv") == 1
+    or vim.fn.filereadable("/run/.containerenv") == 1
+    or vim.env.DEVCONTAINER == "true"
 end
 
 function M.has_node()

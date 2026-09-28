@@ -13,6 +13,7 @@ WSL2 上の Linux 環境を主な想定としていますが、Linux 単体で�
 | lazygit | `lazygit/` | `~/.config/lazygit/config.yml` |
 | lazydocker | `lazydocker/` | `~/.config/lazydocker/config.yml` |
 | lazysql | `lazysql/` | `~/.config/lazysql/config.toml` |
+| Podman | `containers/` | `~/.config/containers/containers.conf` |
 | Git | `git/` | `GIT_CONFIG_GLOBAL` 経由で読み込み |
 | Windows Terminal | `terminal/` | WSL 利用時のみ自動生成 |
 
@@ -43,6 +44,80 @@ sudo apt install -y \
 | **unzip** | [sqls](https://github.com/sqls-server/sqls) バイナリ展開（SQL LSP） |
 | **sqls** | PostgreSQL 向け SQL LSP（Mason ではなく `~/.local/bin` に配置） |
 | **lazysql** | tmux から `S` で起動する TUI SQL クライアント（任意） |
+| **podman** | OCI コンテナ（TS / C# 向け LSP 用 devcontainer、lazydocker 連携） |
+| **lazydocker** | tmux から `D` で起動（Podman の API 経由） |
+| **podman-docker**（任意） | `docker` コマンドを Podman 互換 CLI として使う（`apt install podman-docker`） |
+| **Docker Compose v2** | Go 版 Compose（`podman compose` 用。apt の Python v1 ではなく GitHub バイナリを推奨） |
+
+### Podman（rootless）と lazydocker
+
+コンテナランタイムは **Docker Desktop / dockerd ではなく Podman（rootless）** を想定しています。
+
+#### インストールと socket
+
+```bash
+sudo apt install -y podman podman-docker   # docker 互換 CLI が不要なら podman のみ
+systemctl --user enable --now podman.socket
+```
+
+rootless の API socket は `${XDG_RUNTIME_DIR}/podman/podman.sock`（例: `/run/user/1000/podman/podman.sock`）です。
+
+#### Bash との連携（`bash/.bashrc` / `bash/.bash_prompt`）
+
+| 設定 | 内容 |
+|------|------|
+| `DOCKER_HOST` | 上記 socket が存在するとき `unix://…/podman.sock` を export（**対話シェルのみ**。`.bashrc` 先頭で非対話シェルは読み込まない） |
+| `PODMAN_COMPOSE_PROVIDER` | `~/.local/bin/docker-compose`（Go 版 Compose v2 バイナリ。apt の v1 `/usr/bin/docker-compose` より優先） |
+| プロンプト | `/run/.containerenv` があると `[container]`、WSL なら `[WSL]`、それ以外は `[host]`（旧 `[docker]` / `/.dockerenv` から Podman 向けに変更） |
+| keychain | コンテナ内（`/run/.containerenv`）では SSH 鍵の keychain 読み込みをスキップ |
+
+`lazydocker` は Docker API 互換クライアントのため、**対話シェルで `DOCKER_HOST` が設定された状態**で使います（tmux の `D` も同様）。
+
+```bash
+# 対話シェルで .bashrc 読み込み後
+echo "$DOCKER_HOST"
+podman ps
+podman run --rm docker.io/library/hello-world   # 動作確認
+```
+
+`docker` コマンド（podman-docker）も同じ Podman バックエンドを使います。  
+`docker compose` は **Podman の `compose` サブコマンド**（外部 Compose バイナリを呼び出す）として動き、`podman compose` と同等です。Docker Desktop の Compose プラグイン（`~/.docker/cli-plugins`）は、いまの `docker`→`podman` ラッパーでは使いません。
+
+`.profile` からは Docker Desktop 向けの `DOCKER_CONFIG` export を削除しています（Podman では不要）。
+
+#### Docker Compose（Go 版 v2 系）
+
+Ubuntu apt の **`docker-compose`（Python v1）** は使わず、[Compose Releases](https://github.com/docker/compose/releases) から standalone バイナリを `~/.local/bin` に置きます（`.profile` で PATH 先頭）。  
+Podman 4.x との相性を考え、**v2.40.3 など v2 系**を推奨します（v5 系は Podman を新しくする場合の候補）。
+
+```bash
+COMPOSE_VERSION=v2.40.3
+mkdir -p ~/.local/bin
+curl -fsSL \
+  "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-linux-x86_64" \
+  -o ~/.local/bin/docker-compose
+chmod +x ~/.local/bin/docker-compose
+docker-compose version   # Docker Compose version v2.40.3
+```
+
+任意で apt の v1 を外す（PATH 競合の防止）:
+
+```bash
+sudo apt remove docker-compose
+```
+
+`podman compose` 実行時の `>>>> Executing external compose provider ...` 警告は、**Podman 4.9 では環境変数では消せません**。  
+`containers/containers.conf` で `compose_warning_logs = false` を設定し、`symlink.sh` で `~/.config/containers/containers.conf` にリンクします（§4 参照）。
+
+Compose バイナリのパスは `.bashrc` の `PODMAN_COMPOSE_PROVIDER` で指定しています。conf の `compose_providers` に寄せる場合は、どちらか一方に揃えてください（env が優先されます）。
+
+#### 非対話シェル・スクリプト
+
+cron や CI から Docker API 互換クライアントを使う場合は、自分で export してください。
+
+```bash
+export DOCKER_HOST="unix://${XDG_RUNTIME_DIR}/podman/podman.sock"
+```
 
 ### sqls（SQL Language Server）のインストール
 
@@ -118,6 +193,7 @@ source ~/.config/dotfiles/scripts/symlink.sh
 - `~/.config/lazygit/config.yml` をリンク
 - `~/.config/lazydocker/config.yml` をリンク
 - `~/.config/lazysql/config.toml` をリンク
+- `~/.config/containers/containers.conf` を `containers/containers.conf` にリンク（Podman / Compose 警告抑制）
 - WSL 利用時: Windows Terminal の `settings.json` をテンプレートから生成
 
 設定を更新したあと再リンクする場合:
@@ -236,18 +312,27 @@ PostgreSQL 向けに [sqls](https://github.com/sqls-server/sqls) を LSP とし�
 
 `.env` のない場所の `.sql` では LSP は attach しません。
 
-### LSP / Formatter / Lint（Docker コンテナ）
+### LSP / Formatter / Lint（Podman コンテナ）
 
-TypeScript / C# 向けの LSP・フォーマッタ・Lint は、**Node.js と .NET SDK を Docker コンテナ内に置き、Neovim もコンテナ内で使う**前提で設定しています。  
+TypeScript / C# 向けの LSP・フォーマッタ・Lint は、**Node.js と .NET SDK を Podman（OCI）コンテナ内に置き、Neovim もコンテナ内で使う**前提で設定しています。  
 WSL ホスト上の Neovim から、コンテナ内の Node.js / .NET SDK を直接使うことはできません。
 
-環境判定は `nvim/lua/config/lsp-env.lua` が行います（`/.dockerenv` または `DEVCONTAINER=true`）。
+環境判定は `nvim/lua/config/lsp-env.lua` の `in_container()` が行います。
+
+| 条件 | 用途 |
+|------|------|
+| `/.dockerenv` が存在 | Docker 系 devcontainer |
+| `/run/.containerenv` が存在 | Podman / OCI devcontainer |
+| 環境変数 `DEVCONTAINER=true` | devcontainer ツールが明示した場合 |
+
+いずれかを満たし、かつ Node.js または .NET SDK が PATH にあるとき TS/C# 向け LSP・Mason ツールが有効になります。  
+Bash の `[container]` 表示と keychain スキップは **`/run/.containerenv` のみ**（`bash/.bash_prompt` / `bash/.bashrc`）。
 
 | 環境 | 動作 |
 |------|------|
 | WSL ホスト | TS/C# 向け LSP・Lint プラグインは読み込まない。Mason も `roslyn` / `oxfmt` / `oxlint` をインストールしない |
-| Docker コンテナ（Node.js あり） | `typescript-tools.nvim`、`oxfmt`、`nvim-lint`（oxlint）が有効 |
-| Docker コンテナ（.NET SDK あり） | `roslyn.nvim`、`dotnet format` が有効 |
+| Podman コンテナ（Node.js あり） | `typescript-tools.nvim`、`oxfmt`、`nvim-lint`（oxlint）が有効 |
+| Podman コンテナ（.NET SDK あり） | `roslyn.nvim`、`dotnet format` が有効 |
 
 #### ツール一覧
 
@@ -309,6 +394,7 @@ tmux プラグイン（TPM 等）は使わず、`tmux.conf` と `colors.conf` �
 | 水平分割 | プレフィックス + `H` |
 | ペイン名変更 | プレフィックス + `+` |
 | lazygit | プレフィックス + `g` |
+| lazydocker | プレフィックス + `D`（Podman 上のコンテナ。要 `DOCKER_HOST`） |
 | lazysql | プレフィックス + `S`（現在のペインの cwd で新規ウィンドウ） |
 | 設定再読み込み | プレフィックス + `r` |
 
@@ -331,8 +417,9 @@ WSL ディストリビューション名が `Ubuntu-24.04` 以外の場合は、
 
 ### SSH 鍵（keychain）
 
-`.bashrc` はログイン時に `keychain` で SSH 鍵を読み込みます。  
-`~/.ssh/id_rsa` または `~/.ssh/id_ed25519` を配置してください。
+`.bashrc` は対話シェル起動時に `keychain` で SSH 鍵を読み込みます。  
+`~/.ssh/id_rsa` または `~/.ssh/id_ed25519` を配置してください。  
+Podman コンテナ内（`/run/.containerenv`）では keychain は実行しません。
 
 ### zenhan（日本語 IME 自動オフ）
 
@@ -363,6 +450,12 @@ WSL の Windows 連携が有効である必要があります。
 - [ ] （コンテナ内）TS / C# ファイルで `:LspInfo` に LSP client が表示される
 - [ ] `tmux` が起動し、プレフィックス + `r` で設定が再読み込みできる
 - [ ] `lazygit` が `g` またはコマンドラインから起動できる
+- [ ] `systemctl --user is-active podman.socket` が `active`
+- [ ] 対話シェルで `echo "$DOCKER_HOST"` が `unix://…/podman/podman.sock` を指す
+- [ ] `podman run --rm docker.io/library/hello-world` が成功する
+- [ ] `podman compose version` が v2 系（例: v2.40.3）を表示し、外部プロバイダ警告が出ない（`containers.conf` の `compose_warning_logs = false`）
+- [ ] `lazydocker` または tmux プレフィックス + `D` でコンテナ一覧が開く
+- [ ] Podman コンテナ内でプロンプト先頭に `[container]` が表示される（ホストでは `[WSL]` など）
 
 ## 更新方法
 
@@ -389,6 +482,7 @@ dotfiles/
 ├── lazygit/           # lazygit 設定
 ├── lazydocker/        # lazydocker 設定
 ├── lazysql/           # lazysql 設定
+├── containers/        # Podman containers.conf（compose 警告抑制など）
 ├── nvim/              # Neovim 設定（lazy.nvim）
 │   ├── after/lsp/     # LSP サーバー別設定（sqls.lua, lua_ls.lua など）
 │   └── lua/

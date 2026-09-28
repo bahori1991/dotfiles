@@ -29,6 +29,10 @@ ln -snf "$DOTFILES_DIR/lazydocker/config.yml" ~/.config/lazydocker/config.yml
 mkdir -p ~/.config/lazysql
 ln -snf "$DOTFILES_DIR/lazysql/config.toml" ~/.config/lazysql/config.toml
 
+# Podman
+mkdir -p ~/.config/containers
+ln -snf "$DOTFILES_DIR/containers/containers.conf" ~/.config/containers/containers.conf
+
 # copy windows terminal settings.json (WSL only)
 WT_SETTINGS="/mnt/c/Users/$WIN_USER/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json"
 WT_TEMPLATE="$DOTFILES_DIR/terminal/settings.json.template"

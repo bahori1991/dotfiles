@@ -37,9 +37,8 @@ if ! shopt -oq posix; then
     source /etc/bash_completion
   fi
 fi
-
 # Load secret key of ssh
-if [ ! -f /.dockerenv ]; then
+if [ ! -f /run/.containerenv ]; then
   /usr/bin/keychain -q --nogui $HOME/.ssh/id_rsa 2>/dev/null $HOME/.ssh/id_ed25519 2>/dev/null
   source $HOME/.keychain/$(uname -n)-sh
 fi
@@ -50,5 +49,11 @@ export GIT_CONFIG_GLOBAL="$HOME/.config/dotfiles/git/config"
 # vite-plus env (for frontend Vite+)
 if [ -f "$HOME/.local/share/vite-plus/env" ]; then
   source "$HOME/.local/share/vite-plus/env"
+fi
+
+# Podman rootless API (for lazydocker / docker compose)
+export PODMAN_COMPOSE_PROVIDER="$HOME/.local/bin/docker-compose"
+if [ -S "${XDG_RUNTIME_DIR}/podman/podman.sock" ]; then
+  export DOCKER_HOST="unix://${XDG_RUNTIME_DIR}/podman/podman.sock"
 fi
 
