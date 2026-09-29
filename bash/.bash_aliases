@@ -35,8 +35,8 @@ function apps() {
   local target="$base/$1"
   if [ -d "$target" ]; then
     command cd "$target" || return
-    if [ -d ".docker" ]; then
-      command cd ".docker" || return
+    if [ -d ".containers" ]; then
+      command cd ".containers" || return
     fi
   else
     echo "apps: no such project: $1" >&2

@@ -26,20 +26,25 @@ export GIT_PS1_SHOWUPSTREAM=true
 # Display WSL or container in prompt
 __prompt_ctx() {
   if [ -f /run/.containerenv ]; then
-    printf '\e[36m[container]\e[0m'
+    printf '\e[92m[container]\e[0m'
   elif [ -n "${WSL_DISTRO_NAME:-}" ]; then
     printf '\e[92m[WSL]\e[0m'
   else
-    printf '\e[35m[host]\e[0m'
+    printf '\e[92m[host]\e[0m'
   fi
+}
+
+# Get UserName 
+__prompt_username() {
+  id -un 2>/dev/null || printf '%s' "${USER:-?}"
 }
 
 # Display User and Host
 __prompt_user_and_host() {
   if [ "$color_prompt" = yes ]; then
-    printf '\e[34m %s@%s\e[0m' "$USER" "$HOSTNAME"
+    printf '\e[34m %s@%s\e[0m' "$(__prompt_username)" "$HOSTNAME"
   else
-    printf '%s@%s' "$USER" "$HOSTNAME"
+    printf '%s@%s' "$(__prompt_username)" "$HOSTNAME"
   fi
 }
 
