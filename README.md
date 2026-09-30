@@ -270,12 +270,12 @@ Accept: application/json
 ### SQL LSP（sqls + blink.cmp）
 
 PostgreSQL 向けに [sqls](https://github.com/sqls-server/sqls) を LSP として使い、[blink.cmp](https://github.com/saghen/blink.cmp) で補完します。  
-**DB 接続情報は dotfiles に書かず**、プロジェクト直下の `.env` から読み込みます。
+**DB 接続情報は dotfiles に書かず**、プロジェクト直下の [`.lazysql.toml`](https://github.com/jorgerojas26/lazysql#local-configuration)（lazysql と同じ形式）から読み込みます。
 
 | 要件 | 内容 |
 |------|------|
 | バイナリ | `~/.local/bin/sqls`（Mason 非使用） |
-| ワークスペース | バッファから上方向に `.env` があるディレクトリが root（`after/lsp/sqls.lua` の `root_markers`） |
+| ワークスペース | バッファから上方向に `.lazysql.toml` があるディレクトリが root（`after/lsp/sqls.lua` の `root_markers`） |
 | 補完 | blink.cmp の LSP ソース（`mason-lspconfig` で capabilities 付与） |
 
 #### 設定ファイルの役割
@@ -283,34 +283,38 @@ PostgreSQL 向けに [sqls](https://github.com/sqls-server/sqls) を LSP とし�
 | ファイル | 役割 |
 |----------|------|
 | `nvim/after/lsp/sqls.lua` | プロジェクト root ごとに `sqls -config …` で起動 |
-| `nvim/lua/config/getenv.lua` | `.env` の `POSTGRES_*` を sqls 接続形式に変換 |
+| `nvim/lua/config/databaseurl.lua` | `.lazysql.toml` の最初の `postgres` `[[database]]` の `URL` を sqls 接続形式に変換 |
 | `nvim/lua/config/sqls-config.lua` | 接続 YAML を `stdpath("data")/sqls/<hash>/config.yml` に生成 |
 | `nvim/lua/plugins/mason-lspconfig.lua` | `vim.lsp.enable("sqls")`（Mason 未インストールのため手動 enable） |
 
 生成された sqls 用 config の例: `~/.local/share/nvim/sqls/*/config.yml`
 
-#### プロジェクト側の `.env`
+#### プロジェクト側の `.lazysql.toml`
 
-ルートの `.env` に次の変数を置きます（`POSTGRES_USER` と `POSTGRES_DB` は必須）。
+ルートに `.lazysql.toml` を置き、**上から最初の** `Provider = "postgres"` の `[[database]]` の `URL` を sqls が使います（tmux プレフィックス + `S` の lazysql と同じファイルで接続を揃えられます）。
 
-| 変数 | 省略時の既定 |
-|------|----------------|
-| `POSTGRES_HOST` | `127.0.0.1` |
-| `POSTGRES_PORT` | `5432` |
-| `POSTGRES_USER` | （必須） |
-| `POSTGRES_PASSWORD` | 空 |
-| `POSTGRES_DB` | （必須） |
-| `POSTGRES_SSLMODE` | `disable` |
+```toml
+[[database]]
+Name = "Local development"
+Provider = "postgres"
+URL = "postgres://user:password@localhost:5432/db?sslmode=disable"
+```
 
-`.env` は git 管理外にしてください。`.env.example` にキー名だけ載せる運用を推奨します。
+| 項目 | 内容 |
+|------|------|
+| URL 形式 | `postgres://` または `pg://`（user・DB 名・host は URL から取得） |
+| `sslmode` | query の `?sslmode=…`（省略時は `disable`） |
+| `${env:VAR}` | URL 内の環境変数参照に対応（Neovim 起動時の `os.getenv`） |
+
+接続 URL にパスワードを含める場合は git 管理外にするか、`.gitignore` に `.lazysql.toml` を載せる運用を推奨します。
 
 #### 使い方
 
-1. `.env` があるプロジェクト配下の `.sql` を Neovim で開く（例: `migrations/foo.sql`）
+1. `.lazysql.toml` があるプロジェクト配下の `.sql` を Neovim で開く（例: `migrations/foo.sql`）
 2. `:LspInfo` または `:lua vim.print(vim.inspect(vim.lsp.get_clients({ bufnr = 0 })))` で `sqls` が attach しているか確認
 3. Insert モードでテーブル名などを入力し、blink.cmp の候補を確認（PostgreSQL が起動・接続可能であること）
 
-`.env` のない場所の `.sql` では LSP は attach しません。
+`.lazysql.toml` のない場所の `.sql` では LSP は attach しません。接続が取れない場合は `[sqls]` の WARN が出て、補完は空の connections で起動します。
 
 ### LSP / Formatter / Lint（Podman コンテナ）
 
@@ -445,7 +449,7 @@ WSL の Windows 連携が有効である必要があります。
 - [ ] `curl --version` が表示され、`.http` ファイルで `<leader>rr` がリクエストを実行できる
 - [ ] `.http` を開いたときにハイライトがあり、`:Rest run` / `<leader>rr` で結果ペインが開く
 - [ ] `exepath('sqls')` が `~/.local/bin/sqls` を指す
-- [ ] `.env` 付きプロジェクトの `.sql` で `:LspInfo` に `sqls` が表示される
+- [ ] `.lazysql.toml` 付きプロジェクトの `.sql` で `:LspInfo` に `sqls` が表示される
 - [ ] （コンテナ内）`:Mason` で `oxfmt` / `oxlint` / `roslyn` が Installed になっている
 - [ ] （コンテナ内）TS / C# ファイルで `:LspInfo` に LSP client が表示される
 - [ ] `tmux` が起動し、プレフィックス + `r` で設定が再読み込みできる
@@ -486,7 +490,7 @@ dotfiles/
 ├── nvim/              # Neovim 設定（lazy.nvim）
 │   ├── after/lsp/     # LSP サーバー別設定（sqls.lua, lua_ls.lua など）
 │   └── lua/
-│       ├── config/    # キーマップ、getenv / sqls-config、LSP 環境判定など
+│       ├── config/    # キーマップ、databaseurl / sqls-config、LSP 環境判定など
 │       └── plugins/   # プラグイン spec（rest-nvim.lua など）
 ├── scripts/           # symlink.sh, user.sh など
 ├── terminal/          # Windows Terminal テンプレート

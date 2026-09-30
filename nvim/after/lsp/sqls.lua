@@ -3,16 +3,16 @@
 -- ABOUT: settings of sqls
 -- =====================================================================================================
 
-local getenv = require("config.getenv")
+local dburl = require("config.databaseurl")
 local sqls_config = require("config.sqls-config")
 local notified = {}
 
 return {
   filetypes = { "sql" },
-  root_markers = { ".env" },
+  root_markers = { ".lazysql.toml" },
   cmd = function(dispatchers, config)
     local root = config.root_dir or vim.fn.getcwd()
-    local connections, err = getenv.connections_for_root(root)
+    local connections, err = dburl.connections_for_root(root)
     if not connections then
       if not notified[root] then
         notified[root] = true
