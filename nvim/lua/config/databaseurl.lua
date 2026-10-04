@@ -178,10 +178,27 @@ local function first_postgres_url_in_lazysql(path)
   return nil
 end
 
-function M.connections_for_root(root)
-  local path = vim.fs.joinpath(root, ".lazysql.toml")
-  if vim.fn.filereadable(path) ~= 1 then
+local function find_lazysql_toml(start_dir)
+  if not start_dir or start_dir == "" then
+    return nil, "invalid root directory"
+  end
+  local found = vim.fs.find({ ".lazysql.toml" }, {
+    upward = true,
+    path = start_dir,
+    limit = 1,
+    type = "file",
+  })
+  local path = found[1]
+  if not path or vim.fn.filereadable(path) ~= 1 then
     return nil, ".lazysql.toml not found"
+  end
+  return path, nil
+end
+
+function M.connections_for_root(root)
+  local path, find_err = find_lazysql_toml(root)
+  if not path then
+    return nil, find_err
   end
   local raw_url = first_postgres_url_in_lazysql(path)
   if not raw_url then
@@ -191,7 +208,8 @@ function M.connections_for_root(root)
   if not conn then
     return nil, "invalid postgres URL in .lazysql.toml"
   end
-  return { conn }
+  local config_root = vim.fs.dirname(path)
+  return { conn }, nil, config_root
 end
 
 return M

@@ -12,7 +12,7 @@ return {
   root_markers = { ".lazysql.toml" },
   cmd = function(dispatchers, config)
     local root = config.root_dir or vim.fn.getcwd()
-    local connections, err = dburl.connections_for_root(root)
+    local connections, err, config_root = dburl.connections_for_root(root)
     if not connections then
       if not notified[root] then
         notified[root] = true
@@ -20,7 +20,7 @@ return {
       end
       connections = {}
     end
-    local cfg_path = sqls_config.write(root, connections)
+    local cfg_path = sqls_config.write(config_root or root, connections)
     return vim.lsp.rpc.start({ "sqls", "-config", cfg_path }, dispatchers)
   end,
 }
