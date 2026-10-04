@@ -11,6 +11,7 @@ return {
   { import = "plugins.telescope" },
   { import = "plugins.mason-lspconfig" },
   { import = "plugins.mason-tool-installer" },
+  { import = "plugins.nvim-web-devicons" },
   { import = "plugins.nvim-tree" },
   { import = "plugins.nvim-treesitter" },
   { import = "plugins.treesj" },
