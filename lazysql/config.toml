@@ -8,6 +8,7 @@ Border = "#007fff"
 Title = "#d4d4d4"
 PrimaryText = "#d4d4d4"
 SecondaryText = "#add6ff"
+SQLKeyword = "#4fc1ff"
 EditorSelection = "#add6ff"
 ContrastSecondaryText = "black"
 [keymap.Editor]
