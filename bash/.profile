@@ -6,6 +6,9 @@ export SQL_EDITOR=nvim
 export EDITOR=nvim
 export VISUAL=nvim
 
+export LANG=ja_JP.utf8
+export LC_ALL=ja_JP.utf8
+
 if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
   export PATH="$HOME/.local/bin:$PATH"
 fi
