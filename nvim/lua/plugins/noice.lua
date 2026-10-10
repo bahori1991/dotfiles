@@ -30,12 +30,36 @@ return {
           height = "auto",
         },
       },
+      hover = {
+        relative = "cursor",
+        anchor = "auto",
+        position = {
+          row = 2,
+          col = 0,
+        },
+        size = {
+          max_width = 80,
+          max_height = 25,
+          height = "auto",
+        },
+        border = {
+          style = "rounded",
+        },
+        enter = false,
+      },
     },
     lsp = {
       progress = {
         enabled = true,
         view = "mini",
         throttle = 1000 / 30,
+      },
+      override = {
+        ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+        ["vim.lsp.util.stylize_markdown"] = true,
+      },
+      hover = {
+        enabled = true,
       },
     },
     routes = {
