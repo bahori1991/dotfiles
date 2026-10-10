@@ -1,7 +1,4 @@
 #!/usr/bin/env bash
-# set WSL and Windows Username
-
-DOTFILES_DIR="${DOTFILES_DIR:-$HOME/.config/dotfiles}"
 
 # set a specific name if necessary
 # ${WIN_USER=<Your Windows Username>
@@ -9,7 +6,7 @@ DOTFILES_DIR="${DOTFILES_DIR:-$HOME/.config/dotfiles}"
 
 # get Windows Username
 if [[ -z "${WIN_USER:-}" || ! -d "/mnt/c/Users/${WIN_USER:-}" ]]; then
-  if [ -f ./dockerenv ] || ! command -v cmd.exe >/dev/null 2>&1; then
+  if [ -f /.dockerenv ] || ! command -v cmd.exe >/dev/null 2>&1; then
     : # skip Windows detection
   else
     _detected=$(cmd.exe /c 'echo %USERNAME%' 2>/dev/null | tr -d '\r\n')

@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+source "$HOME/.config/dotfiles/bash/.bash_user.sh"
+source "$HOME/.config/dotfiles/bash/.bash_env.sh"
+
 # If not running interactivity, don't do anything
 case $- in
   *i*) ;;
@@ -7,7 +10,7 @@ case $- in
 esac
 
 # Command History
-HISTFILE="$HOME/.local/state/bash_history"
+HISTFILE="${XDG_STATE_HOME}/bash_history"
 HISTSIZE=10000
 HISTFILESIZE=10000
 HISTTIMEFORMAT="[%Y/%m/%d %H:%M:%S]"
@@ -42,9 +45,6 @@ if [ ! -f /run/.containerenv ]; then
   /usr/bin/keychain -q --nogui $HOME/.ssh/id_rsa 2>/dev/null $HOME/.ssh/id_ed25519 2>/dev/null
   source $HOME/.keychain/$(uname -n)-sh
 fi
-
-# git config global (for not login shell)
-export GIT_CONFIG_GLOBAL="$HOME/.config/dotfiles/git/config"
 
 # vite-plus env (for frontend Vite+)
 if [ -f "$HOME/.local/share/vite-plus/env" ]; then

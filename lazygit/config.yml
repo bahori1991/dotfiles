@@ -15,4 +15,14 @@ gui:
       - "#1e3a5f"
     selectedLineBgColor:
       - "#264f78"
-
+customCommands:
+  - key: "<c-g>"
+    context: files
+    description: "Commit with Cursor Agent message"
+    loadingText: "Generating commit message..."
+    prompts:
+      - type: input
+        title: Commit message
+        key: Msg
+        initialValue: '{{ runCommand "bash -c \"bash \\\"$HOME/.config/dotfiles/lazygit/generate-commit-msg.sh\\\"\"" }}'
+    command: 'git commit -m {{.Form.Msg | quote}}'
