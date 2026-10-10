@@ -33,9 +33,8 @@ vim.api.nvim_create_autocmd("WinLeave", {
   end,
 })
 
-local c = require("vscode.colors").get_colors()
-
 local function set_pane_focus(focused)
+  local c = require("vscode.colors").get_colors()
   local bg = focused and c.vscBack or c.vscTabOther
   vim.api.nvim_set_hl(0, "Normal", { bg = bg, fg = c.vscFront })
   vim.api.nvim_set_hl(0, "CursorLine", { bg = focused and c.vscLeftMid or c.vscTabOther })
@@ -47,6 +46,7 @@ local function set_pane_focus(focused)
 end
 
 local function set_tree_focus(focused)
+  local c = require("vscode.colors").get_colors()
   local bg = focused and c.vscBack or c.vscTabOther
   local cl = focused and c.vscLeftMid or c.vscTabOther
   vim.api.nvim_set_hl(0, "NvimTreeNormal", { bg = bg, fg = c.vscFront })
