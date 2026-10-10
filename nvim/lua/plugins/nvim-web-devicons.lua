@@ -6,7 +6,7 @@
 
 local node_js = {
   icon = "",
-  color = "#417e38",
+  color = "#8fc31f",
   cterm_color = "28",
   name = "PackageJson",
 }
@@ -24,6 +24,14 @@ return {
   priority = 1000,
   config = function()
     require("nvim-web-devicons").setup({
+      override = {
+        tsx = {
+          icon = "",
+          color = "#61dafb",
+          cterm_color = "45",
+          name = "Tsx",
+        },
+      },
       override_by_filename = {
         ["package.json"] = node_js,
         ["compose.yaml"] = docker_compose,
