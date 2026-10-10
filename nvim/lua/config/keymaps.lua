@@ -3,6 +3,10 @@
 -- ABOUT: set keymaps of Neovim
 -- =====================================================================================================
 
+-- leader keys
+vim.g.mapleader = " "
+vim.g.maplocalleader = ","
+
 -- import dependencies
 local env = require("config.lsp-env")
 
