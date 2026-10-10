@@ -26,24 +26,17 @@ function M.build_group_overrides(c)
     CursorLineNC = { bg = c.vscTabOther },
     CursorLineNr = { bg = c.vscBack, fg = c.vscPopupFront },
     CursorLineNrNC = { bg = c.vscTabOther, fg = c.vscPopupFront },
+    EndOfBuffer = { fg = c.vscBack, bg = c.vscBack },
+    EndOfBufferNC = { fg = c.vscTabOther, bg = c.vscTabOther },
+    SignColumn = { bg = c.vscBack, fg = "NONE" },
+    SignColumnNC = { bg = c.vscTabOther, fg = "NONE" },
+    WinBar = { bg = c.vscBack, fg = c.vscFront },
+    WinBarNC = { bg = c.vscTabOther, fg = c.vscFront },
+    Folded = { bg = c.vscBack, fg = c.vscLineNumber },
+    VirtColumn = { fg = c.vscBlue },
 
     Directory = { bg = "NONE", fg = c.vscBlue },
     OilDir = { bg = "NONE", fg = c.vscBlue },
-
-    Folded = { bg = c.vscBack, fg = c.vscLineNumber },
-
-    SignColumn = { bg = c.vscBack, fg = "NONE" },
-    SignColumnNC = { bg = c.vscTabOther, fg = "NONE" },
-    BlinkCmpMenu = { fg = c.vscFront, bg = c.vscLeftMid },
-    BlinkCmpMenuSelection = {
-      fg = c.vscPopupFront,
-      bg = c.vscPopupHighlightBlue,
-    },
-    WinBar = { bg = c.vscBack, fg = c.vscFront },
-    WinBarNC = { bg = c.vscTabOther, fg = c.vscFront },
-
-    BlinkPairsUnmatched = { fg = c.vscRed, bold = true },
-    BlinkPairsMatchParen = { fg = c.vscOrange, bold = true },
 
     NvimTreeNormal = { bg = c.vscBack, fg = c.vscFront },
     NvimTreeNormalNC = { bg = c.vscTabOther, fg = c.vscFront },
@@ -51,6 +44,14 @@ function M.build_group_overrides(c)
     NvimTreeLineNr = { bg = c.vscBack, fg = c.vscLineNumber },
     NvimTreeCursorLine = { bg = c.vscLeftMid },
     NvimTreeCursorLineNr = { bg = c.vscBack, fg = c.vscPopupFront },
+
+    BlinkCmpMenu = { fg = c.vscFront, bg = c.vscLeftMid },
+    BlinkCmpMenuSelection = {
+      fg = c.vscPopupFront,
+      bg = c.vscPopupHighlightBlue,
+    },
+    BlinkPairsUnmatched = { fg = c.vscRed, bold = true },
+    BlinkPairsMatchParen = { fg = c.vscOrange, bold = true },
 
     NormalFloat = { fg = c.vscFront, bg = c.vscPopupBack },
     FloatBorder = { fg = c.vscBlue, bg = c.vscPopupBack },
@@ -71,8 +72,6 @@ function M.build_group_overrides(c)
     TelescopePreviewTitle = { fg = c.vscFront, bg = c.vscBack },
     TelescopeSelection = { fg = c.vscPopupFront, bg = c.vscPopupHighlightBlue },
     TelescopeMatching = { fg = c.vscBlue, bold = true },
-
-    VirtColumn = { fg = c.vscBlue },
   }
 end
 
