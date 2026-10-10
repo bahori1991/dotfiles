@@ -6,8 +6,13 @@
 local M = {}
 
 M.color_overrides = {
-  vscBack = "#121212",
-  vscTabCurrent = "#121212",
+  vscPopupBack = "#282828",
+  vscCursorDarkDark = "#2a2a2a",
+  vscTabOutside = "#2d2d2e",
+  vscTabOther = "#353535",
+  vscSplitThumb = "#4a4a4a",
+  vscSplitDark = "#4c4c4c",
+  vscContext = "#484848",
   vscGreen = "#7cb668",
 }
 
