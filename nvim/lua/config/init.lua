@@ -1,6 +1,7 @@
 require("config.cilpboard")
 require("config.lsp-keymaps")
 require("config.keymaps")
+require("config.filetypes")
 require("config.lazy")
 require("config.treesitter-highlight")
 require("config.focus-dim")

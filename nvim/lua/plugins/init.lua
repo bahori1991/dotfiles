@@ -22,7 +22,7 @@ return {
   { import = "plugins.noice" },
   { import = "plugins.which-key" },
   { import = "plugins.typescript-tools" },
-  { import = "plugins.roslyn" },
+  { import = "plugins.easy-dotnet" },
   { import = "plugins.nvim-lint" },
   { import = "plugins.rest-nvim" },
   { import = "plugins.virt-column" },

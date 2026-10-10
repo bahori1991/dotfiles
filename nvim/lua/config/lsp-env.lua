@@ -23,7 +23,7 @@ function M.typescript_lsp_available()
   return M.in_container() and M.has_node()
 end
 
-function M.roslyn_lsp_available()
+function M.dotnet_lsp_available()
   return M.in_container() and M.has_dotnet()
 end
 

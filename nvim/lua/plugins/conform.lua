@@ -48,7 +48,7 @@ return {
         end,
         require_cwd = true,
         condition = function()
-          return env.roslyn_lsp_available()
+          return env.dotnet_lsp_available()
         end,
       },
     },

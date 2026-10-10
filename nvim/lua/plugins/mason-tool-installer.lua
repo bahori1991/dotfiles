@@ -5,17 +5,16 @@
 -- =====================================================================================================
 
 local env = require("config.lsp-env")
-local ensure_installed = {
-  "lua_ls",
-  "stylua",
-}
-if env.roslyn_lsp_available() then
-  table.insert(ensure_installed, "roslyn")
-end
-
-if env.typescript_lsp_available() then
-  table.insert(ensure_installed, "oxfmt")
-  table.insert(ensure_installed, "oxlint")
+local function build_ensure_installed()
+  local list = {
+    "lua_ls",
+    "stylua",
+  }
+  if env.typescript_lsp_available() then
+    table.insert(list, "oxfmt")
+    table.insert(list, "oxlint")
+  end
+  return list
 end
 
 return {
@@ -25,7 +24,7 @@ return {
     "mason-org/mason-lspconfig.nvim",
   },
   opts = {
-    ensure_installed = ensure_installed,
+    ensure_installed = build_ensure_installed(),
     run_on_start = true,
     start_delay = 1000,
     debounce_hours = 24,

@@ -20,7 +20,7 @@ return {
     -- "ensure_installed" depends on "mason-tool-installer"
     ensure_installed = {},
     automatic_enable = {
-      exclude = { "roslyn", "oxlint" },
+      exclude = { "oxlint" },
     },
   },
   config = function(_, opts)
