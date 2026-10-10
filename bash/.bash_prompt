@@ -26,7 +26,11 @@ export GIT_PS1_SHOWUPSTREAM=true
 # Display WSL or container in prompt
 __prompt_ctx() {
   if [ -f /run/.containerenv ]; then
-    printf '\e[92m[container]\e[0m'
+    if [ -n "${CONTAINER_NAME}" ]; then
+      printf '\e[92m[container<%s>]\e[0m' "${CONTAINER_NAME}"
+    else
+      printf '\e[92m[container]\e[0m'
+    fi
   elif [ -n "${WSL_DISTRO_NAME:-}" ]; then
     printf '\e[92m[WSL]\e[0m'
   else
