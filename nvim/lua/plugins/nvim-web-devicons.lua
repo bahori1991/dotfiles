@@ -4,6 +4,20 @@
 -- LINKS: https://github.com/nvim-tree/nvim-web-devicons
 -- =====================================================================================================
 
+local node_js = {
+  icon = "",
+  color = "#417e38",
+  cterm_color = "28",
+  name = "PackageJson",
+}
+
+local docker_compose = {
+  icon = "󰡨",
+  color = "#38a89d",
+  cterm_color = "68",
+  name = "DockerCompose",
+}
+
 return {
   "nvim-tree/nvim-web-devicons",
   lazy = false,
@@ -11,18 +25,9 @@ return {
   config = function()
     require("nvim-web-devicons").setup({
       override_by_filename = {
-        ["package.json"] = {
-          icon = "",
-          color = "#339933",
-          cterm_color = "28",
-          name = "PackageJson",
-        },
-        ["package-lock.json"] = {
-          icon = "",
-          color = "#339933",
-          cterm_color = "28",
-          name = "PackageJson",
-        },
+        ["package.json"] = node_js,
+        ["compose.yaml"] = docker_compose,
+        ["compose.personal.yaml"] = docker_compose,
       },
     })
   end,
