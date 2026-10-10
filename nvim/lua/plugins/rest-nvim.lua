@@ -4,12 +4,25 @@
 -- LINKS: https://github.com/rest-nvim/rest.nvim
 -- =====================================================================================================
 
+local function luarocks_style_path(plugin)
+  package.path = plugin.dir .. "/?.lua;" .. plugin.dir .. "/?/init.lua;" .. package.path
+end
+
 return {
   "rest-nvim/rest.nvim",
   ft = { "http" },
   dependencies = {
-    "nvim-treesitter/nvim-treesitter",
     "nvim-lua/plenary.nvim",
+    "nvim-neotest/nvim-nio",
+    "j-hui/fidget.nvim",
+    {
+      "lunarmodules/lua-mimetypes",
+      init = luarocks_style_path,
+    },
+    {
+      "manoelcampos/xml2lua",
+      init = luarocks_style_path,
+    },
   },
   config = function()
     vim.g.rest_nvim = {
