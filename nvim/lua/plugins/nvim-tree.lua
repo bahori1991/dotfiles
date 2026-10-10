@@ -9,15 +9,6 @@ return {
   dependencies = {
     "nvim-tree/nvim-web-devicons",
   },
-  keys = {
-    {
-      "<leader>e",
-      function()
-        require("nvim-tree.api").tree.toggle({ focus = true, find_file = true })
-      end,
-      desc = "Toggle File Tree (nvim-tree)",
-    },
-  },
   opts = {
     update_focused_file = {
       enable = true,

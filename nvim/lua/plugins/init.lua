@@ -13,6 +13,7 @@ return {
   { import = "plugins.mason-tool-installer" },
   { import = "plugins.nvim-web-devicons" },
   { import = "plugins.nvim-tree" },
+  { import = "plugins.csharp-explorer" },
   { import = "plugins.nvim-treesitter" },
   { import = "plugins.treesj" },
   { import = "plugins.vim-doge" },
