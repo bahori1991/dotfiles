@@ -13,6 +13,19 @@ return {
   opts = {
     keymap = {
       preset = "super-tab",
+      ["<Up>"] = false,
+      ["<Down>"] = false,
+      ["<Left>"] = false,
+      ["<Right>"] = false,
+    },
+    cmdline = {
+      keymap = {
+        preset = "cmdline",
+        ["<Up>"] = false,
+        ["<Down>"] = false,
+        ["<Left>"] = false,
+        ["<Right>"] = false,
+      },
     },
     appearance = { nerd_font_variant = "mono" },
     completion = {

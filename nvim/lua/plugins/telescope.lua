@@ -56,6 +56,20 @@ return {
             preview_width = 0.5,
           },
         },
+        mappings = {
+          i = {
+            ["<Up>"] = false,
+            ["<Down>"] = false,
+            ["<Left>"] = false,
+            ["<Right>"] = false,
+          },
+          n = {
+            ["<Up>"] = false,
+            ["<Down>"] = false,
+            ["<Left>"] = false,
+            ["<Right>"] = false,
+          },
+        },
         path_display = { "truncate" },
         file_ignore_patterns = {
           "node_modules",
