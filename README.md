@@ -7,7 +7,7 @@ WSL2 上の Linux 環境を主な想定としていますが、Linux 単体で�
 
 | 対象 | 配置 | リンク先 |
 |------|------|----------|
-| Bash | `bash/` | `~/.bashrc`, `~/.profile` など |
+| Bash | `bash/` | `~/.bashrc`, `~/.profile`, `~/.bash_logout`（`GIT_CONFIG_GLOBAL` 等は `bash/.bash_env.sh`） |
 | Neovim | `nvim/` | `~/.config/nvim` |
 | tmux | `tmux/` | `~/.config/tmux/tmux.conf` |
 | lazygit | `lazygit/` | `~/.config/lazygit/config.yml` |
@@ -87,7 +87,7 @@ podman run --rm docker.io/library/hello-world   # 動作確認
 
 #### Docker Compose（Go 版 v2 系）
 
-Ubuntu apt の **`docker-compose`（Python v1）** は使わず、[Compose Releases](https://github.com/docker/compose/releases) から standalone バイナリを `~/.local/bin` に置きます（`.profile` で PATH 先頭）。  
+Ubuntu apt の **`docker-compose`（Python v1）** は使わず、[Compose Releases](https://github.com/docker/compose/releases) から standalone バイナリを `~/.local/bin` に置きます（`bash/.bash_env.sh` で PATH 先頭）。  
 Podman 4.x との相性を考え、**v2.40.3 など v2 系**を推奨します（v5 系は Podman を新しくする場合の候補）。
 
 ```bash
@@ -121,7 +121,7 @@ export DOCKER_HOST="unix://${XDG_RUNTIME_DIR}/podman/podman.sock"
 
 ### sqls（SQL Language Server）のインストール
 
-Mason の `sqls` パッケージは Go が必要なため、**GitHub のビルド済みバイナリ**を `~/.local/bin` に置きます（`.profile` で PATH に含まれます）。
+Mason の `sqls` パッケージは Go が必要なため、**GitHub のビルド済みバイナリ**を `~/.local/bin` に置きます（`bash/.bash_env.sh` で PATH に含まれます）。
 
 ```bash
 mkdir -p ~/.local/bin
@@ -166,16 +166,17 @@ cp ~/.config/dotfiles/git/config.local.example ~/.config/dotfiles/git/config.loc
 
 ### WSL / Windows ユーザー名（任意）
 
-`scripts/user.sh` が Windows ユーザー名と WSL ユーザー名を自動検出します。  
+`bash/.bash_user.sh` が Windows ユーザー名と WSL ユーザー名を自動検出します（`.bashrc` 先頭で読み込み）。  
 検出できない場合は、ファイル内のコメントを参考に直接指定してください。
 
 ```bash
-# scripts/user.sh 内の例
+# bash/.bash_user.sh 内の例
 # WIN_USER=<Your Windows Username>
 # WSL_USER=<Your WSL Username>
 ```
 
-機械ごとの上書き用に `scripts/user.local.sh` を作成して export しても構いません（`.gitignore` 対象）。
+機械ごとの上書き用に `bash/.bash_user.local.sh` など `*.local` を作成して export しても構いません（`.gitignore` 対象）。  
+`scripts/symlink.sh` の Windows Terminal 生成も `WIN_USER` / `WSL_USER` を使います（実行前にログインシェル相当の環境変数が必要な場合は `source ~/.bashrc` 後に symlink を実行）。
 
 ## 4. シンボリックリンクの作成
 
@@ -189,7 +190,8 @@ source ~/.config/dotfiles/scripts/symlink.sh
 
 - `~/.bashrc`, `~/.profile` などを `bash/` にリンク
 - `~/.config/nvim` を `nvim/` にリンク
-- `~/.config/tmux/tmux.conf` を `tmux/tmux.conf` にリンク（`colors.conf` は `tmux.conf` から読み込まれます）
+- `~/.config/tmux/tmux.conf` を `tmux/tmux.conf` にリンク（`colors.conf` は `tmux.conf` から source。TPM 等のプラグインマネージャは未使用）
+- `~/.config/tmux/plugins` を `tmux/plugins` にリンク（リポジトリにディレクトリが無い場合は空リンクになります）
 - `~/.config/lazygit/config.yml` をリンク
 - `~/.config/lazydocker/config.yml` をリンク
 - `~/.config/lazysql/config.toml` をリンク
@@ -217,7 +219,7 @@ nvim
 
 初回起動時に [lazy.nvim](https://github.com/folke/lazy.nvim) が自動インストールされ、  
 `lazy-lock.json` に記載されたプラグインがダウンロードされます。  
-[Mason](https://github.com/mason-org/mason.nvim) 経由で `lua_ls` や `stylua` なども自動導入されます（`sqls` は Mason 対象外。上記「sqls のインストール」を参照）。
+[mason-tool-installer.nvim](https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim) 経由で **Mason** に `lua_ls`・`stylua` が入ります。Podman コンテナ内で Node.js がある場合は `tailwindcss-language-server` も追加されます（`sqls` / TS 向け `oxfmt`・`oxlint` は Mason 対象外。後述）。
 
 Treesitter パーサーのインストール（`sql` 含む）にも数分かかることがあります。
 
@@ -321,63 +323,73 @@ URL = "postgres://user:password@localhost:5432/db?sslmode=disable"
 TypeScript / C# 向けの LSP・フォーマッタ・Lint は、**Node.js と .NET SDK を Podman（OCI）コンテナ内に置き、Neovim もコンテナ内で使う**前提で設定しています。  
 WSL ホスト上の Neovim から、コンテナ内の Node.js / .NET SDK を直接使うことはできません。
 
-環境判定は `nvim/lua/config/lsp-env.lua` の `in_container()` が行います。
+環境判定は `nvim/lua/config/lsp-env.lua` が行います。
 
-| 条件 | 用途 |
+| 関数 | 意味 |
 |------|------|
-| `/.dockerenv` が存在 | Docker 系 devcontainer |
-| `/run/.containerenv` が存在 | Podman / OCI devcontainer |
-| 環境変数 `DEVCONTAINER=true` | devcontainer ツールが明示した場合 |
+| `in_container()` | `/.dockerenv`、`/run/.containerenv`、または `DEVCONTAINER=true` |
+| `typescript_lsp_available()` | コンテナ内かつ `node` が PATH にある |
+| `dotnet_lsp_available()` | コンテナ内かつ `dotnet` が PATH にある |
 
-いずれかを満たし、かつ Node.js または .NET SDK が PATH にあるとき TS/C# 向け LSP・Mason ツールが有効になります。  
 Bash の `[container]` 表示と keychain スキップは **`/run/.containerenv` のみ**（`bash/.bash_prompt` / `bash/.bashrc`）。
 
 | 環境 | 動作 |
 |------|------|
-| WSL ホスト | TS/C# 向け LSP・Lint プラグインは読み込まない。Mason も `roslyn` / `oxfmt` / `oxlint` をインストールしない |
-| Podman コンテナ（Node.js あり） | `typescript-tools.nvim`、`oxfmt`、`nvim-lint`（oxlint）が有効 |
-| Podman コンテナ（.NET SDK あり） | `roslyn.nvim`、`dotnet format` が有効 |
+| WSL ホスト | TS/C# 向けプラグインは読み込まない（`cond` で無効）。Mason は `lua_ls` / `stylua` のみ |
+| Podman コンテナ（Node.js あり） | `typescript-tools.nvim`、Vite+ 同梱の `oxfmt` / `oxlint`（`nvim/lua/config/viteplus-oxc.lua`） |
+| Podman コンテナ（.NET SDK あり） | [easy-dotnet.nvim](https://github.com/GustavEikaas/easy-dotnet.nvim)（LSP 有効）、[csharp-explorer.nvim](https://github.com/dtrh95/csharp-explorer.nvim)、`dotnet format` |
 
 #### ツール一覧
 
-| 種類 | ツール | Neovim 連携 | Mason | コンテナ側の要件 |
-|------|--------|-------------|-------|------------------|
-| LSP | SQL（PostgreSQL） | sqls + blink.cmp | なし（`~/.local/bin/sqls`） | ホスト WSL で利用可 |
-| LSP | TypeScript | [typescript-tools.nvim](https://github.com/pmizio/typescript-tools.nvim) | なし（`ts_ls` は使わない） | Node.js |
-| LSP | C# | [roslyn.nvim](https://github.com/seblyng/roslyn.nvim) | `roslyn` | .NET SDK |
-| Formatter | JS/TS 等 | [conform.nvim](https://github.com/stevearc/conform.nvim) + `oxfmt` | `oxfmt` | Node.js |
-| Linter | JS/TS | [nvim-lint](https://github.com/mfussenegger/nvim-lint) + `oxlint` | `oxlint` | Node.js |
-| Formatter | C# | conform.nvim + `dotnet format` | なし | .NET SDK（`dotnet format` は SDK 同梱） |
+| 種類 | ツール | Neovim 連携 | バイナリの所在 |
+|------|--------|-------------|----------------|
+| LSP | SQL（PostgreSQL） | sqls + blink.cmp | `~/.local/bin/sqls`（ホスト WSL で可） |
+| LSP | TypeScript | [typescript-tools.nvim](https://github.com/pmizio/typescript-tools.nvim) | コンテナ内 Node.js + プロジェクトの `typescript` |
+| LSP | C# | easy-dotnet.nvim（内蔵 LSP） | コンテナ内 .NET SDK |
+| Formatter | JS/TS 等 | [conform.nvim](https://github.com/stevearc/conform.nvim) + `oxfmt` | `node_modules/vite-plus/.../.bin/oxfmt` |
+| Linter | JS/TS | [nvim-lint](https://github.com/mfussenegger/nvim-lint) + `oxlint` | 同上（`oxlint`） |
+| Formatter | C# | conform.nvim + `dotnet format` | SDK 同梱（`.sln` / `.csproj` ルート） |
+| Mason LSP | Tailwind CSS | mason-lspconfig（自動 enable） | Mason（コンテナ + Node.js 時のみ ensure） |
 
-`mason-lspconfig` の `automatic_enable` では `roslyn` と `oxlint` を除外しています。  
-LSP は各専用プラグイン、Lint は `nvim-lint` が担当するため、二重 attach を防ぐためです。
+JS/TS の `oxfmt` / `oxlint` は **Mason では入れません**。プロジェクトに `vite-plus` が `node_modules` にあり、`vite.config.ts` または `package.json` を root として解決できるときだけ conform / nvim-lint が動きます。  
+`mason-lspconfig` の `automatic_enable` では **`oxlint` のみ**除外しています（LSP として attach させないため。Lint は nvim-lint が担当）。
+
+ホストの Bash では、`~/.local/share/vite-plus/env` があると `.bashrc` が source します（フロントエンド用 Vite+ 環境。任意）。
 
 #### コンテナ側で必要なもの
 
-**TypeScript 向け**
+**TypeScript / Vite+ 向け**
 
 - Node.js / npm（PATH に通す）
-- 各プロジェクトで `npm install`（`typescript` を devDependency に含めること。`typescript-tools` が `tsserver.js` を探します）
+- 各プロジェクトで `npm install`（`typescript` を devDependency に含めること）
+- Vite+ プロジェクトでは `node_modules/vite-plus` 経由で `oxfmt` / `oxlint` が使えること
 
 **C# 向け**
 
-- .NET SDK 6 以降（`dotnet format` 利用時。Roslyn 本体は .NET 10 以上を推奨）
-- `.sln` / `.csproj` が存在するディレクトリ（`dotnet format` の作業ディレクトリとして使用）
+- .NET SDK（`dotnet format` および easy-dotnet の LSP）
+- `.sln` / `.csproj` が存在するディレクトリ（format の cwd）
 
 #### ホスト側の挙動
 
 WSL ホストでは Neovim の起動エラーは出ません。  
-ただし TS/JS ファイルを保存すると、formatter が見つからない旨の通知が出ることがあります（コンテナ外では format / lint が意図的にスキップされるため）。  
-コンテナ専用で開発する場合は問題ありません。
+TS/JS をコンテナ外で開いた場合、format / lint は条件を満たさないためスキップされます（通知が出ることがあります）。
 
 #### コンテナ内での確認
 
 ```vim
 :checkhealth        " 起動時エラーがないか
-:Mason              " oxfmt, oxlint, roslyn が Installed か（コンテナ内のみ）
-:LspInfo            " TS ファイル → typescript-tools / C# ファイル → roslyn
-:ConformInfo        " oxfmt, dotnet_format が available か
+:Mason              " lua_ls, stylua, tailwindcss-language-server（Node あり時）など
+:LspInfo            " TS → typescript-tools / C# → easy-dotnet LSP
+:ConformInfo        " oxfmt（Vite+ プロジェクト）, dotnet_format が available か
 ```
+
+#### その他の Neovim 挙動（dotfiles 側）
+
+| 機能 | 設定 |
+|------|------|
+| クリップボード | tmux 内は OSC52、WSL 単体は `clip.exe` / PowerShell（`nvim/lua/config/cilpboard.lua`） |
+| スワップファイル | `CONTAINER_NAME` ごとに `stdpath("state")/swap/<segment>/`（`config/swap.lua`） |
+| フォーカス喪失時 | UI を dim（`config/focus-dim.lua`、NvimTree の背景も同期） |
 
 ## 7. tmux の初回起動
 
@@ -387,7 +399,7 @@ tmux
 tmux -f ~/.config/dotfiles/tmux/tmux.conf
 ```
 
-tmux プラグイン（TPM 等）は使わず、`tmux.conf` と `colors.conf` のみで構成しています。
+TPM 等のプラグインマネージャは使わず、`tmux.conf` と `colors.conf` のみで構成しています。
 
 主な操作（プレフィックスは `Ctrl-t`。デフォルトの `Ctrl-b` ではありません）:
 
@@ -396,13 +408,25 @@ tmux プラグイン（TPM 等）は使わず、`tmux.conf` と `colors.conf` �
 | ペイン移動 | `Ctrl-h` / `Ctrl-j` / `Ctrl-k` / `Ctrl-l`（ウィンドウ最大化中は無効） |
 | 垂直分割 | プレフィックス + `V` |
 | 水平分割 | プレフィックス + `H` |
-| ペイン名変更 | プレフィックス + `+` |
-| lazygit | プレフィックス + `g` |
+| ペインリサイズ | プレフィックス + `h` / `j` / `k` / `l` |
+| lazygit | プレフィックス + `G` |
 | lazydocker | プレフィックス + `D`（Podman 上のコンテナ。要 `DOCKER_HOST`） |
 | lazysql | プレフィックス + `S`（現在のペインの cwd で新規ウィンドウ） |
+| dev セッション終了 | プレフィックス + `Q`（`:wqa` → セッション kill → swap 整理。下記） |
 | 設定再読み込み | プレフィックス + `r` |
 
-コピーモードは vi キー。選択後 `y` で Windows クリップボード（`clip.exe`）へコピーします（WSL 想定）。
+コピーモードは vi キー。選択後 `y` で Windows クリップボード（`clip.exe`）へコピーします（WSL 想定）。  
+ペイン・ウィンドウ切り替え時は `scripts/zenhan-off.sh` で IME オフ（zenhan 配置時）。
+
+#### dev セッション終了（`Q`）
+
+`scripts/nvim-dev-session-kill.sh` は、Compose ベースの dev tmux セッション向けです。
+
+1. `frontend` / `backend` ウィンドウのペイン 1 に `:wqa` を送る  
+2. コンテナ内の nvim PID を記録してから tmux セッションを kill  
+3. 終了した nvim の swap のみ `XDG_STATE_HOME/nvim/swap/<frontend|backend>/` から削除  
+
+前提: グローバル tmux 環境変数 `DEV_COMPOSE_ROOT` に `compose.yaml` があるプロジェクト root、`docker compose`（Podman 互換）が使えること。手動実行: `~/.config/dotfiles/scripts/nvim-dev-session-kill.sh '<session-name>'`.
 
 ## 8. Windows Terminal の設定（WSL のみ・任意）
 
@@ -427,17 +451,26 @@ Podman コンテナ内（`/run/.containerenv`）では keychain は実行しま�
 
 ### zenhan（日本語 IME 自動オフ）
 
-Neovim / tmux のペイン移動時に IME をオフにする場合、Windows 側に zenhan を配置します。
+Neovim / tmux のペイン移動時に IME をオフにする場合、Windows 側に zenhan を配置します（`WIN_USER` は `bash/.bash_user.sh` と同じパス）。
 
 ```
 C:\Users\<Windowsユーザー名>\bin\zenhan\zenhan.exe
 ```
 
-zenhan が無くても他の設定は問題なく動作します。
+`scripts/zenhan-off.sh` が tmux の `pane-focus-in` フックから呼ばれます。zenhan が無くても他の設定は問題なく動作します。
 
-### クリップボード（WSL）
+### 環境変数（`bash/.bash_env.sh`）
 
-tmux のコピー（`y`）は Windows クリップボード（`clip.exe`）へ送ります。  
+対話シェル以外も含め `.bashrc` より先に読み込まれ、`EDITOR` / XDG ベース、`GIT_CONFIG_GLOBAL`、`BUILDKIT_PROGRESS=plain` などを export します。
+
+### クリップボード（WSL / tmux）
+
+| 場所 | 挙動 |
+|------|------|
+| tmux コピーモード（`y`） | `clip.exe` へパイプ（WSL 想定） |
+| Neovim（tmux 内） | OSC52 + `unnamedplus`（tmux の `allow-passthrough`） |
+| Neovim（tmux 外・WSL） | `+` / `*` を `clip.exe` と PowerShell `Get-Clipboard` に接続 |
+
 WSL の Windows 連携が有効である必要があります。
 
 ## 動作確認チェックリスト
@@ -450,10 +483,11 @@ WSL の Windows 連携が有効である必要があります。
 - [ ] `.http` を開いたときにハイライトがあり、`:Rest run` / `<leader>rr` で結果ペインが開く
 - [ ] `exepath('sqls')` が `~/.local/bin/sqls` を指す
 - [ ] `.lazysql.toml` 付きプロジェクトの `.sql` で `:LspInfo` に `sqls` が表示される
-- [ ] （コンテナ内）`:Mason` で `oxfmt` / `oxlint` / `roslyn` が Installed になっている
-- [ ] （コンテナ内）TS / C# ファイルで `:LspInfo` に LSP client が表示される
+- [ ] （コンテナ内）`:Mason` で `lua_ls` / `stylua` などが Installed になっている
+- [ ] （コンテナ内・Vite+ プロジェクト）`:ConformInfo` で `oxfmt` が available、保存時に oxlint 診断が付く
+- [ ] （コンテナ内）TS / C# ファイルで `:LspInfo` に typescript-tools / easy-dotnet LSP が表示される
 - [ ] `tmux` が起動し、プレフィックス + `r` で設定が再読み込みできる
-- [ ] `lazygit` が `g` またはコマンドラインから起動できる
+- [ ] `lazygit` が tmux プレフィックス + `G` またはコマンドラインから起動できる
 - [ ] `systemctl --user is-active podman.socket` が `active`
 - [ ] 対話シェルで `echo "$DOCKER_HOST"` が `unix://…/podman/podman.sock` を指す
 - [ ] `podman run --rm docker.io/library/hello-world` が成功する
@@ -481,20 +515,20 @@ nvim
 
 ```
 dotfiles/
-├── bash/              # Bash 設定
+├── bash/              # Bash 設定（.bash_env.sh, .bash_user.sh, .bash_aliases など）
 ├── git/               # Git 共通設定（config.local はローカルのみ）
-├── lazygit/           # lazygit 設定
+├── lazygit/           # lazygit 設定（generate-commit-msg.sh 含む）
 ├── lazydocker/        # lazydocker 設定
 ├── lazysql/           # lazysql 設定
 ├── containers/        # Podman containers.conf（compose 警告抑制など）
 ├── nvim/              # Neovim 設定（lazy.nvim）
-│   ├── after/lsp/     # LSP サーバー別設定（sqls.lua, lua_ls.lua など）
+│   ├── after/lsp/     # LSP サーバー別設定（sqls.lua など）
 │   └── lua/
-│       ├── config/    # キーマップ、databaseurl / sqls-config、LSP 環境判定など
-│       └── plugins/   # プラグイン spec（rest-nvim.lua など）
-├── scripts/           # symlink.sh, user.sh など
+│       ├── config/    # キーマップ、clipboard / swap / viteplus-oxc / focus-dim など
+│       └── plugins/   # プラグイン spec（easy-dotnet, typescript-tools など）
+├── scripts/           # symlink.sh, zenhan-off.sh, nvim-dev-session-kill.sh
 ├── terminal/          # Windows Terminal テンプレート
 └── tmux/
     ├── colors.conf    # カラーパレット（tmux.conf から source）
-    └── tmux.conf      # メイン設定（プラグインなし）
+    └── tmux.conf      # メイン設定（TPM なし）
 ```
