@@ -4,6 +4,26 @@
 -- LINKS: https://github.com/nvim-telescope/telescope.nvim
 -- =====================================================================================================
 
+local dotnet = require("config.dotnet-workspace")
+local BASE_IGNORE = {
+  "node_modules",
+  "%.DS_STORE",
+  "%.git",
+  "%.pnpm%-store",
+  "%.tanstack",
+  "%.vite-hooks",
+}
+local function file_ignore_patterns()
+  local patterns = vim.deepcopy(BASE_IGNORE)
+  if dotnet.has_solution_root(vim.fn.getcwd()) then
+    vim.list_extend(patterns, {
+      "[/\\\\]bin[/\\\\]",
+      "[/\\\\]obj[/\\\\]",
+    })
+  end
+  return patterns
+end
+
 return {
   "nvim-telescope/telescope.nvim",
   dependencies = {
@@ -15,8 +35,26 @@ return {
   },
   cmd = "Telescope",
   keys = {
-    { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find Files (Telescope)" },
-    { "<leader>fg", "<cmd>Telescope live_grep<cr>", desc = "Live Grep (Telescope)" },
+    {
+      "<leader>ff",
+      function()
+        require("telescope.builtin").find_files({
+          hidden = true,
+          no_ignore = false,
+          file_ignore_patterns = file_ignore_patterns(),
+        })
+      end,
+      desc = "Find Files (Telescope)",
+    },
+    {
+      "<leader>fg",
+      function()
+        require("telescope.builtin").live_grep({
+          file_ignore_patterns = file_ignore_patterns(),
+        })
+      end,
+      desc = "Live Grep (Telescope)",
+    },
     { "<leader>fb", "<cmd>Telescope buffers<cr>", desc = "Buffers (Telescope)" },
     { "<leader>fh", "<cmd>Telescope help_tags<cr>", desc = "Help Tags (Telescope)" },
     { "<leader>fn", "<cmd>Telescope notify<cr>", desc = "Notification History (Telescope)" },
@@ -71,14 +109,7 @@ return {
           },
         },
         path_display = { "truncate" },
-        file_ignore_patterns = {
-          "node_modules",
-          "%.DS_STORE",
-          "%.git",
-          "%.pnpm%-store",
-          "%.tanstack",
-          "%.vite-hooks",
-        },
+        file_ignore_patterns = BASE_IGNORE,
       },
       pickers = {
         find_files = {
