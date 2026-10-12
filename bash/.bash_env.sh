@@ -17,3 +17,4 @@ export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.local/cache}"
 
 export LESSHISTFILE="$XDG_STATE_HOME/lesshst"
 export GIT_CONFIG_GLOBAL="$XDG_CONFIG_HOME/dotfiles/git/config"
+export BUILDKIT_PROGRESS=plain
