@@ -13,8 +13,55 @@ gui:
       - "bold"
     inactiveViewSelectedLineBgColor:
       - "#1e3a5f"
+    unstagedChangesColor:
+      - "#fb4934"
     selectedLineBgColor:
       - "#264f78"
+    authorColors:
+      "bahori": "#007fff"
+      "*": "#83a598"
+    branchColors:
+      "main": "#fb4934"
+      "feature/*": "#b8bb26"
+      "fix/*": "#fe8019"
+  nerdFontVersion: "3"
+  showIcons: true
+  showFileTree: true
+  showRandomTip: false
+  showCommandLog: true
+  mouseEvents: false
+  showDivergenceFrombaseBranch: arrwoAndNumber
+  commitLength:
+    show: true
+git:
+  log:
+    order: topo-order
+    showGraph: always
+  parseEmoji: true
+  mainBranches:
+    - main
+    - master
+  autoFetch: true
+os:
+  editPreset: nvim
+  copyToClipboardCmd: >
+    if [[ -n "$TMUX" ]]; then
+      printf "\033Ptmux;\033\033]52;c;$(printf {{text}} | base64 -w 0)\a\033\\" > /dev/tty
+    elif command -v clip.exe >/dev/null 2>&1; then
+      printf {{text}} | clip.exe
+    else
+      printf "\033]52;c;$(printf {{text}} | base64 -w 0)\a" > /dev/tty
+    fi
+  readFromClipboardCmd: >
+    if command -v powershell.exe >/dev/null 2>&1; then
+      powershell.exe -NoProfile -Command 'Get-Clipboard -Raw'
+    elif command -v xclip >/dev/null 2>&1; then
+      xclip -o -selection clipboard
+    elif command -v wl-paste >/dev/null 2>&1; then
+      wl-paste --no-newline
+    else
+      exit 1
+    fi
 customCommands:
   - key: "<c-g>"
     context: files
@@ -26,3 +73,18 @@ customCommands:
         key: Msg
         initialValue: '{{ runCommand "bash -c \"bash \\\"$HOME/.config/dotfiles/lazygit/generate-commit-msg.sh\\\"\"" }}'
     command: 'git commit -m {{.Form.Msg | quote}}'
+keybinding:
+  universal:
+    prevItem: "k"
+    nextItem: "j"
+    prevPage: "<c-u>"
+    nextPage: "<c-d>"
+    scrollUpMain: "K"
+    scrollDownMain: "J"
+    pushFiles: "P"
+    pullFiles: "p"
+  commits:
+    squashDown: "s"
+    renameCommit: "r"
+    cherryPickCopy: "c"
+    pasteCommits: "v"
