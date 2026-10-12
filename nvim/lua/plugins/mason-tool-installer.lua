@@ -5,17 +5,6 @@
 -- =====================================================================================================
 
 local env = require("config.lsp-env")
-local function build_ensure_installed()
-  local list = {
-    "lua_ls",
-    "stylua",
-  }
-  if env.typescript_lsp_available() then
-    table.insert(list, "oxfmt")
-    table.insert(list, "oxlint")
-  end
-  return list
-end
 
 return {
   "WhoIsSethDaniel/mason-tool-installer.nvim",
@@ -24,10 +13,19 @@ return {
     "mason-org/mason-lspconfig.nvim",
   },
   opts = {
-    ensure_installed = build_ensure_installed(),
+    ensure_installed = {
+      "lua_ls",
+      "stylua",
+      {
+        "tailwindcss-language-server",
+        condition = function()
+          return env.typescript_lsp_available()
+        end,
+      },
+    },
     run_on_start = true,
     start_delay = 1000,
-    debounce_hours = 24,
+    debounce_hours = 0,
     integrations = {
       ["mason-lspconfig"] = true,
       ["mason-null-ls"] = false,
