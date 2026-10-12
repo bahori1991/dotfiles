@@ -17,9 +17,7 @@ vim.keymap.set({ "n", "i", "v" }, "<Left>", "<Nop>", { noremap = true, silent = 
 vim.keymap.set({ "n", "i", "v" }, "<Right>", "<Nop>", { noremap = true, silent = true })
 
 -- move current row to center
-vim.keymap.set("n", "G", "Gzz", { noremap = true, silent = true })
-vim.keymap.set("n", "n", "nzzzv", { noremap = true, silent = true })
-vim.keymap.set("n", "N", "Nzzzv", { noremap = true, silent = true })
+vim.keymap.set("n", "G", "Gzt", { noremap = true, silent = true })
 
 -- Redraw Neovim window
 vim.keymap.set("n", "<leader>l", "<cmd>nohlsearch<bar>redraw!<cr>", {
