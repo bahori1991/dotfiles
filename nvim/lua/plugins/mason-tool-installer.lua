@@ -22,6 +22,12 @@ return {
           return env.typescript_lsp_available()
         end,
       },
+      {
+        "vtsls",
+        condition = function()
+          return env.typescript_lsp_available()
+        end,
+      },
     },
     run_on_start = true,
     start_delay = 1000,
