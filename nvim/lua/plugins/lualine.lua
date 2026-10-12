@@ -5,8 +5,12 @@
 -- =====================================================================================================
 
 local function line_status()
-  local row = vim.fn.line(".") .. "/" .. vim.fn.line("$")
-  local col = vim.fn.virtcol(".")
+  local cur = vim.fn.line(".")
+  local total = vim.fn.line("$")
+  local row_w = math.max(1, #tostring(total))
+  local row = string.format("%0" .. row_w .. "d/%0" .. row_w .. "d", cur, total)
+  local col_w = 3
+  local col = string.format("%0" .. col_w .. "d", vim.fn.virtcol("."))
   return "row:" .. row .. " col:" .. col
 end
 
