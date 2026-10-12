@@ -41,6 +41,11 @@ local function is_nvim_tree_win(win)
   return vim.bo[buf].filetype == "NvimTree"
 end
 
+local function is_csharp_explorer_win(win)
+  local buf = vim.api.nvim_win_get_buf(win)
+  return vim.bo[buf].filetype == "csharpexplorer"
+end
+
 local function winhighlight_str(active)
   return active and active_wh or inactive_wh
 end
@@ -63,7 +68,7 @@ local function sync_winhighlights()
   end
   local current = vim.api.nvim_get_current_win()
   for _, win in ipairs(vim.api.nvim_list_wins()) do
-    local active = win == current or is_nvim_tree_win(win)
+    local active = win == current or is_nvim_tree_win(win) or is_csharp_explorer_win(win)
     set_winhighlight(win, active)
   end
 end
@@ -169,7 +174,7 @@ vim.api.nvim_create_autocmd("WinLeave", {
 
 vim.api.nvim_create_autocmd("FileType", {
   group = focus_au,
-  pattern = "NvimTree",
+  pattern = { "NvimTree", "csharpexplorer" },
   callback = function()
     sync_tree_buf()
   end,
