@@ -2,7 +2,7 @@
 
 DOTFILES_DIR="${DOTFILES_DIR:-$HOME/.config/dotfiles}"
 
-source "$DOTFILES_DIR/scripts/user.sh"
+source "$DOTFILES_DIR/bash/.bash_user.sh"
 
 # set zenhan.exe path in Window
 ZENHAN="/mnt/c/Users/$WIN_USER/bin/zenhan/zenhan.exe"
