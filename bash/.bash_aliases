@@ -73,7 +73,6 @@ function lta() {
 
 # tmux
 alias tmux="tmux -f ~/.config/dotfiles/tmux/tmux.conf"
-alias tkill="tmux kill-session"
 
 # Update symlinks of dotfiles
 alias updatesymlink="source ~/.config/dotfiles/scripts/symlink.sh"
