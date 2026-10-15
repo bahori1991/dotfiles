@@ -17,14 +17,9 @@ if [[ -z "$SESSION" ]]; then
   exit 1
 fi
 
-if [[ -z "$ROOT" || ! -f "$ROOT/compose.yaml" ]]; then
-  echo "nvim-dev-session-kill: DEV_COMPOSE_ROOT / compose.yaml missing" >&2 
-  exit 1
-fi
-
-if ! command -v docker >/dev/null 2>&1; then
-  echo "nvim-dev-session-kill: docker not found" >&2
-  exit 1
+COMPOSE_OK=1
+if [[ -z "$ROOT" || ! -f "$ROOT/compose.yaml" ]] || ! command -v docker >/dev/null 2>&1; then
+  COMPOSE_OK=0
 fi
 
 COMPOSE=(docker compose --project-directory "$ROOT" -f "$ROOT/compose.yaml")
@@ -73,7 +68,9 @@ remove_swaps_matching_pids() {
         break
       fi
     done
-    ((${match})) && rm -f -- "$swp"
+    if ((match)); then
+      rm -f -- "$swp"
+    fi
   done
 }
 
@@ -92,24 +89,31 @@ collect_dead_pids() {
 
 # --- 1) :wqa on nvim panes (dev.sh: frontend/backend window, pane 1) ---
 for win in frontend backend; do
-  if tmux list-windows -t "$SESSION" -F '#{window_name}' 2>/dev/null | grep -qx "$win"; then
+  windows="$(tmux list-windows -t "$SESSION" -F '#{window_name}' 2>/dev/null || true)"
+  if grep -qx "$win" <<<"$windows"; then
     tmux send-keys -t "${SESSION}:${win}.1" Escape ':wqa' Enter 2>/dev/null || true
   fi
 done
 sleep 0.5
 
-# --- 2) Snapshot nvim PIDs in containers (includes embed if running) ---
+# --- 2) No compose environment: skip swap cleaning and just close the tmux session ---
+if ((!COMPOSE_OK)); then
+  tmux kill-session -t "$SESSION" 2>/dev/null || true
+  exit 0
+fi
+
+# --- 3) Snapshot nvim PIDs in containers (includes embed if running) ---
 mapfile -t BEFORE_F < <(compose_pgrep frontend | grep -E '^[0-9]+$' || true)
 mapfile -t BEFORE_B < <(compose_pgrep backend | grep -E '^[0-9]+$' || true)
 
-# --- 3) KIll tmux session 
-tmux kill-session -t "$SESSION"
+# --- 4) KIll tmux session
+tmux kill-session -t "$SESSION" || true
 sleep 0.5
 
-# --- 4) PIDs that were running before and are dead now ---
+# --- 5) PIDs that were running before and are dead now ---
 mapfile -t DEAD_F < <(collect_dead_pids frontend "${BEFORE_F[@]}")
 mapfile -t DEAD_B < <(collect_dead_pids backend "${BEFORE_B[@]}")
 
-# --- 5) Remove swap files owned by those PIDs only ---
+# --- 6) Remove swap files owned by those PIDs only ---
 remove_swaps_matching_pids frontend "${DEAD_F[@]}"
 remove_swaps_matching_pids backend "${DEAD_B[@]}"
