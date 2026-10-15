@@ -65,7 +65,7 @@ os:
 customCommands:
   - key: "<c-g>"
     context: files
-    description: "Commit with Cursor Agent message"
+    description: "Commit with Claude Code message"
     loadingText: "Generating commit message..."
     prompts:
       - type: input

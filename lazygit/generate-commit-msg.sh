@@ -19,10 +19,9 @@ PROMPT
 )"
 prompt="${prompt}
 ${recent}
-Run or use equivalent of: git diff --cached
-"
+$(git diff --cached)"
 
-agent -p --mode ask --model composer-2.5-fast --output-format text "$prompt" \
+claude -p --model claude-haiku-5-5 --permission-mode plan --output-format text "$prompt" \
   | sed -e '/^```/d' -e 's/^`//;s/`$//' \
   | awk 'NF{p=1} p' \
   | head -n 20
