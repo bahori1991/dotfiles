@@ -7,6 +7,9 @@
 -- encode
 vim.opt.fileencodings = "utf-8,sjis,euc-jp,iso-2022-jp"
 
+-- mouse
+vim.opt.mouse = ""
+
 -- cursorline
 vim.opt.cursorline = true
 
