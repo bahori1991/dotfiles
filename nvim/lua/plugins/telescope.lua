@@ -17,6 +17,8 @@ local function file_ignore_patterns()
   local patterns = vim.deepcopy(BASE_IGNORE)
   if dotnet.has_solution_root(vim.fn.getcwd()) then
     vim.list_extend(patterns, {
+      "[/\\\\]?bin[/\\\\]",
+      "[/\\\\]?obj[/\\\\]",
       "[/\\\\]bin[/\\\\]",
       "[/\\\\]obj[/\\\\]",
     })
