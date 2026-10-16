@@ -37,7 +37,7 @@ TMP_RESPONSE=$(mktemp)
 TMP_ERROR=$(mktemp)
 
 # API request via Claude Code
-gum spin --spinner dot --title "Generating candidates..." -- \
+gum spin --spinner dot --title "Generating git commit message candidates. Please wait..." -- \
   bash -c "claude -p --model claude-haiku-5-5 --output-format text < $TMP_PAYLOAD > $TMP_RESPONSE 2>$TMP_ERROR"
 
 CANDIDATES=$(cat "$TMP_RESPONSE")
@@ -75,5 +75,3 @@ if [ -n "$FINAL_MSG" ]; then
 else
   echo "Commit cancelled"
 fi
-
-clear
