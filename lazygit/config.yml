@@ -30,7 +30,7 @@ gui:
   showRandomTip: false
   showCommandLog: true
   mouseEvents: false
-  showDivergenceFrombaseBranch: arrwoAndNumber
+  showDivergenceFromBaseBranch: arrowAndNumber
   commitLength:
     show: true
 git:
@@ -46,33 +46,37 @@ os:
   editPreset: nvim
   copyToClipboardCmd: >
     if [[ -n "$TMUX" ]]; then
+
       printf "\033Ptmux;\033\033]52;c;$(printf {{text}} | base64 -w 0)\a\033\\" > /dev/tty
     elif command -v clip.exe >/dev/null 2>&1; then
+
       printf {{text}} | clip.exe
     else
+
       printf "\033]52;c;$(printf {{text}} | base64 -w 0)\a" > /dev/tty
     fi
+
   readFromClipboardCmd: >
     if command -v powershell.exe >/dev/null 2>&1; then
+
       powershell.exe -NoProfile -Command 'Get-Clipboard -Raw'
     elif command -v xclip >/dev/null 2>&1; then
+
       xclip -o -selection clipboard
     elif command -v wl-paste >/dev/null 2>&1; then
+
       wl-paste --no-newline
     else
+
       exit 1
     fi
+
 customCommands:
   - key: "<c-g>"
-    context: files
+    context: 'global'
     description: "Commit with Claude Code message"
-    loadingText: "Generating commit message..."
-    prompts:
-      - type: input
-        title: Commit message
-        key: Msg
-        initialValue: '{{ runCommand "bash -c \"bash \\\"$HOME/.config/dotfiles/lazygit/generate-commit-msg.sh\\\"\"" }}'
-    command: 'git commit -m {{.Form.Msg | quote}}'
+    command: '$HOME/.config/dotfiles/lazygit/generate-commit-msg.sh'
+    output: terminal
 keybinding:
   universal:
     prevItem: "k"
