@@ -72,8 +72,8 @@ FINAL_MSG=$(echo "$FULL_MSG" | gum write --width 100 --height 10 --placeholder "
 
 if [ -n "$FINAL_MSG" ]; then
   git commit -m "$FINAL_MSG"
-  clear
 else
   echo "Commit cancelled"
 fi
 
+clear
