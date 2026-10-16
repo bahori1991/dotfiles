@@ -78,7 +78,7 @@ return {
       oxfmt = {
         command = function(_, ctx)
           local root = oxc.project_root(ctx.buf)
-          return oxc.resolve_ox_tool(root, "oxfmt")
+          return oxc.resolve_ox_tool(root, "oxfmt") or "oxfmt"
         end,
         args = { "--stdin-filepath", "$FILENAME" },
         cwd = function(_, ctx)
