@@ -87,14 +87,24 @@ collect_dead_pids() {
   done
 }
 
-# --- 1) :wqa on nvim panes (dev.sh: frontend/backend window, pane 1) ---
-for win in frontend backend; do
-  windows="$(tmux list-windows -t "$SESSION" -F '#{window_name}' 2>/dev/null || true)"
-  if grep -qx "$win" <<<"$windows"; then
-    tmux send-keys -t "${SESSION}:${win}.1" Escape ':wqa' Enter 2>/dev/null || true
+# --- 1) :qa on nvim panes (docker-dev.sh: pane started with "podman exec -it csharp_tutorial-dev-1 nvim"), wait for them to exit ---
+pane_alive() {
+  [[ "$(tmux display-message -p -t "$1" '#{pane_dead}' 2>/dev/null)" == 0 ]]
+}
+
+nvim_panes="$(tmux list-panes -s -t "$SESSION" -F '#{pane_id} #{pane_start_command}' 2>/dev/null | awk '/(^|[ "\/])nvim([ "]|$)/ {print $1}' || true)"
+for pane in $nvim_panes; do
+  tmux send-keys -t "$pane" Escape ':qa' Enter 2>/dev/null || true
+  for _ in $(seq 1 50); do
+    pane_alive "$pane" || break
+    sleep 0.1
+  done
+  if pane_alive "$pane"; then
+    tmux display-message -t "$SESSION" "nvim did not quit (unsaved changes?). Session kept." 2>/dev/null || true
+    echo "nvim in pane $pane did not quit; session kept" >&2
+    exit 1
   fi
 done
-sleep 0.5
 
 # --- 2) No compose environment: skip swap cleaning and just close the tmux session ---
 if ((!COMPOSE_OK)); then
