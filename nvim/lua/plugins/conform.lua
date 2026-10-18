@@ -12,7 +12,7 @@ local function lint_error_count(bufnr, opts)
   local only_source = opts.source
   local n = 0
   for _, d in ipairs(vim.diagnostic.get(bufnr, { severity = vim.diagnostic.severity.ERROR })) do
-    if not only_source or d.source == only_source then
+    if (not only_source or d.source == only_source) and tostring(d.code) ~= "CS1002" then
       n = n + 1
     end
   end
