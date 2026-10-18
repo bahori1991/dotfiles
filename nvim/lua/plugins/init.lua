@@ -26,4 +26,5 @@ return {
   { import = "plugins.nvim-lint" },
   { import = "plugins.rest-nvim" },
   { import = "plugins.virt-column" },
+  { import = "plugins.mdkite" },
 }
