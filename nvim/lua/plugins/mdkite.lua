@@ -18,6 +18,7 @@ return {
     require("mdkite").setup({
       open_browser = true,
       default_theme = "dark",
+      custom_css = vim.fn.stdpath("config") .. "/mdkite.css",
       browser = {
         "/mnt/c/Windows/explorer.exe",
       },
