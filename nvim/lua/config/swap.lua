@@ -7,7 +7,9 @@ local M = {}
 
 local function swap_container_segment()
   local name = vim.env.CONTAINER_NAME or ""
-  name = vim.trim(name)
+  if name == "" then
+    name = vim.trim(vim.fn.hostname()):gsub("%..*$", "")
+  end
   if name ~= "" and name:match("^[%w%-]+$") then
     return name
   end
@@ -19,9 +21,8 @@ local function swap_dir()
 end
 
 function M.setup_directory()
-  local dir = swap_dir()
-  vim.fn.mkdir(dir, "p")
-  vim.o.directory = dir .. "//"
+  vim.fn.mkdir(swap_dir(), "p")
+  vim.o.directory = swap_dir() .. "//"
 end
 
 M.setup_directory()
