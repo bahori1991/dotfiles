@@ -41,8 +41,8 @@ sudo apt install -y \
 | **tmux** 3.1 以上 | ターミナル multiplexer（`bind -N` を使用） |
 | **lazygit** | tmux から `G` で起動 |
 | **gum** | lazygit の `Ctrl-g`（Claude によるコミットメッセージ生成）の選択 UI |
-| **jq** | 上記の候補 JSON の解析（apt の `jq` で可） |
-| **Claude Code**（`claude` コマンド） | 上記で `claude -p` により候補を生成（事前にログイン済みであること） |
+| **jq** | 上記の候補 JSON の解析、tmux 使用量表示の statusLine スクリプト（apt の `jq` で可） |
+| **Claude Code**（`claude` コマンド） | 上記で `claude -p` により候補を生成（事前にログイン済みであること）。tmux の使用量表示は statusLine 経由で利用 |
 | **eza** | `ls` / `ll` / `la` エイリアス |
 | **curl** | Neovim プラグイン rest.nvim（HTTP クライアント） |
 | **unzip** | [sqls](https://github.com/sqls-server/sqls) バイナリ展開（SQL LSP） |
@@ -397,9 +397,22 @@ TS/JS をコンテナ外で開いた場合、format / lint は条件を満たさ
 | クリップボード | tmux 内は OSC52 + `unnamedplus`（tmux の `allow-passthrough`）、WSL 単体は `clip.exe` / PowerShell `Get-Clipboard`（`nvim/lua/config/cilpboard.lua`） |
 | 保存時フォーマット | `BufWritePre` で conform.nvim が整形。リントエラーのあるバッファは整形をスキップして警告（`nvim/lua/plugins/conform.lua`） |
 | IME 自動オフ | 挿入・置換モード以外へ切り替えたとき `scripts/zenhan-off.sh` を実行（`nvim/lua/config/zenhan.lua`。zenhan 配置時） |
-| Telescope | `.sln` 等のある dotnet ワークスペースでは `bin` / `obj` を検索対象から除外 |
+| Telescope | `bin` / `obj` を常に検索対象から除外（`nvim/lua/plugins/telescope.lua`） |
 | スワップファイル | `CONTAINER_NAME` ごとに `stdpath("state")/swap/<segment>/`（`config/swap.lua`） |
 | フォーカス喪失時 | UI を dim（`config/focus-dim.lua`、NvimTree の背景も同期） |
+
+### Markdown プレビュー（mdkite）
+
+[mdkite.nvim](https://github.com/selimacerbas/mdkite.nvim) で `.md` をブラウザにリアルタイム表示します（Mermaid・KaTeX・スクロール同期）。  
+npm や Node.js は不要です。設定は `nvim/lua/plugins/mdkite.lua` にあり、依存の `kitehost.nvim` も lazy.nvim が入れます。
+
+| キー | コマンド | 説明 |
+|------|----------|------|
+| `<leader>ms` | `:MdKite start` | プレビューを開始（ブラウザを開く） |
+| `<leader>mr` | `:MdKite refresh` | プレビューを再描画 |
+| `<leader>mS` | `:MdKite stop` | プレビューを停止 |
+
+ブラウザは `/mnt/c/Windows/explorer.exe` 経由で開くため、WSL 前提です。テーマは dark。
 
 ## 7. tmux の初回起動
 
@@ -429,6 +442,22 @@ TPM 等のプラグインマネージャは使わず、`tmux.conf` と `colors.c
 
 コピーモードは vi キー。選択後 `y` で Windows クリップボード（`clip.exe`）へコピーします（WSL 想定）。  
 ペイン切り替え時（`pane-focus-in`）に `scripts/zenhan-off.sh` で IME オフ（zenhan 配置時）。
+
+### ステータスバーの Claude 使用量
+
+ステータスバー右側に、Claude Code の 5 時間枠・7 日枠の使用率を表示します（`scripts/claude-usage.sh`、色は 80% で黄、95% で赤）。  
+数値は Claude Code の statusLine から `scripts/claude-statusline.sh` が `${XDG_CACHE_HOME:-$HOME/.cache}/claude-usage` に書き出すキャッシュを読んでいます。キャッシュが 6 時間より古い場合は表示しません。
+
+表示させるには、`~/.claude/settings.json`（`symlink.sh` では配置されない）に次を設定してください。
+
+```json
+"statusLine": {
+  "type": "command",
+  "command": "~/.config/dotfiles/scripts/claude-statusline.sh"
+}
+```
+
+`claude-statusline.sh` は Claude Code 本体の下部にもモデル名とコンテキスト使用率を表示します。
 
 ### dev セッション終了（`Q`）
 
@@ -538,6 +567,8 @@ WSL の Windows 連携が有効である必要があります。
 - [ ] `podman compose version` が v2 系（例: v2.40.3）を表示し、外部プロバイダ警告が出ない（`containers.conf` の `compose_warning_logs = false`）
 - [ ] `lazydocker` または tmux プレフィックス + `D` でコンテナ一覧が開く
 - [ ] Podman コンテナ内でプロンプト先頭に `[container]` が表示される（ホストでは `[WSL]` など）
+- [ ] `.md` を開いて `<leader>ms` を押すと、ブラウザにプレビューが開く
+- [ ] tmux のステータスバー右側に Claude の 5h / 7d 使用量が表示される（Claude Code の statusLine 設定後、`~/.cache/claude-usage` が作成されていること）
 
 ## 更新方法
 
@@ -570,7 +601,7 @@ dotfiles/
 │   └── lua/
 │       ├── config/    # キーマップ、clipboard / swap / zenhan / viteplus-oxc / focus-dim など
 │       └── plugins/   # プラグイン spec（easy-dotnet, csharp-explorer, rest-nvim など）
-├── scripts/           # symlink.sh, zenhan-off.sh, nvim-dev-session-kill.sh
+├── scripts/           # symlink.sh, zenhan-off.sh, nvim-dev-session-kill.sh, claude-statusline.sh, claude-usage.sh
 ├── terminal/          # Windows Terminal テンプレート
 └── tmux/
     ├── colors.conf    # カラーパレット（tmux.conf から source）
