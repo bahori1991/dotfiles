@@ -5,6 +5,8 @@
 
 vim.treesitter.language.register("tsx", "typescriptreact")
 vim.treesitter.language.register("jsx", "javascriptreact")
+vim.treesitter.language.register("xml", "csproj")
+vim.treesitter.language.register("xml", "dotnetprops")
 
 vim.api.nvim_create_autocmd("FileType", {
   callback = function(args)

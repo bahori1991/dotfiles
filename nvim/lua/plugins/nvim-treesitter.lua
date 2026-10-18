@@ -30,6 +30,7 @@ return {
       "vim",
       "vimdoc",
       "query",
+      "xml",
     }
     require("nvim-treesitter").install(parsers)
   end,
