@@ -109,5 +109,8 @@ function lta() {
 # tmux
 alias tmux="tmux -f ~/.config/dotfiles/tmux/tmux.conf"
 
+# podman
+alias docker="podman"
+
 # Update symlinks of dotfiles
 alias updatesymlink="source ~/.config/dotfiles/scripts/symlink.sh"
