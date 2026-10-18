@@ -4,7 +4,6 @@
 -- LINKS: https://github.com/nvim-telescope/telescope.nvim
 -- =====================================================================================================
 
-local dotnet = require("config.dotnet-workspace")
 local BASE_IGNORE = {
   "node_modules",
   "%.DS_STORE",
@@ -12,17 +11,11 @@ local BASE_IGNORE = {
   "%.pnpm%-store",
   "%.tanstack",
   "%.vite-hooks",
+  "[/\\\\]?obj[/\\\\]",
+  "[/\\\\]?bin[/\\\\]",
 }
 local function file_ignore_patterns()
   local patterns = vim.deepcopy(BASE_IGNORE)
-  if dotnet.has_solution_root(vim.fn.getcwd()) then
-    vim.list_extend(patterns, {
-      "[/\\\\]?bin[/\\\\]",
-      "[/\\\\]?obj[/\\\\]",
-      "[/\\\\]bin[/\\\\]",
-      "[/\\\\]obj[/\\\\]",
-    })
-  end
   return patterns
 end
 
