@@ -12,7 +12,7 @@ return {
     "nvim-telescope/telescope.nvim",
     "mfussenegger/nvim-dap",
   },
-  ft = { "cs", "csharp", "cshtml", "csproj", "dotnetprops" },
+  lazy = false,
   cond = function()
     return env.dotnet_lsp_available()
   end,
