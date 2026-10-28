@@ -38,7 +38,12 @@ local function toggle_nvim_tree()
 end
 
 local function toggle_solution_explorer()
+  local prev_win = vim.api.nvim_get_current_win()
   vim.cmd("CSharpExplorer")
+  -- csharp-explorer moves focus into its split on open; return focus to the editor
+  if vim.api.nvim_win_is_valid(prev_win) then
+    vim.api.nvim_set_current_win(prev_win)
+  end
 end
 
 vim.keymap.set("n", "<leader>e", function()

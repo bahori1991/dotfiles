@@ -21,6 +21,7 @@ return {
     picker = "telescope",
     lsp = {
       enabled = true,
+      auto_refresh_codelens = false,
     },
   },
   config = function(_, opts)
