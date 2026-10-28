@@ -37,6 +37,12 @@ vim.opt.expandtab = true
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.autoindent = true
+vim.opt.list = true
+vim.opt.listchars = {
+  tab = "··",
+  trail = "·",
+  space = "·",
+}
 
 -- wrap
 vim.opt.wrap = false
