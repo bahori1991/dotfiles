@@ -36,7 +36,7 @@ return {
       typescriptreact = { "oxfmt" },
       json = { "oxfmt" },
       jsonc = { "oxfmt" },
-      cs = { "dotnet_format" },
+      cs = { "csharpier" },
     },
     default_format_opts = {
       lsp_format = false,
@@ -44,6 +44,9 @@ return {
     format_on_save = function(bufnr)
       if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
         return
+      end
+      if vim.bo[bufnr].filetype == "cs" then
+        require("config.csharp-semicolon").fix_missing_semicolons(bufnr)
       end
       local err_count = lint_error_count(bufnr)
       if err_count > 0 then
@@ -92,14 +95,7 @@ return {
           return oxc.resolve_ox_tool(root, "oxfmt") ~= nil
         end,
       },
-      dotnet_format = {
-        command = "dotnet",
-        args = { "format", "--include", "$FILENAME" },
-        stdin = false,
-        cwd = function(_, ctx)
-          return require("conform.util").root_file({ "*.sln", "*.slnx", "*.csproj" })(_, ctx)
-        end,
-        require_cwd = true,
+      csharpier = {
         condition = function()
           return env.dotnet_lsp_available()
         end,
