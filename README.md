@@ -394,7 +394,7 @@ TS/JS をコンテナ外で開いた場合、format / lint は条件を満たさ
 
 | 機能 | 設定 |
 |------|------|
-| クリップボード | tmux 内は OSC52 + `unnamedplus`（tmux の `allow-passthrough`）、WSL 単体は `clip.exe` / PowerShell `Get-Clipboard`（`nvim/lua/config/cilpboard.lua`） |
+| クリップボード | tmux 内は OSC52 + `unnamedplus`（tmux の `allow-passthrough`）、WSL 単体は `clip.exe` / PowerShell `Get-Clipboard`（`nvim/lua/config/clipoard.lua`） |
 | 保存時フォーマット | `BufWritePre` で conform.nvim が整形。リントエラーのあるバッファは整形をスキップして警告（`nvim/lua/plugins/conform.lua`） |
 | IME 自動オフ | 挿入・置換モード以外へ切り替えたとき `scripts/zenhan-off.sh` を実行（`nvim/lua/config/zenhan.lua`。zenhan 配置時） |
 | Telescope | `bin` / `obj` を常に検索対象から除外（`nvim/lua/plugins/telescope.lua`） |
