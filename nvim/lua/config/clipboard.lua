@@ -69,10 +69,8 @@ function M.setup_disabled()
   vim.opt.clipboard = ""
 end
 
-if os.getenv("TMUX") then
-  M.setup_osc52()
-elseif M.wsl_clipboard_available() then
+if M.wsl_clipboard_available() then
   M.setup_wsl_clipboard()
 else
-  M.setup_disabled()
+  M.setup_osc52()
 end
