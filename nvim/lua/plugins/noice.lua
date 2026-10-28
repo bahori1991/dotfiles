@@ -16,6 +16,30 @@ return {
       "<cmd>Noice dismiss<cr>",
       desc = "Dismiss Noice messages",
     },
+    {
+      "<C-f>",
+      function()
+        if not require("noice.lsp").scroll(4) then
+          return "<C-f>"
+        end
+      end,
+      mode = { "n", "i", "s" },
+      expr = true,
+      silent = true,
+      desc = "Scroll LSP docs down",
+    },
+    {
+      "<C-b>",
+      function()
+        if not require("noice.lsp").scroll(-4) then
+          return "<C-b>"
+        end
+      end,
+      mode = { "n", "i", "s" },
+      expr = true,
+      silent = true,
+      desc = "Scroll LSP docs up",
+    },
   },
   opts = {
     cmdline = {
@@ -60,6 +84,20 @@ return {
       },
       hover = {
         enabled = true,
+      },
+      signature = {
+        relative = "cursor",
+        anchor = "SW",
+        position = { row = -1, col = 0 },
+        size = {
+          max_width = 50,
+          max_height = 4,
+          height = "auto",
+        },
+        border = {
+          style = "rounded",
+        },
+        enter = false,
       },
     },
     routes = {

@@ -18,8 +18,7 @@ return {
       cmdline = true,
       disabled_filetypes = {},
       wrap = {
-        ["<C-b>"] = "motion",
-        ["<C-S-b>"] = "motion_reverse",
+        ["<C-b>"] = false,
       },
       pairs = {},
     },
