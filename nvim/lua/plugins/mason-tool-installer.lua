@@ -28,6 +28,12 @@ return {
           return env.typescript_lsp_available()
         end,
       },
+      {
+        "csharpier",
+        condition = function()
+          return env.dotnet_lsp_available()
+        end,
+      },
     },
     run_on_start = true,
     start_delay = 1000,
