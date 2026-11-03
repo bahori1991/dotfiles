@@ -23,6 +23,16 @@ return {
       enabled = true,
       auto_refresh_codelens = false,
     },
+    notifications = {
+      -- 起動時の "Initializing..." 通知を出さず、失敗時のみ通知する
+      handler = function()
+        return function(finished_event)
+          if not finished_event.success then
+            vim.notify(finished_event.result.msg, vim.log.levels.ERROR)
+          end
+        end
+      end,
+    },
   },
   config = function(_, opts)
     require("easy-dotnet").setup(opts)
