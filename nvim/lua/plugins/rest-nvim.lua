@@ -25,6 +25,18 @@ return {
     },
   },
   config = function()
+    local fidget_handle = require("fidget.progress.handle")
+    local create = fidget_handle.create
+    fidget_handle.create = function(msg)
+      if msg and msg.lsp_client and msg.lsp_client.name == "rest.nvim" then
+        return {
+          report = function() end,
+          finish = function() end,
+          cancel = function() end,
+        }
+      end
+      return create(msg)
+    end
     vim.g.rest_nvim = {
       _log_level = "DEBUG",
       env = {
@@ -37,7 +49,16 @@ return {
         },
       },
     }
-    vim.keymap.set("n", "<leader>rr", "<cmd>belowright horizontal Rest run<cr>", {
+    vim.keymap.set("n", "<leader>rr", function()
+      vim.cmd("belowright horizontal Rest run")
+      for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+        local buf = vim.api.nvim_win_get_buf(win)
+        if vim.b[buf].__pane_group == "rest_nvim_result" then
+          vim.api.nvim_set_current_win(win)
+          break
+        end
+      end
+    end, {
       buffer = true,
       desc = "Run HTTP Request (rest.nvim)",
     })
