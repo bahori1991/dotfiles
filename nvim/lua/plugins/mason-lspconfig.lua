@@ -4,6 +4,8 @@
 -- LINKS: https://github.com/mason-org/mason-lspconfig.nvim
 -- =====================================================================================================
 
+local env = require("config.lsp-env")
+
 return {
   "mason-org/mason-lspconfig.nvim",
   dependencies = {
@@ -20,7 +22,13 @@ return {
     -- "ensure_installed" depends on "mason-tool-installer"
     ensure_installed = {},
     automatic_enable = {
-      exclude = { "oxlint" },
+      exclude = (function()
+        local exclude = { "oxlint" }
+        if not env.typescript_lsp_available() then
+          vim.list_extend(exclude, { "tailwindcss", "vtsls" })
+        end
+        return exclude
+      end)(),
     },
   },
   config = function(_, opts)
