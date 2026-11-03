@@ -34,7 +34,6 @@ return {
       { "<leader>c", group = "Code" },
       { "<leader>d", group = "Diagnostics" },
       { "<leader>f", group = "Telescope" },
-      { "<leader>r", group = "Rename / Refactor" },
     },
   },
   keys = {
