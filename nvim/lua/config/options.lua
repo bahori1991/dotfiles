@@ -73,3 +73,6 @@ vim.opt.fillchars = vim.tbl_extend("force", vim.opt.fillchars:get(), {
   foldsep = " ",
 })
 vim.opt.foldtext = "v:lua.require('config.foldtext').get()"
+
+-- disable swap file
+vim.opt.swapfile = false
