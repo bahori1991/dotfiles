@@ -49,21 +49,22 @@ return {
       cmdline_popup = {
         position = { row = "50%", col = "50%" },
         size = {
-          min_width = 60,
+          min_width = 40,
+          max_width = 60,
           width = "auto",
           height = "auto",
         },
       },
       hover = {
         relative = "cursor",
-        anchor = "auto",
+        anchor = "NW",
         position = {
           row = 2,
           col = 0,
         },
         size = {
           max_width = 80,
-          max_height = 25,
+          max_height = 15,
           height = "auto",
         },
         border = {
@@ -86,18 +87,20 @@ return {
         enabled = true,
       },
       signature = {
-        relative = "cursor",
-        anchor = "SW",
-        position = { row = -1, col = 0 },
-        size = {
-          max_width = 50,
-          max_height = 4,
-          height = "auto",
+        opts = {
+          relative = "cursor",
+          anchor = "NW",
+          position = { row = 2, col = 0 },
+          size = {
+            max_width = 80,
+            max_height = 15,
+            height = "auto",
+          },
+          border = {
+            style = "rounded",
+          },
+          enter = false,
         },
-        border = {
-          style = "rounded",
-        },
-        enter = false,
       },
     },
     routes = {
