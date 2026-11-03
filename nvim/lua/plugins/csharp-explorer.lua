@@ -25,6 +25,28 @@ return {
     },
   },
   config = function(_, opts)
-    require("csharp-explorer").setup(opts)
+    local explorer = require("csharp-explorer")
+    explorer.setup(opts)
+    vim.api.nvim_create_autocmd("FileType", {
+      group = vim.api.nvim_create_augroup("CSharpExplorerNoList", { clear = true }),
+      pattern = "csharpexplorer",
+      callback = function()
+        vim.wo.list = false
+      end,
+    })
+    vim.api.nvim_create_autocmd("BufEnter", {
+      group = vim.api.nvim_create_augroup("CSharpExplorerFollow", { clear = true }),
+      pattern = "*.cs",
+      callback = function()
+        if not explorer.is_active then
+          return
+        end
+        local prev_win = vim.api.nvim_get_current_win()
+        explorer.find_file()
+        if vim.api.nvim_win_is_valid(prev_win) then
+          vim.api.nvim_set_current_win(prev_win)
+        end
+      end,
+    })
   end,
 }
