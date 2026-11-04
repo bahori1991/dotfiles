@@ -68,7 +68,9 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
       -- collapse other expanded dirs, then reveal only the opened file's path
       local api = require("nvim-tree.api")
       api.tree.collapse_all()
-      api.tree.open({ focus = false, find_file = true })
+      keep_focus(function()
+        api.tree.open({ find_file = true })
+      end)
     end
   end,
 })
