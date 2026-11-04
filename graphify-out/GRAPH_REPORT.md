@@ -3,15 +3,15 @@
 ## Corpus Check
 - 78 files · ~15,056 words
 - Verdict: corpus is large enough that graph structure adds value.
-- Unclassified: 15 file(s) not represented in the graph (top: (none) 5, .toml 4, .conf 3)
+- Unclassified: 16 file(s) not represented in the graph (top: (none) 6, .toml 4, .conf 3)
 
 ## Summary
-- 305 nodes · 311 edges · 52 communities (15 shown, 37 thin omitted)
+- 306 nodes · 311 edges · 52 communities (15 shown, 37 thin omitted)
 - Extraction: 98% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 4 edges (avg confidence: 0.6)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `d6813447`
+- Built from commit: `f906ffc1`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -51,8 +51,8 @@
 5. `universal` - 9 edges
 6. `sync_winhighlights()` - 7 edges
 7. `customCommands` - 6 edges
-8. `theme` - 5 edges
-9. `git` - 5 edges
+8. `apply_focus_state()` - 5 edges
+9. `parse_postgres_url()` - 5 edges
 10. `commits` - 5 edges
 
 ## Surprising Connections (you probably didn't know these)
@@ -76,7 +76,7 @@ Cohesion: 0.08
 Nodes (25): bahori, feature/*, fix/*, main, show, gui, border, commitLength (+17 more)
 
 ### Community 3 - "explorer.lua"
-Cohesion: 0.19
+Cohesion: 0.18
 Nodes (13): entries_changed(), explorer_is_open(), has_solution_in_cwd(), keep_focus(), list_entries(), M.toggle(), M.use_solution_explorer(), same_entries() (+5 more)
 
 ### Community 4 - "gui"
@@ -132,8 +132,8 @@ Nodes (3): .bash_user.sh script, WIN_USER, WSL_USER
   .claude/CLAUDE.md · relation: conceptually_related_to
 
 ## Knowledge Gaps
-- **23 isolated node(s):** `SQL_EDITOR`, `EDITOR`, `VISUAL`, `LANG`, `LC_ALL` (+18 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 192 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **23 isolated node(s):** `PODMAN_COMPOSE_PROVIDER`, `WIN_USER`, `WSL_USER`, `BUILDKIT_PROGRESS`, `EDITOR` (+18 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 193 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **37 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
@@ -141,7 +141,7 @@ _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `gui` connect `gui` to `universal`?**
   _High betweenness centrality (0.021) - this node is a cross-community bridge._
-- **What connects `SQL_EDITOR`, `EDITOR`, `VISUAL` to the rest of the system?**
+- **What connects `PODMAN_COMPOSE_PROVIDER`, `WIN_USER`, `WSL_USER` to the rest of the system?**
   _23 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `universal` be split into smaller, more focused modules?**
   _Cohesion score 0.07692307692307693 - nodes in this community are weakly interconnected._
