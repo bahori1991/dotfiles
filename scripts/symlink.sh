@@ -25,14 +25,11 @@ ln -snf "$DOTFILES_DIR/lazygit/config.yml" ~/.config/lazygit/config.yml
 mkdir -p ~/.config/lazydocker
 ln -snf "$DOTFILES_DIR/lazydocker/config.yml" ~/.config/lazydocker/config.yml
 
-# lazysql
-# mkdir -p ~/.config/lazysql
-# ln -snf "$DOTFILES_DIR/lazysql/config.toml" ~/.config/lazysql/config.toml
-
 # sqlmux
 ln -snf "$DOTFILES_DIR/sqlmux/config.toml" ~/.config/sqlmux/config.toml
 ln -snf "$DOTFILES_DIR/sqlmux/keymaps.toml" ~/.config/sqlmux/keymaps.toml
 ln -snf "$DOTFILES_DIR/sqlmux/themes" ~/.config/sqlmux/themes
+ln -snf "$DOTFILES_DIR/sqlmux/layouts" ~/.config/sqlmux/layouts
 
 # Podman
 mkdir -p ~/.config/containers
