@@ -1,0 +1,21 @@
+version = 1
+
+[[session]]
+  name = ""
+  connection = "sample (container)"
+  active = 0
+
+  [[session.window]]
+    name = "data"
+    focus = 0
+    zoom = 0
+    sidebar_open = true
+    sidebar_width = 0
+    result_height = 0.0
+    [session.window.layout]
+      ratio = 0.0
+      pane = 1
+
+    [[session.window.pane]]
+      id = 1
+      current = 0
