@@ -12,7 +12,7 @@ WSL2 上の Linux 環境を主な想定としていますが、Linux 単体で�
 | tmux | `tmux/` | `~/.config/tmux/tmux.conf` |
 | lazygit | `lazygit/` | `~/.config/lazygit/config.yml` |
 | lazydocker | `lazydocker/` | `~/.config/lazydocker/config.yml` |
-| lazysql | `lazysql/` | `~/.config/lazysql/config.toml` |
+| sqlmux | `sqlmux/` | `~/.config/sqlmux/`（`config.toml`, `keymaps.toml`, `themes/`, `layouts/`） |
 | Podman | `containers/` | `~/.config/containers/containers.conf` |
 | Git | `git/` | `GIT_CONFIG_GLOBAL` 経由で読み込み |
 | Windows Terminal | `terminal/` | WSL 利用時のみ自動生成 |
@@ -47,9 +47,9 @@ sudo apt install -y \
 | **curl** | Neovim プラグイン rest.nvim（HTTP クライアント） |
 | **unzip** | [sqls](https://github.com/sqls-server/sqls) バイナリ展開（SQL LSP） |
 | **sqls** | PostgreSQL 向け SQL LSP（Mason ではなく `~/.local/bin` に配置） |
-| **lazysql** | tmux から `S` で起動する TUI SQL クライアント（任意） |
 | **podman** | OCI コンテナ（TS / C# 向け LSP 用 devcontainer、lazydocker 連携） |
 | **lazydocker** | tmux から `D` で起動（Podman の API 経由） |
+| **sqlmux** | tmux から `S` で起動する TUI SQL クライアント（任意。`~/.local/bin/sqlmux` に配置） |
 | **podman-docker**（任意） | `docker` コマンドを Podman 互換 CLI として使う（`apt install podman-docker`） |
 | **Docker Compose v2** | Go 版 Compose（`podman compose` 用。apt の Python v1 ではなく GitHub バイナリを推奨） |
 
@@ -198,7 +198,7 @@ source ~/.config/dotfiles/scripts/symlink.sh
 - `~/.config/tmux/plugins` を `tmux/plugins` にリンク（リポジトリにディレクトリが無い場合は空リンクになります）
 - `~/.config/lazygit/config.yml` をリンク
 - `~/.config/lazydocker/config.yml` をリンク
-- `~/.config/lazysql/config.toml` をリンク
+- `~/.config/sqlmux/` の `config.toml` / `keymaps.toml` / `themes` / `layouts` をリンク（`connections.toml` はリポジトリ管理外）
 - `~/.config/containers/containers.conf` を `containers/containers.conf` にリンク（Podman / Compose 警告抑制）
 - WSL 利用時: Windows Terminal の `settings.json` をテンプレートから生成
 
@@ -278,7 +278,7 @@ Accept: application/json
 ### SQL LSP（sqls + blink.cmp）
 
 PostgreSQL 向けに [sqls](https://github.com/sqls-server/sqls) を LSP として使い、[blink.cmp](https://github.com/saghen/blink.cmp) で補完します。  
-**DB 接続情報は dotfiles に書かず**、プロジェクト直下の [`.lazysql.toml`](https://github.com/jorgerojas26/lazysql#local-configuration)（lazysql と同じ形式）から読み込みます。
+**DB 接続情報は dotfiles に書かず**、プロジェクト直下の `.lazysql.toml` から読み込みます。
 
 | 要件 | 内容 |
 |------|------|
@@ -299,7 +299,7 @@ PostgreSQL 向けに [sqls](https://github.com/sqls-server/sqls) を LSP とし�
 
 #### プロジェクト側の `.lazysql.toml`
 
-ルートに `.lazysql.toml` を置き、**上から最初の** `Provider = "postgres"` の `[[database]]` の `URL` を sqls が使います（tmux プレフィックス + `S` の lazysql と同じファイルで接続を揃えられます）。
+ルートに `.lazysql.toml` を置き、**上から最初の** `Provider = "postgres"` の `[[database]]` の `URL` を sqls が使います。sqlmux（tmux プレフィックス + `S`）はこのファイルを読まず、接続は `~/.config/sqlmux/connections.toml` で別管理のため、両者の接続先は手動で揃えてください。
 
 ```toml
 [[database]]
@@ -434,7 +434,7 @@ TPM 等のプラグインマネージャは使わず、`tmux.conf` と `colors.c
 | ペインリサイズ | プレフィックス + `h` / `j` / `k` / `l` |
 | lazygit | プレフィックス + `G` |
 | lazydocker | プレフィックス + `D`（Podman 上のコンテナ。要 `DOCKER_HOST`） |
-| lazysql | プレフィックス + `S`（現在のペインの cwd で新規ウィンドウ） |
+| sqlmux | プレフィックス + `S`（現在のペインの cwd で新規ウィンドウ。`layouts/empty.toml` で起動し、終了時にウィンドウを閉じる） |
 | ブラウザで `http://localhost:3000` を開く（WSL） | プレフィックス + `F` |
 | ブラウザで `http://localhost:8080` を開く（WSL） | プレフィックス + `B` |
 | dev セッション終了 | プレフィックス + `Q`（`:wqa` → セッション kill → swap 整理。下記） |
@@ -594,7 +594,7 @@ dotfiles/
 ├── git/               # Git 共通設定（config.local はローカルのみ）
 ├── lazygit/           # lazygit 設定（generate-commit-msg.sh 含む）
 ├── lazydocker/        # lazydocker 設定
-├── lazysql/           # lazysql 設定
+├── sqlmux/            # sqlmux 設定（config.toml, keymaps.toml, themes/, layouts/）
 ├── containers/        # Podman containers.conf（compose 警告抑制など）
 ├── nvim/              # Neovim 設定（lazy.nvim）
 │   ├── after/lsp/     # LSP サーバー別設定（sqls.lua, vtsls.lua, lua_ls.lua など）
