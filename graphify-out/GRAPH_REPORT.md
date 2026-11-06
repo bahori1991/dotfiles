@@ -1,12 +1,19 @@
-# Graph Report - dotfiles  (2026-11-05)
+# Graph Report - dotfiles  (2026-11-06)
 
 ## Corpus Check
-- Corpus is ~13,523 words - fits in a single context window. You may not need a graph.
+- 76 files · ~13,665 words
+- Verdict: corpus is large enough that graph structure adds value.
+- Unclassified: 16 file(s) not represented in the graph (top: (none) 6, .toml 4, .conf 3)
 
 ## Summary
-- 285 nodes · 285 edges · 52 communities (16 shown, 36 thin omitted)
+- 287 nodes · 285 edges · 54 communities (17 shown, 37 thin omitted)
 - Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 5 edges (avg confidence: 0.61)
 - Token cost: 0 input · 0 output
+
+## Graph Freshness
+- Built from commit: `c96ec92a`
+- Run `git rev-parse HEAD` and compare to check if the graph is stale.
+- Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - Lazygit Config
@@ -36,6 +43,7 @@
 - Symlink Script
 - Tmux Split Script
 - Zenhan IME Script
+- blink-cmp-transform.lua
 
 ## God Nodes (most connected - your core abstractions)
 1. `gui` - 11 edges
@@ -44,10 +52,10 @@
 4. `universal` - 9 edges
 5. `sync_winhighlights()` - 7 edges
 6. `customCommands` - 6 edges
-7. `theme` - 5 edges
-8. `git` - 5 edges
-9. `commits` - 5 edges
-10. `apply_focus_state()` - 5 edges
+7. `apply_focus_state()` - 5 edges
+8. `commits` - 5 edges
+9. `git` - 5 edges
+10. `theme` - 5 edges
 
 ## Surprising Connections (you probably didn't know these)
 - None detected - all connections are within the same source files.
@@ -55,15 +63,15 @@
 ## Import Cycles
 - None detected.
 
-## Communities (52 total, 36 thin omitted)
+## Communities (54 total, 37 thin omitted)
 
 ### Community 0 - "Lazygit Config"
 Cohesion: 0.08
 Nodes (25): cherryPickCopy, pasteCommits, renameCommit, squashDown, customCommands, command, context, description (+17 more)
 
 ### Community 2 - "Blink CMP Transforms"
-Cohesion: 0.15
-Nodes (11): M.single_to_double_quoted(), single_to_double_quoted(), transform_item(), glob_has_markers(), has_marker_under_container_workspace(), M.has_solution_root(), M.dotnet_lsp_available(), M.has_dotnet() (+3 more)
+Cohesion: 0.23
+Nodes (8): glob_has_markers(), has_marker_under_container_workspace(), M.has_solution_root(), M.dotnet_lsp_available(), M.has_dotnet(), M.has_node(), M.in_container(), M.typescript_lsp_available()
 
 ### Community 3 - "Explorer Panel"
 Cohesion: 0.19
@@ -121,33 +129,37 @@ Nodes (3): .bash_user.sh script, WIN_USER, WSL_USER
 Cohesion: 0.50
 Nodes (4): graphify trigger rule, Programming Assistance Policy, Safety and Operations Rules, Working Policy (CLAUDE.md)
 
+### Community 52 - "blink-cmp-transform.lua"
+Cohesion: 0.47
+Nodes (3): M.single_to_double_quoted(), single_to_double_quoted(), transform_item()
+
 ## Ambiguous Edges - Review These
-- `Working Policy (CLAUDE.md)` → `graphify trigger rule`  [AMBIGUOUS]
+- `graphify trigger rule` → `Working Policy (CLAUDE.md)`  [AMBIGUOUS]
   .claude/CLAUDE.md · relation: conceptually_related_to
 
 ## Knowledge Gaps
-- **26 isolated node(s):** `SQL_EDITOR`, `EDITOR`, `VISUAL`, `LANG`, `LC_ALL` (+21 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 179 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **36 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **26 isolated node(s):** `PODMAN_COMPOSE_PROVIDER`, `WIN_USER`, `WSL_USER`, `BUILDKIT_PROGRESS`, `EDITOR` (+21 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 181 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **37 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `gui` connect `Lazygit Commit Display` to `Lazygit Config`, `Git Branch Naming`?**
   _High betweenness centrality (0.024) - this node is a cross-community bridge._
-- **What connects `SQL_EDITOR`, `EDITOR`, `VISUAL` to the rest of the system?**
+- **What connects `PODMAN_COMPOSE_PROVIDER`, `WIN_USER`, `WSL_USER` to the rest of the system?**
   _26 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Lazygit Config` be split into smaller, more focused modules?**
   _Cohesion score 0.07692307692307693 - nodes in this community are weakly interconnected._
 - **Why does `theme` connect `Git Branch Naming` to `Lazygit Commit Display`?**
   _High betweenness centrality (0.016) - this node is a cross-community bridge._
 - **Should `Clipboard Integration` be split into smaller, more focused modules?**
-  _Cohesion score 0.1 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.09523809523809523 - nodes in this community are weakly interconnected._
 - **Should `Lazydocker Config` be split into smaller, more focused modules?**
   _Cohesion score 0.125 - nodes in this community are weakly interconnected._
 
 ### Low-confidence Hints
 _AMBIGUOUS edges — the extractor was unsure. Verify before acting on these._
 
-- **What is the exact relationship between `Working Policy (CLAUDE.md)` and `graphify trigger rule`?**
+- **What is the exact relationship between `graphify trigger rule` and `Working Policy (CLAUDE.md)`?**
   _Edge tagged AMBIGUOUS (relation: conceptually_related_to) - confidence is low._

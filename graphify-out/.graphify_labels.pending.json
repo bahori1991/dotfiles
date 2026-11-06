@@ -1,5 +1,4 @@
 {
-  "2": "lazysql TUI SQL client",
-  "51": "gui",
-  "52": "sqls-config.lua"
+  "52": "blink-cmp-transform.lua",
+  "53": "cs.lua"
 }
