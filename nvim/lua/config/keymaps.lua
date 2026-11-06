@@ -26,5 +26,4 @@ vim.keymap.set("n", "gUiw", "gUiwe", { noremap = true })
 
 -- toggle file explorer whether
 local explorer = require("config.explorer")
-
 vim.keymap.set("n", "<leader>e", explorer.toggle, { desc = "Toggle File/Solution Explorer" })
