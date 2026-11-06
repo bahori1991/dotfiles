@@ -33,6 +33,7 @@ vim.opt.formatoptions:remove({ "c", "r", "o" })
 vim.opt.termguicolors = true
 
 -- indent
+vim.opt.smartindent = true
 vim.opt.expandtab = true
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
