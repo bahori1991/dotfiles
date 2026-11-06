@@ -356,8 +356,10 @@
 "<Leader>z" = "pane.zoom"  # Zoom / restore
 "<Leader>x" = "pane.close"  # Close pane
 "<Leader>q" = "pane.number"  # Jump by number
+"<Leader>l" = "pane.resize.left"  # Resize left
+"<Leader>r" = "pane.resize.right"  # Resize right
 "<Leader>e" = "tree.toggle"  # Open / focus / fold the sidebar
-"<Leader>r" = "result.toggle"  # Show / hide the results
+"<Leader>g" = "result.toggle"  # Show / hide the results
 "?" = "keyhelp.open"  # Key help
 "<Leader>?" = "keyhelp.open"  # Key help
 "<Esc>" = "pane.error.close"  # Close error bar
@@ -382,8 +384,6 @@
 # "" = "palette.table"  # Palette: table
 # "" = "palette.window"  # Palette: window
 # "" = "pane.resize.down"  # Resize down
-# "" = "pane.resize.left"  # Resize left
-# "" = "pane.resize.right"  # Resize right
 # "" = "pane.resize.up"  # Resize up
 # "" = "quit"  # Quit
 # "" = "session.close"  # Close session

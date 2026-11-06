@@ -1,1 +1,4 @@
 theme = "vscode-dark"
+
+[tree]
+width = 50
